@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style
+        name  ="SplashTheme"
+        parent="Theme.AppCompat.Light.NoActionBar">
+        <item
+            name="android:windowBackground">@drawable/splash</item>
+        <item
+            name="android:windowNoTitle">true</item>
+        <item
+            name="android:windowFullscreen">true</item>
+        <item
+            name="android:windowAnimationStyle">@null</item>
+    </style>
+    <style
         name  ="MainTheme"
         parent="MainTheme.Base">
     </style>
@@ -24,7 +36,7 @@
         <!-- colorAccent is used as the default value for colorControlActivated
          which is used to tint widgets -->
         <item
-            name="colorAccent">#FF4081</item>
+            name="colorAccent">#a42300</item>
         <!-- You can also set colorControlNormal, colorControlActivated
          colorControlHighlight and colorSwitchThumbNormal. -->
         <item

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns                         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="FirePlatform.Mobile.Pages.LoginPage"
+    xmlns:pageModels               ="clr-namespace:FirePlatform.Mobile.PageModels"
+    xmlns:converters               ="clr-namespace:FirePlatform.Mobile.Converters"
+    NavigationPage.HasNavigationBar="False">
+    <Grid
+        VerticalOptions="CenterAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="*" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
+        </Grid.RowDefinitions>
+        <Image
+            Grid.Row     ="0"
+            HeightRequest="150"
+            Aspect       ="AspectFit"
+            Source       ="logo.png" />
+        <StackLayout
+            Padding ="30,0,30,0"
+            Grid.Row="1">
+            <Entry
+                AutomationId="IdUsername"
+                Placeholder ="Username"
+                Text        ="{Binding CurrentUser.Username}" />
+            <Entry
+                AutomationId="IdPassword"
+                Placeholder ="Password"
+                Text        ="{Binding CurrentUser.Password}"
+                IsPassword  ="True" />
+            <StackLayout
+                Orientation      ="Horizontal"
+                HorizontalOptions="EndAndExpand">
+                <Label
+                    VerticalOptions="Center"
+                    Text           ="Remember Me" />
+                <Switch
+                    IsToggled="{Binding RememberMe}" />
+            </StackLayout>
+        </StackLayout>
+        <Button
+            Grid.Row         ="2"
+            Margin           ="0, 10, 0, 20"
+            AutomationId     ="IdLogin"
+            BackgroundColor  ="Transparent"
+            BorderColor      ="#feb700"
+            BorderWidth      ="2"
+            BorderRadius     ="20"
+            WidthRequest     ="200"
+            HeightRequest    ="50"
+            HorizontalOptions="Center"
+            VerticalOptions  ="Center"
+            Text             ="Login"
+            Command          ="{Binding LoginClickCommand}"
+            IsVisible        ="{Binding IsBusy, Converter={converters:NegateBooleanConverter}}"
+            IsEnabled        ="{Binding IsInternetConnected}">
+        </Button>
+        <ActivityIndicator
+            Grid.Row         ="2"
+            Margin           ="0, 10, 0, 20"
+            HeightRequest    ="50"
+            HorizontalOptions="Center"
+            VerticalOptions  ="Center"
+            Color            ="#feb700"
+            IsVisible        ="{Binding IsBusy}"
+            IsRunning        ="{Binding IsBusy}" />
+        <Label
+            Grid.Row         ="3"
+            Margin           ="0, 10, 0, 20"
+            HeightRequest    ="50"
+            HorizontalOptions="Center"
+            VerticalOptions  ="Center"
+            TextColor        ="Red"
+            Text             ="{Binding MessageInfoText}">
+            <Label.IsVisible>
+                <Binding
+                    Path="MessageInfoText">
+                    <Binding.Converter>
+                        <converters:EqualsToObjectConverter
+                            x:TypeArguments="x:Boolean"
+                            EqualsObject   ="null"
+                            TrueObject     ="false"
+                            FalseObject    ="true" />
+                    </Binding.Converter>
+                </Binding>
+            </Label.IsVisible>
+        </Label>
+    </Grid>
+</ContentPage>

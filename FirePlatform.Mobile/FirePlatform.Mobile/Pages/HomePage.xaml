@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns                         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="FirePlatform.Mobile.Pages.HomePage"
+    xmlns:pageModels               ="clr-namespace:FirePlatform.Mobile.PageModels"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <ActivityIndicator
+            Margin           ="0, 10, 0, 20"
+            HeightRequest    ="200"
+            WidthRequest     ="200"
+            HorizontalOptions="Center"
+            VerticalOptions  ="Center"
+            Color            ="#feb700"
+            IsVisible        ="{Binding IsBusy}"
+            IsRunning        ="{Binding IsBusy}" />
+    </ContentPage.Content>
+</ContentPage>
