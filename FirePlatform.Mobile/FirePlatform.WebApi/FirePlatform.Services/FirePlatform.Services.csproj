@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FirePlatform.Models\FirePlatform.Models.csproj" />
+    <ProjectReference Include="..\FirePlatform.Repositories\FirePlatform.Repositories.csproj" />
+    <ProjectReference Include="..\FirePlatform.Utils\FirePlatform.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
