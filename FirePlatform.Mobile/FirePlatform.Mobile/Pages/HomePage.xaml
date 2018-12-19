@@ -10,7 +10,7 @@
     xmlns:customContol             ="clr-namespace:FirePlatform.Mobile.Controls"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <Grid>
+        <Grid Margin="0,50,0,0">
             <syncfusion:SfListView
                 x:Name                  ="listView"
                 IsStickyGroupHeader     ="True"
@@ -23,7 +23,7 @@
                     <data:DataSource>
                         <data:DataSource.GroupDescriptors>
                             <data:GroupDescriptor
-                                PropertyName="Type" />
+                                PropertyName="GroupTitle" />
                         </data:DataSource.GroupDescriptors>
                     </data:DataSource>
                 </syncfusion:SfListView.DataSource>

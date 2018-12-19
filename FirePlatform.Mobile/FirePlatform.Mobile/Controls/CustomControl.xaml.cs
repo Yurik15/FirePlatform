@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using FirePlatform.Mobile.Enums;
 using Xamarin.Forms;
+using System.Linq;
 using ItemControl = FirePlatform.Mobile.Common.Entities.Item;
+using FirePlatform.Mobile.Common;
 
 namespace FirePlatform.Mobile.Controls
 {
@@ -73,9 +74,12 @@ namespace FirePlatform.Mobile.Controls
             switch (controlType)
             {
                 case ControlType.text:
-                    return new Entry() { Text = controlDetails.NumValue.ToString(), Keyboard = Keyboard.Text };
+                    var item = new Entry() { Text = controlDetails.NumValue.ToString(), Keyboard = Keyboard.Text };
+                    return item;
                 case ControlType.numeric:
                     return new Entry() { Text = controlDetails.NumValue.ToString(), Keyboard = Keyboard.Numeric };
+                case ControlType.combo:
+                    return PreparePicker(controlDetails);
             }
             return new Label()
             {
@@ -83,6 +87,13 @@ namespace FirePlatform.Mobile.Controls
                 BackgroundColor = Color.Azure,
                 TextColor = Color.Black
             };
+        }
+        private static View PreparePicker(ItemControl controlDetails)
+        {
+            var picker = new Picker();
+            picker.ItemsSource = controlDetails.MultiItemDict.Where(x => x.IsVisibile).ToArray();
+            picker.ItemDisplayBinding = new Binding("ComboItemTitle");
+            return picker;
         }
     }
 }

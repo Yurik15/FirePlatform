@@ -59,6 +59,9 @@
     <PackageReference Include="LiveXAML">
       <Version>2.1.57</Version>
     </PackageReference>
+    <PackageReference Include="Apitron.PDF.Rasterizer">
+      <Version>3.0.128</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

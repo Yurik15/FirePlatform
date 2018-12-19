@@ -35,6 +35,5 @@
     <Folder Include="Models\" />
     <Folder Include="Tools\SyncfusionTools\" />
     <Folder Include="Controls\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 </Project>

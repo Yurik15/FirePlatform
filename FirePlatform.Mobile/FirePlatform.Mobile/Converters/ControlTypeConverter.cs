@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using FirePlatform.Mobile.Common;
 using FirePlatform.Mobile.Controls;
-using FirePlatform.Mobile.Enums;
 using Xamarin.Forms;
 
 namespace FirePlatform.Mobile.Converters
@@ -31,12 +31,16 @@ namespace FirePlatform.Mobile.Converters
         Dictionary<string, ControlType> dictionary = new Dictionary<string, ControlType>()
         {
             {"num", ControlType.numeric },
-            {"text", ControlType.text }
+            {"text", ControlType.text },
+            {"combo", ControlType.combo},
+            {"formula", ControlType.formula}
         };
         Dictionary<ControlType, string> dictionary2 = new Dictionary<ControlType, string>()
         {
             {ControlType.numeric, "num" },
-            {ControlType.text, "text" }
+            {ControlType.text, "text" },
+            {ControlType.combo, "combo"},
+            {ControlType.formula, "formula"}
         };
     }
 }
