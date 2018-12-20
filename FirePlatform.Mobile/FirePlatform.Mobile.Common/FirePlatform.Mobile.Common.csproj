@@ -13,11 +13,18 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="Tools\" />
+<<<<<<< HEAD
     <Folder Include="Interfaces\" />
     <Folder Include="Implements\" />
     <Folder Include="Enums\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.51" />
+=======
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="4.6.58" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="4.6.58" />
+>>>>>>> develop
   </ItemGroup>
 </Project>

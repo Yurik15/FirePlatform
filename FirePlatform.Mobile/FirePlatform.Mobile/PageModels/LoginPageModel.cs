@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using FirePlatform.Mobile.Models;
+using FirePlatform.Mobile.Common.Interfaces.Communication;
+using FirePlatform.Mobile.Common.Models;
 using FirePlatform.Mobile.Tools;
 using Plugin.Connectivity;
+using Refit;
 using Xamarin.Forms;
 
 namespace FirePlatform.Mobile.PageModels
@@ -44,7 +46,7 @@ namespace FirePlatform.Mobile.PageModels
             {
                 CurrentUser = new UserCredentials()
                 {
-                    Username = Settings.UserName,
+                    Login = Settings.Login,
                     Password = Settings.Password
 
                 };
@@ -86,20 +88,80 @@ namespace FirePlatform.Mobile.PageModels
             }
         }
 
-        private void LoginClick()
+        private async void LoginClick()
         {
             IsBusy = true;
-            Task.Run(() =>
+            await Task.Run(async() =>
             {
-                Task.Delay(12000);
-                Device.BeginInvokeOnMainThread(() =>
+                var isAuthenticated = false;
+                isAuthenticated = await UserAuthenticated(CurrentUser.Login, CurrentUser.Password);
+
+                if (isAuthenticated)
                 {
-                    CoreMethods.PushPageModel<HomePageModel>();
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        CoreMethods.PushPageModel<HomePageModel>();
+                        IsBusy = false;
+                    });
+                }
+                else
+                {
+                    MessageInfoText = "Login failed";
                     IsBusy = false;
-                });
+                }
             });
         }
 
+        private ICommand _RegisterlickCommand;
+
+        public ICommand RegisterClickCommand
+        {
+            get
+            {
+                if (_RegisterlickCommand == null)
+                {
+                    _RegisterlickCommand = new Command(() =>
+                    {
+                        this.RegisterClick();
+                    });
+                }
+                return _RegisterlickCommand;
+            }
+        }
+
+        private void RegisterClick()
+        {
+            CoreMethods.PushPageModel<RegisterPageModel>();
+        }
+
         #endregion Commands
+
+        #region Communication
+
+        private async Task<bool> UserAuthenticated(string login, string password)
+        {
+            if (string.IsNullOrEmpty(login)
+                || string.IsNullOrEmpty(password))
+            {
+                return false;
+            }
+            var apiResponse = RestService.For<IAccountApi>(RestApiServerUri);
+            var userRequest = new UserCredentials()
+            {
+                Login = login,
+                Password = password
+            };
+            try
+            {
+                var userCredentials = await apiResponse.Login(userRequest);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        #endregion
     }
 }

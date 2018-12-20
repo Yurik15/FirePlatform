@@ -10,6 +10,9 @@ namespace FirePlatform.Mobile.PageModels
         private bool _isBusy;
         private bool _isInternetConnected;
 
+        protected const string RestApiServerUri = "http://beforedeadline-001-site1.itempurl.com/";
+        //protected const string RestApiServerUri = "https://localhost:44358/";    
+
         #endregion fields
 
         #region bound props
