@@ -13,7 +13,7 @@
             <syncfusion:SfListView
                 x:Name                  ="listView"
                 IsStickyGroupHeader     ="True"
-                GroupHeaderSize         ="60"
+                GroupHeaderSize         ="65"
                 AllowGroupExpandCollapse="True"
                 Margin                  ="5"
                 SelectionMode           ="None"
