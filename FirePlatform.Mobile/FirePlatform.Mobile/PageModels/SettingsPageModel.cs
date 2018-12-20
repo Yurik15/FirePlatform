@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using FirePlatform.Mobile.Models;
 using FirePlatform.Mobile.Tools;
@@ -81,8 +82,8 @@ namespace FirePlatform.Mobile.PageModels
         private void SetCulture()
         {
             Settings.Culture = SelectedItem.Cuture;
-            AppResources.Culture = new System.Globalization.CultureInfo(SelectedItem.Cuture);
-            NotifyPropertiesChanged();
+            //AppResources.Culture = new System.Globalization.CultureInfo(SelectedItem.Cuture);
+            //NotifyPropertiesChanged();
         }
     }
 }
