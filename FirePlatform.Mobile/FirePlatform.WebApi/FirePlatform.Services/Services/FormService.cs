@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace FirePlatform.Services.Services
 {
-    public class FormService : BaseService<FormService, FormRepository, Form>
+    public class FormService : BaseService<FormService, FormRepository, TemplateModel>
     {
         public FormService
             (
-                BaseRepository<Form, FormRepository> baseRepository,
+                BaseRepository<TemplateModel, FormRepository> baseRepository,
                 Repository repository
             ) : base(baseRepository, repository)
         {
@@ -33,21 +33,21 @@ namespace FirePlatform.Services.Services
             return container;
         }
 
-        public async Task<ServiceContainer<Form>> GetFormsByUserId(int IdUser)
+        public async Task<ServiceContainer<TemplateModel>> GetFormsByUserId(int IdUser)
         {
             var forms = Repository.GetFormRepository().GetIQueryable(x => x.UserForms.Any(y => y.UserId == IdUser));
 
-            var container = new ServiceContainer<Form>();
+            var container = new ServiceContainer<TemplateModel>();
             container.DataCollection = await forms.ToListAsync();
 
             return container;
         }
 
-        public async Task<ServiceContainer<Form>> GetAllForms()
+        public async Task<ServiceContainer<TemplateModel>> GetAllForms()
         {
             var forms = Repository.GetFormRepository().GetIQueryable();
 
-            var container = new ServiceContainer<Form>();
+            var container = new ServiceContainer<TemplateModel>();
             container.DataCollection = await forms.ToListAsync();
 
             return container;

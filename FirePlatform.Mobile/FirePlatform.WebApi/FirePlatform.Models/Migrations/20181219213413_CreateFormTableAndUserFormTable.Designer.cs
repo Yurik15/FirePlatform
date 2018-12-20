@@ -20,7 +20,7 @@ namespace FirePlatform.Models.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("FirePlatform.Models.Models.Form", b =>
+            modelBuilder.Entity("FirePlatform.Models.Models.TemplateModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,7 +67,7 @@ namespace FirePlatform.Models.Migrations
 
             modelBuilder.Entity("FirePlatform.Models.Models.UserForm", b =>
                 {
-                    b.HasOne("FirePlatform.Models.Models.Form", "Form")
+                    b.HasOne("FirePlatform.Models.Models.TemplateModel", "TemplateModel")
                         .WithMany("UserForms")
                         .HasForeignKey("FormId")
                         .OnDelete(DeleteBehavior.Cascade);

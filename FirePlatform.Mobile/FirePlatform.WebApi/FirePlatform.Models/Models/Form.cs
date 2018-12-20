@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FirePlatform.Models.Models
 {
-    public class Form : IDomain
+    public class TemplateModel : IDomain
     {
         public string Name { get; set; }
         public IEnumerable<UserForm> UserForms { get; set; }

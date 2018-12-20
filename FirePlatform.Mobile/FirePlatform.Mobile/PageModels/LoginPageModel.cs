@@ -100,7 +100,7 @@ namespace FirePlatform.Mobile.PageModels
                 {
                     Device.BeginInvokeOnMainThread(() =>
                     {
-                        CoreMethods.PushPageModel<HomePageModel>();
+                        CoreMethods.PushPageModel<FormListPageModel>();
                         IsBusy = false;
                     });
                 }

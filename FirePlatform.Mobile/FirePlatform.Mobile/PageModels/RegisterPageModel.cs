@@ -59,8 +59,8 @@ namespace FirePlatform.Mobile.PageModels
         private async void CreateAccountClick()
         {
             IsBusy = true;
-            await Task.Run(async () =>
-            {
+            //await Task.Run(async () =>
+            //{
                 var isRegistered = false;
 
                 if (CurrentUser.Password != CurrentUser.ConfirmPassword)
@@ -93,7 +93,7 @@ namespace FirePlatform.Mobile.PageModels
                         IsBusy = false;
                     }
                 }
-            });
+           // });
         }
 
         #endregion

@@ -8,7 +8,7 @@ namespace FirePlatform.WebApi.Controllers.Mappers.ResponseMappers
     {
         public FormResponseMapper()
         {
-            CreateMap<Form, FormResponse>();
+            CreateMap<TemplateModel, FormResponse>();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace FirePlatform.Models
     {
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Form> Forms { get; set; }
+        public DbSet<TemplateModel> Forms { get; set; }
         public DbSet<UserForm> UserForms { get; set; }
         //public DbSet<UserRole> UserRoles { get; set; }
         //public DbSet<Role> Roles { get; set; }
@@ -32,7 +32,7 @@ namespace FirePlatform.Models
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
 
-            modelBuilder.Entity<Form>()
+            modelBuilder.Entity<TemplateModel>()
                 .HasKey(u => u.Id);
 
             modelBuilder.Entity<UserForm>()

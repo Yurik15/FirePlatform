@@ -31,7 +31,7 @@ namespace FirePlatform.WebApi.Controllers
             if (result == null)
                 return NotFound();
 
-            var response = Mapper.Map<IEnumerable<Form>, IEnumerable<FormResponse>>(result.DataCollection);
+            var response = Mapper.Map<IEnumerable<TemplateModel>, IEnumerable<FormResponse>>(result.DataCollection);
             var container = new ApiContainer<FormResponse>
             {
                 DataCollection = response
