@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FirePlatform.Mobile.Common;
 using FirePlatform.Mobile.Common.Entities;
-using System.Linq;
-using System.Collections.Generic;
-using System.Windows.Input;
-using Xamarin.Forms;
-using FirePlatform.Mobile.Models;
 using FirePlatform.Mobile.Tools;
 
 namespace FirePlatform.Mobile.PageModels

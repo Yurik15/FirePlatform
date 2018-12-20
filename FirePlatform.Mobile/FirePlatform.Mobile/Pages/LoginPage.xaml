@@ -64,13 +64,6 @@
             IsVisible        ="{Binding IsBusy, Converter={converters:NegateBooleanConverter}}"
             IsEnabled        ="{Binding IsInternetConnected}">
         </Button>
-        <Button 
-            Grid.Row         ="3"
-            Text             ="Create new account" 
-            BackgroundColor  ="Transparent" 
-            TextColor        ="Blue" 
-            Command          ="{Binding RegisterClickCommand}"
-            />
         <ActivityIndicator
             Grid.Row         ="2"
             Margin           ="0, 10, 0, 20"
@@ -80,8 +73,14 @@
             Color            ="#feb700"
             IsVisible        ="{Binding IsBusy}"
             IsRunning        ="{Binding IsBusy}" />
+        <Button
+            Grid.Row       ="3"
+            Text           ="Create new account"
+            BackgroundColor="Transparent"
+            TextColor      ="Blue"
+            Command        ="{Binding RegisterClickCommand}" />
         <Label
-            Grid.Row         ="3"
+            Grid.Row         ="4"
             Margin           ="0, 10, 0, 20"
             HeightRequest    ="50"
             HorizontalOptions="Center"

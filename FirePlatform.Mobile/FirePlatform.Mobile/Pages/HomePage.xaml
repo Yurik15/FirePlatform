@@ -7,10 +7,9 @@
     xmlns:data                     ="clr-namespace:Syncfusion.DataSource;assembly=Syncfusion.DataSource.Portable"
     xmlns:pageModels               ="clr-namespace:FirePlatform.Mobile.PageModels"
     xmlns:converters               ="clr-namespace:FirePlatform.Mobile.Converters"
-    xmlns:customContol             ="clr-namespace:FirePlatform.Mobile.Controls"
-    NavigationPage.HasNavigationBar="False">
+    xmlns:customContol             ="clr-namespace:FirePlatform.Mobile.Controls">
     <ContentPage.Content>
-        <Grid Margin="0,50,0,0">
+        <Grid>
             <syncfusion:SfListView
                 x:Name                  ="listView"
                 IsStickyGroupHeader     ="True"

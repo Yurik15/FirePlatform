@@ -17,6 +17,7 @@ namespace FirePlatform.Mobile.Tools
         private const string PROP_LOGIN = "Login";
         private const string PROP_PASSWORD = "Password";
         private const string REMEMBER_ME = "RememberMe";
+        private const string PROP_CULTURE_ID = "CultureId";
 
         public static string Login
         {
@@ -34,6 +35,17 @@ namespace FirePlatform.Mobile.Tools
         {
             get => AppSettings.GetValueOrDefault(REMEMBER_ME, false);
             set => AppSettings.AddOrUpdateValue(REMEMBER_ME, value);
+        }
+        public static string Culture
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault(PROP_CULTURE_ID, "en");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue(PROP_CULTURE_ID, value);
+            }
         }
     }
 }

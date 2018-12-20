@@ -30,6 +30,7 @@
   <ItemGroup>
     <Folder Include="Converters\" />
     <Folder Include="Tools\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Pages\RegisterPage.xaml">
@@ -38,5 +39,14 @@
     <Folder Include="Models\" />
     <Folder Include="Tools\SyncfusionTools\" />
     <Folder Include="Controls\" />
+    <EmbeddedResource Update="Resources\AppResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\AppResources.Designer.cs">
+      <DependentUpon>AppResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

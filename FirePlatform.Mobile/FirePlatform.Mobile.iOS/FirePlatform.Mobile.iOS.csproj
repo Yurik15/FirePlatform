@@ -161,5 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\logo.png" />
+    <BundleResource Include="Resources\settingsIcon.png" />
+    <BundleResource Include="Resources\uk_flag.png" />
+    <BundleResource Include="Resources\pl_flag.png" />
   </ItemGroup>
 </Project>

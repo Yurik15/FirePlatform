@@ -17,7 +17,17 @@ namespace FirePlatform.Mobile.Pages
             InitializeComponent();
             listView.ChildAdded += ListView_ChildAdded;
             listView.GroupCollapsed += ListView_GroupCollapsed;
+
+            var settingsToolbarItem = new ToolbarItem();
+            settingsToolbarItem.Icon = "settingsIcon.png";
+            settingsToolbarItem.Clicked += SettingsToolbarItem_Clicked;
+            ToolbarItems.Add(settingsToolbarItem);
         }
+
+        void SettingsToolbarItem_Clicked(object sender, EventArgs e)
+        {
+        }
+
 
         void ListView_GroupCollapsed(object sender, GroupExpandCollapseChangedEventArgs e)
         {
