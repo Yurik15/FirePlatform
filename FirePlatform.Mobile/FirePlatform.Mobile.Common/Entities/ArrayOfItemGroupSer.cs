@@ -7,6 +7,6 @@ namespace FirePlatform.Mobile.Common.Entities
     public class ArrayOfItemGroupSer
     {
         [XmlElement(ElementName = "ItemGroupSer")]
-        public ItemGroup ItemGroupSer { get;set;}
+        public ItemGroup[] ItemGroupSer { get;set;}
     }
 }

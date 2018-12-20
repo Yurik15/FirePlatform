@@ -8,6 +8,7 @@
     <Compile Remove="Class1.cs" />
     <Compile Remove="Tools\Parser.cs" />
     <Compile Remove="Entities\GhostFormulas.cs" />
+    <Compile Remove="OverloadOperators\ItemOverloadOperators.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
@@ -16,5 +17,11 @@
   <ItemGroup>
     <PackageReference Include="Refit" Version="4.6.58" />
     <PackageReference Include="Refit.HttpClientFactory" Version="4.6.58" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Implements\" />
+    <Folder Include="Enums\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.51" />
   </ItemGroup>
 </Project>
