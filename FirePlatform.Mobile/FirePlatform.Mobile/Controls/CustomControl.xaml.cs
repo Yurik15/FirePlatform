@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using System.Linq;
 using ItemControl = FirePlatform.Mobile.Common.Entities.Item;
 using FirePlatform.Mobile.Common;
+using FirePlatform.Mobile.Tools;
 
 namespace FirePlatform.Mobile.Controls
 {
@@ -74,25 +75,42 @@ namespace FirePlatform.Mobile.Controls
             switch (controlType)
             {
                 case ControlType.text:
-                    var item = new Entry() { Text = controlDetails.NumValue.ToString(), Keyboard = Keyboard.Text };
-                    return item;
+                    return PrepareTextControl(controlDetails);
                 case ControlType.numeric:
-                    return new Entry() { Text = controlDetails.NumValue.ToString(), Keyboard = Keyboard.Numeric };
+                    return PrepareNumericControl(controlDetails);
                 case ControlType.combo:
                     return PreparePicker(controlDetails);
             }
-            return new Label()
-            {
-                Text = controlDetails.NumValue.ToString(),
-                BackgroundColor = Color.Azure,
-                TextColor = Color.Black
-            };
+            var formula = new Label();
+            formula.SetBinding(Label.TextProperty, "NumValueString", BindingMode.TwoWay);
+            formula.BackgroundColor = Color.Azure;
+            return formula;
+        }
+        private static View PrepareTextControl(ItemControl controlDetails)
+        {
+            var text = new Entry();
+            text.BindingContext = controlDetails;
+            text.SetBinding(Entry.TextProperty, nameof(controlDetails.NumValueString), BindingMode.TwoWay);
+            text.Keyboard = Keyboard.Text;
+            text.TextChanged += (object sender, TextChangedEventArgs e) => { ItemsControlLoader.Intance().RefreshForlumas(); };
+            return text;
+        }
+        private static View PrepareNumericControl(ItemControl controlDetails)
+        {
+            var numeric = new Entry();
+            numeric.BindingContext = controlDetails;
+            numeric.SetBinding(Entry.TextProperty, nameof(controlDetails.NumValueString), BindingMode.TwoWay);
+            numeric.Keyboard = Keyboard.Numeric;
+            numeric.TextChanged += (object sender, TextChangedEventArgs e) => { ItemsControlLoader.Intance().RefreshForlumas(); }; ;
+            return numeric;
         }
         private static View PreparePicker(ItemControl controlDetails)
         {
             var picker = new Picker();
-            picker.ItemsSource = controlDetails.MultiItemDict.Where(x => x.IsVisibile).ToArray();
+            picker.ItemsSource = controlDetails.MultiItemDict.ToArray();
+            picker.SetBinding(Picker.SelectedIndexProperty, nameof(controlDetails.SelectedIndex), BindingMode.TwoWay);
             picker.ItemDisplayBinding = new Binding("ComboItemTitle");
+            picker.SelectedIndexChanged += (object sender, EventArgs e) => { ItemsControlLoader.Intance().RefreshForlumas(); }; ;
             return picker;
         }
     }

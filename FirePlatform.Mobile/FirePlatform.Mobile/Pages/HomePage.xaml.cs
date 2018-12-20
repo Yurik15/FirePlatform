@@ -16,13 +16,21 @@ namespace FirePlatform.Mobile.Pages
         {
             InitializeComponent();
             listView.ChildAdded += ListView_ChildAdded;
+            listView.GroupCollapsed += ListView_GroupCollapsed;
         }
+
+        void ListView_GroupCollapsed(object sender, GroupExpandCollapseChangedEventArgs e)
+        {
+
+        }
+
+
         void ListView_ChildAdded(object sender, ElementEventArgs e)
         {
             var viewmodel = (BindingContext as HomePageModel);
             if (viewmodel != null)
             {
-                viewmodel.CollapseExpandGroupAction = (nameGroup, expanded) =>
+                viewmodel.ItemsControlLoader.CollapseExpandGroupAction = (nameGroup, expanded) =>
                 {
                     if (listView.DataSource.Groups.Count > 0)
                     {
@@ -40,7 +48,7 @@ namespace FirePlatform.Mobile.Pages
                         }
                     }
                 };
-                viewmodel.CollapseExpand();
+                viewmodel.ItemsControlLoader.CollapseExpand();
             }
         }
 

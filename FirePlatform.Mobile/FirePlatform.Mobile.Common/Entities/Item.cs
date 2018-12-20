@@ -1,9 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Xml.Serialization;
 
 namespace FirePlatform.Mobile.Common.Entities
 {
-    public class Item
+    public class Item : INotifyPropertyChanged
     {
         public string[] GhostFormulas { get; set; }
         public string[] MultiItemTags { get; set; }
@@ -23,6 +24,18 @@ namespace FirePlatform.Mobile.Common.Entities
         public string SelectedIndex { get; set; }
         public string NumVar { get; set; }
         public double NumValue { get; set; }
+        public string NumValueString
+        {
+            get => NumValue.ToString();
+            set
+            {
+                if (double.TryParse(value, out double parsedValue))
+                    NumValue = parsedValue;
+                else
+                    NumValue = default(double);
+                OnPropertyChanged(nameof(NumValueString));
+            }
+        }
         public string Min { get; set; }
         public string Max { get; set; }
         public string Inc { get; set; }
@@ -35,5 +48,17 @@ namespace FirePlatform.Mobile.Common.Entities
         public bool IsVisibleNum { get; set; }
         public bool IsVisibleCheck { get; set; }
         public bool IsVisibleText { get; set; }
+
+        #region property changed
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion property changed
+
     }
 }

@@ -3,13 +3,14 @@ using FirePlatform.Mobile.Common.Entities;
 using System.Linq;
 using NCalc;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace FirePlatform.Mobile.Common
 {
     public static class FormulaHelper
     {
         private static char[] operands = new char[] { '+', '-', '/', '*' };
-        public static List<Item> PreparingFormula(this List<Item> items)
+        public static void PreparingFormula(this ObservableCollection<Item> items)
         {
             var varibleDitionary = items
             .Where(x => !string.IsNullOrEmpty(x.NumVar))
@@ -23,10 +24,17 @@ namespace FirePlatform.Mobile.Common
                     if (item.Formula.Contains("="))
                     {
                         var name = string.Empty;
-                        var formula = GetFormulaString(item.Formula, out name);
+                        var formula = GetFormulaString(item.Formula.Replace("(","").Replace(")",""), out name);
                         item.NumVar = name;
-                        item.NumValue = Calculate(formula, varibleDitionary);
-                        varibleDitionary.Add(item.NumVar, item.NumValue);
+                        item.NumValueString = Calculate(formula, varibleDitionary).ToString();
+                        if (varibleDitionary.ContainsKey(item.NumVar))
+                        {
+                            varibleDitionary[item.NumVar] = item.NumValue;
+                        }
+                        else
+                        {
+                            varibleDitionary.Add(item.NumVar, item.NumValue);
+                        }
                     }
                     else
                     {
@@ -44,11 +52,26 @@ namespace FirePlatform.Mobile.Common
                     if (filter.Count() == 1)
                     {
                         item.NumVar = filter.FirstOrDefault();
-                        varibleDitionary.Add(item.NumVar, item.NumValue);
+                        if (varibleDitionary.ContainsKey(item.NumVar))
+                        {
+                            if (int.TryParse(item.SelectedIndex, out int index) && index > -1)
+                            {
+                                item.NumValueString = item.MultiItemTags[index].Split(',')[1];
+                            }
+                            varibleDitionary[item.NumVar] = item.NumValueString;
+                        }
+                        else
+                        {
+                            if (int.TryParse(item.SelectedIndex, out int index) && index > -1)
+                            {
+                                item.NumValueString = item.MultiItemTags[index].Split(',')[1];
+
+                            }
+                            varibleDitionary.Add(item.NumVar, item.NumValueString);
+                        }
                     }
                 }
             }
-            return items;
         }
 
         private static double Calculate(string formula, Dictionary<string, object> parameters)
@@ -56,8 +79,9 @@ namespace FirePlatform.Mobile.Common
             try
             {
                 Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase);
+
                 expression.Parameters = parameters;
-                string result = expression.Evaluate().ToString();
+                string result = Convert.ToDouble(expression.Evaluate()).ToString();
                 if (double.TryParse(result, out double res))
                 {
                     return res;
@@ -65,7 +89,7 @@ namespace FirePlatform.Mobile.Common
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine($"{formula} - {ex.Message} \n");
             }
             return default(double);
         }

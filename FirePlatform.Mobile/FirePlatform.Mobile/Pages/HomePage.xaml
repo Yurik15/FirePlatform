@@ -18,7 +18,7 @@
                 AllowGroupExpandCollapse="True"
                 Margin                  ="5"
                 SelectionMode           ="None"
-                ItemsSource             ="{Binding ItemGroupCollection}">
+                ItemsSource             ="{Binding ItemsControlLoader.ItemGroupCollection,Mode=TwoWay}">
                 <syncfusion:SfListView.DataSource>
                     <data:DataSource>
                         <data:DataSource.GroupDescriptors>
@@ -69,7 +69,7 @@
                                         Text         ="{Binding Title}" />
                                     <customContol:CustomControl
                                         Grid.Column       ="2"
-                                        Item              ="{Binding .}"
+                                        Item              ="{Binding .,Mode=TwoWay}"
                                         CurrentControlType="{Binding Type, Converter={converters:ControlTypeConverter}}" />
                                 </Grid>
                             </ViewCell.View>
