@@ -12,7 +12,9 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="Tools\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Implements\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="4.6.58" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="4.6.58" />
   </ItemGroup>
 </Project>

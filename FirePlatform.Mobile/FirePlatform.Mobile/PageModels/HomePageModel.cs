@@ -8,7 +8,7 @@ namespace FirePlatform.Mobile.PageModels
     public class HomePageModel : BasePageModel
     {
         #region fields
-        private readonly string _url = $"https://onedrive.live.com/download.aspx?cid=15B0AEBC04DB9C80&authKey=%21AODJTEr%5FsKI%2D5Hs&resid=15B0AEBC04DB9C80%21145&canary=Ob4rLa3XhEEl%2BLpIaWfPs40HZ6chYRmnfdoXnngg%2FBQ%3D2&ithint=%2Exml";
+        private readonly string _url = $"https://m3upfa.am.files.1drv.com/y4mcUTUblwFASp30Xqf3tHFvvVEBXwrmYGFTIUglbe6JRXaekufBVq0vMPJPYZ3Y_XM34YRtu3suWsBHbdI53gLu2N7PQtSV0iygp0q_ieD9H-CWofiv9zJ0dqKVNCnHnOkFnwZ1VAtP3Kg2m6oL0kAHEhqPPnR4541-P59dWLYN8wXjrxQVtVkNyAiLPQsCtY5/serialout%20(1).xml?download&psid=1";
         private ArrayOfItemGroupSer _arrayOfItemGroup;
         #endregion fields
 

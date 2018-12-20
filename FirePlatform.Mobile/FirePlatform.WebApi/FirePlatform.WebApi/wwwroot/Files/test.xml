@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfItemGroupSer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ItemGroupSer>
+    <Expanded>true</Expanded>
+    <NumID>0</NumID>
+    <Title>Pomieszczenie</Title>
+    <IsVisible>true</IsVisible>
+    <Items>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Długość</Title>
+        <NumID>0</NumID>
+        <TooltipText>Długość                     [N: L #2 1 5 100 0.1 m]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>l</NumVar>
+        <NumValue>5</NumValue>
+        <Min>1</Min>
+        <Max>100</Max>
+        <Inc>0.1</Inc>
+        <Dec>F2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Szerokość</Title>
+        <NumID>1</NumID>
+        <TooltipText>Szerokość                   [N: W #2 1 5 100 0.1 m]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>w</NumVar>
+        <NumValue>5</NumValue>
+        <Min>1</Min>
+        <Max>100</Max>
+        <Inc>0.1</Inc>
+        <Dec>F2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Wysokość</Title>
+        <NumID>2</NumID>
+        <TooltipText>Wysokość                    [N: H #2 1 3 10 0.1 m]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>h</NumVar>
+        <NumValue>3</NumValue>
+        <Min>1</Min>
+        <Max>10</Max>
+        <Inc>0.1</Inc>
+        <Dec>F2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Powierzchnia \r\n otworów</Title>
+        <NumID>3</NumID>
+        <TooltipText>Powierzchnia \r\n otworów   [N: Aov #1 0 0 10 0.1 m2]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>aov</NumVar>
+        <NumValue>0</NumValue>
+        <Min>0</Min>
+        <Max>10</Max>
+        <Inc>0.1</Inc>
+        <Dec>F1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Objętość wentylacyjna</Title>
+        <NumID>4</NumID>
+        <TooltipText>Objętość wentylacyjna       [N: Vz #1 0 0 1000 0.1 m3]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>vz</NumVar>
+        <NumValue>0</NumValue>
+        <Min>0</Min>
+        <Max>1000</Max>
+        <Inc>0.1</Inc>
+        <Dec>F1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Objętość odliczana</Title>
+        <NumID>5</NumID>
+        <TooltipText>Objętość odliczana          [N: Vg #1 0 0 1000 0.1 m3]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>vg</NumVar>
+        <NumValue>0</NumValue>
+        <Min>0</Min>
+        <Max>1000</Max>
+        <Inc>0.1</Inc>
+        <Dec>F1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>af = l*w #2 m2</Formula>
+        <Title>Powierzchnia rzutu</Title>
+        <NumID>6</NumID>
+        <TooltipText>Powierzchnia rzutu          [F: Af = L*W #2 m2]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <Unit>m2</Unit>
+        <Text>25.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>vv = af*h #2 m2</Formula>
+        <Title>Objętość pomieszczenia</Title>
+        <NumID>7</NumID>
+        <TooltipText>Objętość pomieszczenia      [F: Vv = Af*H #2 m2]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <Unit>m2</Unit>
+        <Text>75.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>av = 2*af+2*l*h+2*w*h #2 m2</Formula>
+        <Title>Powierzchnia przegród</Title>
+        <NumID>8</NumID>
+        <TooltipText>Powierzchnia przegród       [F: Av = 2*Af+2*L*H+2*W*H #2 m2]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <Unit>m2</Unit>
+        <Text>110.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>a = av+30*aov #2 m2</Formula>
+        <Title>Powierzchnia obliczeniowa A</Title>
+        <NumID>9</NumID>
+        <TooltipText>Powierzchnia obliczeniowa A [F: A = Av+30*Aov #2 m2]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <Unit>m2</Unit>
+        <Text>110.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>v = vv+vz-vg #2 m3</Formula>
+        <Title>Objętość obliczeniowa V</Title>
+        <NumID>10</NumID>
+        <TooltipText>Objętość obliczeniowa V     [F: V = Vv+Vz-Vg #2 m3]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <Unit>m3</Unit>
+        <Text>75.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <MultiItemTags>
+          <string>aupa,true</string>
+          <string>jupa,true</string>
+          <string>zupa,true</string>
+        </MultiItemTags>
+        <Type>Combo</Type>
+        <Title>Blupa</Title>
+        <NumID>11</NumID>
+        <TooltipText>Blupa                       [D: Test2]</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <MultiItemTitles>
+          <string>Cupa</string>
+          <string>Tupa</string>
+          <string>Mupa</string>
+        </MultiItemTitles>
+        <MultiItemDict>
+          <MyComboItem>
+            <ComboItemTitle>Cupa</ComboItemTitle>
+            <ComboItemTag>aupa,true</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Tupa</ComboItemTitle>
+            <ComboItemTag>jupa,true</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Mupa</ComboItemTitle>
+            <ComboItemTag>zupa,true</ComboItemTag>
+          </MyComboItem>
+        </MultiItemDict>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>true</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>str='jagiellonia białystok mistrzem polski jest i basta'</Formula>
+        <Title>Fupa</Title>
+        <NumID>12</NumID>
+        <TooltipText>Fupa                        [F: STR='Jagiellonia Białystok Mistrzem Polski jest i Basta']</TooltipText>
+        <GroupTitle>Pomieszczenie</GroupTitle>
+        <GroupNum>0</GroupNum>
+        <Text>JAGIELLONIA BIAŁYSTOK MISTRZEM POLSKI JEST I BASTA</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+    </Items>
+  </ItemGroupSer>
+  <ItemGroupSer>
+    <Expanded>true</Expanded>
+    <NumID>1</NumID>
+    <Title>Materiały palne</Title>
+    <IsVisible>true</IsVisible>
+    <Items>
+      <Item>
+        <GhostFormulas />
+        <MultiItemTags>
+          <string>kb,1</string>
+          <string>kb,2.25</string>
+          <string>kb,2</string>
+          <string>kb,2.25</string>
+          <string>kb,2</string>
+          <string>kb,1</string>
+          <string>kb,1</string>
+        </MultiItemTags>
+        <Type>Combo</Type>
+        <Title>Materiały palne</Title>
+        <NumID>13</NumID>
+        <TooltipText>Materiały palne             [D: Materials]</TooltipText>
+        <GroupTitle>Materiały palne</GroupTitle>
+        <GroupNum>1</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <MultiItemTitles>
+          <string>Dupa dupa i jeszcze raz dupa a nawet dwie</string>
+          <string>Celulozowe</string>
+          <string>Bawełna</string>
+          <string>Papier</string>
+          <string>Sztuczne</string>
+          <string>Polistyren</string>
+          <string>Poliuretan</string>
+        </MultiItemTitles>
+        <MultiItemDict>
+          <MyComboItem>
+            <ComboItemTitle>Dupa dupa i jeszcze raz dupa a nawet dwie</ComboItemTitle>
+            <ComboItemTag>kb,1</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Celulozowe</ComboItemTitle>
+            <ComboItemTag>kb,2.25</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Bawełna</ComboItemTitle>
+            <ComboItemTag>kb,2</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Papier</ComboItemTitle>
+            <ComboItemTag>kb,2.25</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Sztuczne</ComboItemTitle>
+            <ComboItemTag>kb,2</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Polistyren</ComboItemTitle>
+            <ComboItemTag>kb,1</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Poliuretan</ComboItemTitle>
+            <ComboItemTag>kb,1</ComboItemTag>
+          </MyComboItem>
+        </MultiItemDict>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>true</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>kb #1 ---</Formula>
+        <Title>Współczynnik materiałowy Kb</Title>
+        <NumID>14</NumID>
+        <TooltipText>Współczynnik materiałowy Kb [F: Kb #1 ---]</TooltipText>
+        <GroupTitle>Materiały palne</GroupTitle>
+        <GroupNum>1</GroupNum>
+        <Unit>---</Unit>
+        <Text>0.0</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>m = kb*(0.2*a*0.7*v) #2 kg</Formula>
+        <Title>Wymagana masa gazu</Title>
+        <NumID>15</NumID>
+        <TooltipText>Wymagana masa gazu          [F: m = Kb*(0.2*A*0.7*V) #2 kg]</TooltipText>
+        <GroupTitle>Materiały palne</GroupTitle>
+        <GroupNum>1</GroupNum>
+        <Unit>kg</Unit>
+        <Text>0.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+    </Items>
+  </ItemGroupSer>
+  <ItemGroupSer>
+    <Expanded>false</Expanded>
+    <NumID>2</NumID>
+    <Title>Powierzchnie odciążające</Title>
+    <IsVisible>true</IsVisible>
+    <Items>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Czas uwolnienia</Title>
+        <NumID>16</NumID>
+        <TooltipText>Czas uwolnienia             [N: T #1 1 1 10 1 1 min]</TooltipText>
+        <GroupTitle>Powierzchnie odciążające</GroupTitle>
+        <GroupNum>2</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>t</NumVar>
+        <NumValue>1</NumValue>
+        <Min>1</Min>
+        <Max>10</Max>
+        <Inc>1</Inc>
+        <Dec>F1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>q = m/t #2 kg/min</Formula>
+        <Title>Natężenie wypływu</Title>
+        <NumID>17</NumID>
+        <TooltipText>Natężenie wypływu           [F: Q = m/t #2 kg/min]</TooltipText>
+        <GroupTitle>Powierzchnie odciążające</GroupTitle>
+        <GroupNum>2</GroupNum>
+        <Unit>kg/min</Unit>
+        <Text>0.00</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>2</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Num</Type>
+        <Title>Dopuszczalne ciśnienie</Title>
+        <NumID>18</NumID>
+        <TooltipText>Dopuszczalne ciśnienie      [N: P #1 1 5 500 1 Bar]</TooltipText>
+        <GroupTitle>Powierzchnie odciążające</GroupTitle>
+        <GroupNum>2</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumVar>p</NumVar>
+        <NumValue>5</NumValue>
+        <Min>1</Min>
+        <Max>500</Max>
+        <Inc>1</Inc>
+        <Dec>F1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>true</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <Type>Formula</Type>
+        <Formula>f = 23.9 * q / sqrt(p) #1 mm2</Formula>
+        <Title>Powierzchnia odciążająca</Title>
+        <NumID>19</NumID>
+        <TooltipText>Powierzchnia odciążająca    [F: F = 23.9 * Q / Sqrt(P) #1 mm2]</TooltipText>
+        <GroupTitle>Powierzchnie odciążające</GroupTitle>
+        <GroupNum>2</GroupNum>
+        <Unit>mm2</Unit>
+        <Text>0.0</Text>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <Dec>1</Dec>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>false</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>true</IsVisibleText>
+      </Item>
+      <Item>
+        <GhostFormulas />
+        <MultiItemTags>
+          <string>supa,true</string>
+          <string>pupa,true</string>
+          <string>kupa,true</string>
+        </MultiItemTags>
+        <Type>Combo</Type>
+        <Title>Blabla</Title>
+        <NumID>20</NumID>
+        <TooltipText>Blabla                      [D: Test1]</TooltipText>
+        <GroupTitle>Powierzchnie odciążające</GroupTitle>
+        <GroupNum>2</GroupNum>
+        <IsChecked>false</IsChecked>
+        <SuspendPropertyChanged>false</SuspendPropertyChanged>
+        <SelectedIndex>-1</SelectedIndex>
+        <NumValue>-9999999</NumValue>
+        <Min>0</Min>
+        <Max>0</Max>
+        <Inc>0</Inc>
+        <MultiItemTitles>
+          <string>Dupa</string>
+          <string>Rupa</string>
+          <string>Lupa</string>
+        </MultiItemTitles>
+        <MultiItemDict>
+          <MyComboItem>
+            <ComboItemTitle>Dupa</ComboItemTitle>
+            <ComboItemTag>supa,true</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Rupa</ComboItemTitle>
+            <ComboItemTag>pupa,true</ComboItemTag>
+          </MyComboItem>
+          <MyComboItem>
+            <ComboItemTitle>Lupa</ComboItemTitle>
+            <ComboItemTag>kupa,true</ComboItemTag>
+          </MyComboItem>
+        </MultiItemDict>
+        <NumVariable />
+        <IsVisible>true</IsVisible>
+        <WasVisible>false</WasVisible>
+        <IsGroupVisible>true</IsGroupVisible>
+        <IsVisibleCombo>true</IsVisibleCombo>
+        <IsVisibleNum>false</IsVisibleNum>
+        <IsVisibleCheck>false</IsVisibleCheck>
+        <IsVisibleText>false</IsVisibleText>
+      </Item>
+    </Items>
+  </ItemGroupSer>
+</ArrayOfItemGroupSer>

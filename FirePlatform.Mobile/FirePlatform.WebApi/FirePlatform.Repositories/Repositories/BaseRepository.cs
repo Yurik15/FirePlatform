@@ -41,7 +41,7 @@ namespace FirePlatform.Repositories.Repositories
                         .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> expression)
+        public async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> expression = null)
         {
             if (expression != null)
             {
@@ -55,7 +55,7 @@ namespace FirePlatform.Repositories.Repositories
                         .ToListAsync();          
         }
 
-        public IQueryable<TEntity> GetIQueryable(Expression<Func<TEntity, bool>> expression)
+        public IQueryable<TEntity> GetIQueryable(Expression<Func<TEntity, bool>> expression = null)
         {
             if (expression != null)
             {

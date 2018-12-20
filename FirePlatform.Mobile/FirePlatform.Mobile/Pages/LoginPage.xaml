@@ -17,6 +17,8 @@
                 Height="Auto" />
             <RowDefinition
                 Height="Auto" />
+            <RowDefinition
+                Height="Auto" />
         </Grid.RowDefinitions>
         <Image
             Grid.Row     ="0"
@@ -27,9 +29,9 @@
             Padding ="30,0,30,0"
             Grid.Row="1">
             <Entry
-                AutomationId="IdUsername"
-                Placeholder ="Username"
-                Text        ="{Binding CurrentUser.Username}" />
+                AutomationId="IdLogin"
+                Placeholder ="Login"
+                Text        ="{Binding CurrentUser.Login}" />
             <Entry
                 AutomationId="IdPassword"
                 Placeholder ="Password"
@@ -62,6 +64,13 @@
             IsVisible        ="{Binding IsBusy, Converter={converters:NegateBooleanConverter}}"
             IsEnabled        ="{Binding IsInternetConnected}">
         </Button>
+        <Button 
+            Grid.Row         ="3"
+            Text             ="Create new account" 
+            BackgroundColor  ="Transparent" 
+            TextColor        ="Blue" 
+            Command          ="{Binding RegisterClickCommand}"
+            />
         <ActivityIndicator
             Grid.Row         ="2"
             Margin           ="0, 10, 0, 20"

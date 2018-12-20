@@ -9,13 +9,16 @@ namespace FirePlatform.Services
     public class Service
     {
         private readonly UserService _userService;
+        private readonly FormService _formService;
 
         public Service
             (
-                UserService userService
+                UserService userService,
+                FormService formService
             )
         {
             _userService = userService;
+            _formService = formService;
         }
 
         #region Methods
@@ -23,6 +26,11 @@ namespace FirePlatform.Services
         public UserService GetUserService()
         {
             return _userService;
+        }
+
+        public FormService GetFormService()
+        {
+            return _formService;
         }
 
         #endregion

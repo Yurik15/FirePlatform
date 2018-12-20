@@ -8,5 +8,13 @@ namespace FirePlatform.Repositories
         {
             return UserRepository.Instance;
         }
+        public static FormRepository GetFormRepository()
+        {
+            return FormRepository.Instance;
+        }
+        public static UserFormRepository GetUserFormRepository()
+        {
+            return UserFormRepository.Instance;
+        }
     }
 }

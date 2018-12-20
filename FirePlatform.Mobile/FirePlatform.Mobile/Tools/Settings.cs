@@ -14,14 +14,14 @@ namespace FirePlatform.Mobile.Tools
             }
         }
 
-        private const string PROP_USER_NAME = "UserName";
+        private const string PROP_LOGIN = "Login";
         private const string PROP_PASSWORD = "Password";
         private const string REMEMBER_ME = "RememberMe";
 
-        public static string UserName
+        public static string Login
         {
-            get => AppSettings.GetValueOrDefault(PROP_USER_NAME, "");
-            set => AppSettings.AddOrUpdateValue(PROP_USER_NAME, value);
+            get => AppSettings.GetValueOrDefault(PROP_LOGIN, "");
+            set => AppSettings.AddOrUpdateValue(PROP_LOGIN, value);
         }
 
         public static string Password
