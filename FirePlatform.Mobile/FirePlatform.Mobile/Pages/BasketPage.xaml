@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FirePlatform.Mobile.Pages.FormListPage">
+             x:Class="FirePlatform.Mobile.Pages.BasketPage">
     <ContentPage.Content>
         <ListView
                    ItemsSource    ="{Binding ReportedForms}"
@@ -17,7 +17,7 @@
                                     <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
                                 <Label HorizontalOptions="StartAndExpand" FontSize="Micro" Grid.Column="0" Text="{Binding Name}"/>
-                                <Image Grid.Column ="1" Source ="shoppingCartAdd.png" />
+                                <Image Grid.Column ="1" Source ="shoppingCartRemove.png" />
                             </Grid>
                         </ViewCell.View>
                     </ViewCell>
