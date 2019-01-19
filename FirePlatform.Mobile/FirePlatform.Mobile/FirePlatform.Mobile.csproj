@@ -31,6 +31,7 @@
     <Folder Include="Converters\" />
     <Folder Include="Tools\" />
     <Folder Include="Resources\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Pages\FormListPage.xaml">

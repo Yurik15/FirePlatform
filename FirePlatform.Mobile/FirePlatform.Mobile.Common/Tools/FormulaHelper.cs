@@ -24,7 +24,7 @@ namespace FirePlatform.Mobile.Common
                     if (item.Formula.Contains("="))
                     {
                         var name = string.Empty;
-                        var formula = GetFormulaString(item.Formula.Replace("(","").Replace(")",""), out name);
+                        var formula = GetFormulaString(item.Formula.Replace("(", "").Replace(")", ""), out name);
                         item.NumVar = name;
                         item.NumValueString = Calculate(formula, varibleDitionary).ToString();
                         if (varibleDitionary.ContainsKey(item.NumVar))
@@ -74,7 +74,7 @@ namespace FirePlatform.Mobile.Common
             }
         }
 
-        private static double Calculate(string formula, Dictionary<string, object> parameters)
+        public static double Calculate(string formula, Dictionary<string, object> parameters)
         {
             try
             {
@@ -94,11 +94,20 @@ namespace FirePlatform.Mobile.Common
             return default(double);
         }
 
-        private static string GetFormulaString(string fullFormula, out string nameVarible)
+        public static string GetFormulaString(string fullFormula, out string nameVarible)
         {
-            var parts = fullFormula.Split('=');
-            nameVarible = parts[0].Trim().ToLower();
-            return parts[1].Trim().Split(' ')[0].Trim();
+            try
+            {
+                var parts = fullFormula.Split('=');
+                nameVarible = parts[0].Trim().ToLower();
+                return parts[1].Trim().Split(' ')[0].Trim();
+            }
+            catch (Exception ex)
+            {
+                nameVarible = null;
+                return string.Empty;
+            }
+
         }
     }
 }

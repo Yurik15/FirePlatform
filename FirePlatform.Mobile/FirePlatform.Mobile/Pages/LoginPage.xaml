@@ -73,12 +73,19 @@
             Color            ="#feb700"
             IsVisible        ="{Binding IsBusy}"
             IsRunning        ="{Binding IsBusy}" />
-        <Button
-            Grid.Row       ="3"
-            Text           ="Create new account"
-            BackgroundColor="Transparent"
-            TextColor      ="Blue"
-            Command        ="{Binding RegisterClickCommand}" />
+        <StackLayout
+            Grid.Row="3">
+            <Button
+                Text           ="Create new account"
+                BackgroundColor="Transparent"
+                TextColor      ="Blue"
+                Command        ="{Binding RegisterClickCommand}" />
+            <Button
+                Text           ="Demo Test"
+                BackgroundColor="Red"
+                TextColor      ="Black"
+                Command        ="{Binding DemoTestClickCommand}" />
+        </StackLayout>
         <Label
             Grid.Row         ="4"
             Margin           ="0, 10, 0, 20"
