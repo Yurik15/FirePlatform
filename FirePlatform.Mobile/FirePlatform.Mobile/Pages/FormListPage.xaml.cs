@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace FirePlatform.Mobile.Pages
@@ -8,7 +9,16 @@ namespace FirePlatform.Mobile.Pages
 	{
 		public FormListPage ()
 		{
-			InitializeComponent ();
+            var shoppingCartCounterItem = new ToolbarItem();
+            shoppingCartCounterItem.Icon = "shoppingCartCounter.png";
+            shoppingCartCounterItem.Clicked += ShoppingCartCounterItem_Clicked;
+            ToolbarItems.Add(shoppingCartCounterItem);
+
+            InitializeComponent ();
 		}
-	}
+
+        void ShoppingCartCounterItem_Clicked(object sender, EventArgs e)
+        {
+        }
+    }
 }

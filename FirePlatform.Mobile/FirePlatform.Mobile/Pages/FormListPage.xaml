@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage
-    xmlns ="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="FirePlatform.Mobile.Pages.FormListPage"
+    xmlns         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class        ="FirePlatform.Mobile.Pages.FormListPage"
     BackgroundColor="#feb700">
     <ContentPage.Content>
         <ListView
@@ -13,18 +13,22 @@
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.View>
-                            <Frame
-                                BorderColor    ="#feb700"
-                                BackgroundColor="Silver">
-                                <StackLayout>
-                                    <Label
-                                        HorizontalOptions="Center"
-                                        FontSize         ="Micro"
-                                        TextColor        ="Black"
-                                        BackgroundColor  ="Transparent"
-                                        Text             ="{Binding Name}" />
-                                </StackLayout>
-                            </Frame>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition
+                                        Width="*" />
+                                    <ColumnDefinition
+                                        Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    HorizontalOptions="StartAndExpand"
+                                    FontSize         ="Micro"
+                                    Grid.Column      ="0"
+                                    Text             ="{Binding Name}" />
+                                <Image
+                                    Grid.Column="1"
+                                    Source     ="shoppingCartAdd.png" />
+                            </Grid>
                         </ViewCell.View>
                     </ViewCell>
                 </DataTemplate>

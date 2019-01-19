@@ -4,7 +4,6 @@ using FirePlatform.Services;
 using FirePlatform.WebApi.Model.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using FirePlatform.Models.Models;
 

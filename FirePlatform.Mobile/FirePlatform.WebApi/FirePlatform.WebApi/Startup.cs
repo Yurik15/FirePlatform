@@ -27,11 +27,15 @@ namespace FirePlatform.WebApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAutoMapper();
 
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+                                                                    .AllowAnyMethod()
+                                                                     .AllowAnyHeader()));
+
             // Inject an implementation of ISwaggerProvider with defaulted settings applied
             //services.AddSwaggerGen();
 
             #region IoC
-            
+
             //repositories
             services.AddScoped<Repository, Repository>();
 
@@ -69,6 +73,7 @@ namespace FirePlatform.WebApi
             //app.UseHttpsRedirection();
             app.UseMvc();
 
+            app.UseCors("AllowAll");
             // Enable middleware to serve generated Swagger as a JSON endpoint
             // app.UseSwagger();
 
