@@ -12,8 +12,12 @@ namespace FirePlatform.WebApi.Model
             MultiItemTags = new List<string>();
             MultiItemTitles = new List<string>();
             MultiItemDict = new List<MyComboItem>();
-            RelatedItems = new List<_Item>();
-            RelatedGroups = new List<_ItemGroup>();
+            //RelatedItems = new List<_Item>();
+            //RelatedGroups = new List<_ItemGroup>();
+
+            DependToItems = new List<_Item>();
+            NeedNotifyItems = new List<_Item>();
+            NeedNotifyGroups = new List<_ItemGroup>();
         }
         public int GroupID { get; set; }
         public string GroupTitle { get; set; }
@@ -41,9 +45,16 @@ namespace FirePlatform.WebApi.Model
         public List<MyComboItem> MultiItemDict { get; set; }
 
         [JsonIgnore]
-        public List<_Item> RelatedItems { get; set; }
+        public List<_Item> DependToItems { get; set; }
         [JsonIgnore]
-        public List<_ItemGroup> RelatedGroups { get; set; }
+        public List<_Item> NeedNotifyItems { get; set; }
+        [JsonIgnore]
+        public List<_ItemGroup> NeedNotifyGroups { get; set; }
+
+        //[JsonIgnore]
+        //public List<_Item> RelatedItems { get; set; }
+        //[JsonIgnore]
+        //public List<_ItemGroup> RelatedGroups { get; set; }
     }
     public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture };
 }

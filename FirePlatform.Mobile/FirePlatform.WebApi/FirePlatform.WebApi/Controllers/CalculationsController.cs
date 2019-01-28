@@ -62,7 +62,7 @@ namespace FirePlatform.WebApi.Controllers
             }
             item.Value = newValue;
             item.NotifyAboutChange();
-            return Ok(item.RelatedItems);
+            return Ok(item.NeedNotifyItems);
         }
 
         private string Download(int numberTmpl = 1)

@@ -221,28 +221,31 @@ namespace FirePlatform.WebApi.Services.Parser
 
         public static void NotifyAboutChange(this _Item item)
         {
-            foreach (var relatedGroup in item.RelatedGroups)
+            foreach (var relatedGroup in item.NeedNotifyGroups)
             {
                 relatedGroup.UpdateGroup();
             }
-            foreach (var relatedItem in item.RelatedItems)
+            foreach (var relatedItem in item.NeedNotifyItems)
             {
                 relatedItem.UpdateItem();
             }
         }
-        public static void UpdateItem(this _Item item)
+        public static void UpdateItem(this _Item item, bool onlyFormula = false)
         {
             var paramsDic = item.GetParams();
             var formula = item.GetFormulaString();
-            if (!string.IsNullOrEmpty(formula))
+            if (!paramsDic.Where(x => string.IsNullOrEmpty(x.Key)).Any())
             {
-                var resultValue = Calculate(formula, paramsDic);
-                item.Value = resultValue;
-            }
-            if (!string.IsNullOrEmpty(item.VisCondition))
-            {
-                var resultValue = CalculateVis(item.VisCondition, paramsDic);
-                item.IsVisible = resultValue;
+                if (!string.IsNullOrEmpty(formula))
+                {
+                    var resultValue = Calculate(formula, paramsDic);
+                    item.Value = resultValue;
+                }
+                if (!string.IsNullOrEmpty(item.VisCondition) && !onlyFormula)
+                {
+                    var resultValue = CalculateVis(item.VisCondition, paramsDic);
+                    item.IsVisible = resultValue;
+                }
             }
 
         }
@@ -253,8 +256,12 @@ namespace FirePlatform.WebApi.Services.Parser
         public static Dictionary<string, object> GetParams(this _Item item)
         {
             var paramsDic = new Dictionary<string, object>();
-            foreach (var relatedItem in item.RelatedItems)
+            foreach (var relatedItem in item.DependToItems)
             {
+                if (relatedItem.Type == ItemType.Formula.ToString())
+                {
+                    relatedItem.UpdateItem(true);
+                }
                 if (!paramsDic.ContainsKey(relatedItem.NameVarible))
                 {
                     paramsDic.Add(relatedItem.NameVarible, relatedItem.Value);
@@ -289,7 +296,7 @@ namespace FirePlatform.WebApi.Services.Parser
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"{formula} - {ex.Message} \n");
+                System.Diagnostics.Debug.WriteLine($"[FORMULAS] {formula} - {ex.Message} \n");
             }
             return default(double);
         }
@@ -309,7 +316,7 @@ namespace FirePlatform.WebApi.Services.Parser
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"{formula} - {ex.Message} \n");
+                System.Diagnostics.Debug.WriteLine($"[VISIBILITY] {formula} - {ex.Message} \n");
             }
             return default(bool);
         }
