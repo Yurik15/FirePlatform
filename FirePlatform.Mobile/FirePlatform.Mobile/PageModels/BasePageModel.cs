@@ -11,6 +11,7 @@ namespace FirePlatform.Mobile.PageModels
         private bool _isInternetConnected;
 
         protected const string RestApiServerUri = "http://beforedeadline-001-site1.itempurl.com/";
+        protected const string DemoTestServerUri = "http://beforedeadline-001-site1.itempurl.com/api/Files/Test?id=1&value=10&dataCount=1000";
         //protected const string RestApiServerUri = "https://localhost:44358/";    
 
         #endregion fields

@@ -91,7 +91,7 @@ namespace FirePlatform.Mobile.PageModels
         private async void LoginClick()
         {
             IsBusy = true;
-            await Task.Run(async() =>
+            await Task.Run(async () =>
             {
                 var isAuthenticated = false;
                 isAuthenticated = await UserAuthenticated(CurrentUser.Login, CurrentUser.Password);
@@ -132,6 +132,29 @@ namespace FirePlatform.Mobile.PageModels
         private void RegisterClick()
         {
             CoreMethods.PushPageModel<RegisterPageModel>();
+        }
+
+
+        private ICommand _DemoTestClickCommand;
+
+        public ICommand DemoTestClickCommand
+        {
+            get
+            {
+                if (_DemoTestClickCommand == null)
+                {
+                    _DemoTestClickCommand = new Command(() =>
+                    {
+                        this.DemoTestClick();
+                    });
+                }
+                return _DemoTestClickCommand;
+            }
+        }
+
+        private void DemoTestClick()
+        {
+            CoreMethods.PushPageModel<DemoTestPageModel>();
         }
 
         #endregion Commands

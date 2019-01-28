@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage
+    xmlns ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="FirePlatform.Mobile.Pages.DemoTestPage">
+    <Grid>
+        <StackLayout>
+            <Entry
+                Margin         ="20"
+                BackgroundColor="Teal"
+                TextColor      ="White"
+                Text           ="{Binding NumberEnter}"
+                Keyboard       ="Numeric"
+                TextChanged    ="Handle_TextChanged" />
+            <ListView
+                ItemsSource    ="{Binding Data}"
+                BackgroundColor="Transparent"
+                SelectionMode  ="None"
+                HasUnevenRows  ="true">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Frame
+                                    BackgroundColor="Silver">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition
+                                                Width="*" />
+                                            <ColumnDefinition
+                                                Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label
+                                            Grid.Column      ="0"
+                                            HorizontalOptions="Center"
+                                            FontSize         ="Micro"
+                                            TextColor        ="Black"
+                                            BackgroundColor  ="Transparent"
+                                            Text             ="{Binding id}" />
+                                        <Label
+                                            Grid.Column      ="1"
+                                            HorizontalOptions="Center"
+                                            FontSize         ="Micro"
+                                            TextColor        ="Black"
+                                            BackgroundColor  ="Transparent"
+                                            Text             ="{Binding value}" />
+                                    </Grid>
+                                </Frame>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+        <StackLayout
+            VerticalOptions  ="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor  ="Teal"
+            Opacity          ="0.3"
+            IsVisible        ="{Binding IsBusy}" />
+    </Grid>
+</ContentPage>

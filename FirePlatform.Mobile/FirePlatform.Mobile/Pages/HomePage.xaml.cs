@@ -6,7 +6,6 @@ using Syncfusion.DataSource;
 using Syncfusion.ListView.XForms;
 using Xamarin.Forms;
 using System.Linq;
-using ItemControl = FirePlatform.Mobile.Common.Entities.Item;
 
 namespace FirePlatform.Mobile.Pages
 {
@@ -16,22 +15,10 @@ namespace FirePlatform.Mobile.Pages
         {
             InitializeComponent();
             listView.ChildAdded += ListView_ChildAdded;
-            listView.GroupCollapsed += ListView_GroupCollapsed;
 
             var settingsToolbarItem = new ToolbarItem();
             settingsToolbarItem.Icon = "settingsIcon.png";
-            settingsToolbarItem.Clicked += SettingsToolbarItem_Clicked;
             ToolbarItems.Add(settingsToolbarItem);
-        }
-
-        void SettingsToolbarItem_Clicked(object sender, EventArgs e)
-        {
-        }
-
-
-        void ListView_GroupCollapsed(object sender, GroupExpandCollapseChangedEventArgs e)
-        {
-
         }
 
 
@@ -40,7 +27,7 @@ namespace FirePlatform.Mobile.Pages
             var viewmodel = (BindingContext as HomePageModel);
             if (viewmodel != null)
             {
-                viewmodel.ItemsControlLoader.CollapseExpandGroupAction = (nameGroup, expanded) =>
+                viewmodel.CollapseExpandGroupAction = (nameGroup, expanded) =>
                 {
                     if (listView.DataSource.Groups.Count > 0)
                     {
@@ -58,7 +45,7 @@ namespace FirePlatform.Mobile.Pages
                         }
                     }
                 };
-                viewmodel.ItemsControlLoader.CollapseExpand();
+                viewmodel.CollapseExpand();
             }
         }
 
