@@ -157,8 +157,8 @@ namespace FirePlatform.WebApi.Services.Parser
                                             .Select(x => x.Value)
                                             .Distinct()
                                             .ToList();
-                    relatedItems.ForEach(x => x.RelatedGroups.Add(group));
-
+                    relatedItems.ForEach(x => x.NeedNotifyGroups.Add(group));
+                    group.RelatedItem = relatedItems;
                 }
                 foreach (var item in group.Items)
                 {
@@ -174,12 +174,26 @@ namespace FirePlatform.WebApi.Services.Parser
                     }
                     if (!string.IsNullOrEmpty(condition))
                     {
-                        var relatedItems = data.Where(x => condition.Contains(x.Key.Trim()))
+                        var relatedItems = data.Where(x => !string.IsNullOrEmpty(x.Key) && condition.Contains(x.Key.Trim()))
                                                   .Select(x => x.Value)
                                                   .Distinct()
                                                   .ToList();
-                        relatedItems.ForEach(x => x.RelatedItems.Add(item));
-                        item.RelatedItems.AddRange(relatedItems);
+                        var relatedToSelectedList = data.Where(x => string.IsNullOrEmpty(x.Key) && !string.IsNullOrEmpty(x.Value.Varibles))
+                                                        .ToList();
+                        if (relatedToSelectedList.Any())
+                        {
+                            foreach(var itemList in relatedToSelectedList)
+                            {
+                                var itemsList = itemList.Value.Varibles.Split('|').ToList();
+                                if(itemsList.Any(x=> condition.Contains(x)))
+                                {
+                                    relatedItems.Add(itemList.Value);
+                                }
+                            }
+                        }
+                        item.DependToItems = relatedItems;
+                        relatedItems.ForEach(x => x.NeedNotifyItems.Add(item));
+                        //item.RelatedItems.AddRange(relatedItems);
                     }
                 }
             }
