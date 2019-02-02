@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 namespace FirePlatform.WebApi.Controllers
 {
     [ApiController]
-    public class ItemsController : BaseController
+    public class TestItemsController : BaseController
     {
-        public ItemsController
+        public TestItemsController
             (
                 Service service,
                 IMapper mapper
