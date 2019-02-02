@@ -96,6 +96,8 @@
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="FodyWeavers.xml" />
+    <Compile Include="PushNotification\PushNotificationHandler.cs" />
+    <Compile Include="PushNotification\PushNotificationManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -151,6 +153,18 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="3.3.0.967583" />
     <PackageReference Include="Xamarin.TestCloud.Agent" Version="0.21.4" />
+    <PackageReference Include="Xamarin.Firebase.iOS.Analytics">
+      <Version>5.1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.Core">
+      <Version>5.1.8</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.CloudMessaging">
+      <Version>3.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.iOS.InstanceID">
+      <Version>3.3.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
@@ -158,11 +172,19 @@
       <Project>{5777802F-E6EF-45CB-A8BB-C901532926C7}</Project>
       <Name>FirePlatform.Mobile</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FirePlatform.Mobile.Common\FirePlatform.Mobile.Common.csproj">
+      <Project>{457C1C55-7E58-47EB-9294-CB8EBE228A96}</Project>
+      <Name>FirePlatform.Mobile.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\logo.png" />
     <BundleResource Include="Resources\settingsIcon.png" />
     <BundleResource Include="Resources\uk_flag.png" />
     <BundleResource Include="Resources\pl_flag.png" />
+    <BundleResource Include="GoogleService-Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PushNotification\" />
   </ItemGroup>
 </Project>

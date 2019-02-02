@@ -13,6 +13,8 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="Tools\" />
+    <Folder Include="PushNotification\" />
+    <Folder Include="PushNotification\Abstractions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Refit" Version="4.6.58" />
