@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Model
 {
@@ -11,11 +12,14 @@ namespace FirePlatform.WebApi.Model
         public int IndexGroup { get; set; }
         public string Title { get; set; }
         public string Tag { get; set; }
-        public string visCondition { get; set; }
+        public string VisCondition { get; set; }
         public bool IsVisible { get; set; }
         public List<_Item> Items { get; set; }
 
-        public List<_Item> RelatedItem { get; set; }
+        public List<_Item> DependToItems { get; set; }
+
+        [JsonIgnore]
+        public bool InitialVisibility { get; set; }
 
         // Methods
 

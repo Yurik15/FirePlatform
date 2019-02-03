@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using FirePlatform.WebApi.Model;
+using FirePlatform.WebApi.Services.Tools;
 
 namespace FirePlatform.WebApi.Services.Parser
 {
@@ -126,12 +127,16 @@ namespace FirePlatform.WebApi.Services.Parser
                         IndexGroup = indexGroup,
                         Title = title,
                         Tag = tag,
-                        Items = items
+                        Items = items,
+                        IsVisible = true,
+                        InitialVisibility = true
                     };
 
                     if (!string.IsNullOrEmpty(tag))
                     {
-                        groupItems.visCondition = tag.Split(':')[1].Trim();
+                        groupItems.VisCondition = tag.Split(':')[1].Trim();
+                        groupItems.IsVisible = false;
+                        groupItems.InitialVisibility = false;
                     }
 
 
@@ -151,14 +156,27 @@ namespace FirePlatform.WebApi.Services.Parser
         {
             foreach (var group in _ItemGroups)
             {
-                if (!string.IsNullOrEmpty(group.visCondition))
+                if (!string.IsNullOrEmpty(group.VisCondition))
                 {
-                    var relatedItems = data.Where(x => group.visCondition.Contains(x.Key.Trim()))
+                    var relatedItems = data.Where(x => group.VisCondition.Contains(x.Key.Trim()) && !string.IsNullOrEmpty(x.Key.Trim()))
                                             .Select(x => x.Value)
                                             .Distinct()
                                             .ToList();
+                    var relatedToSelectedList = data.Where(x => string.IsNullOrEmpty(x.Key) && !string.IsNullOrEmpty(x.Value.Varibles))
+                                                        .ToList();
+                    if (relatedToSelectedList.Any())
+                    {
+                        foreach (var itemList in relatedToSelectedList)
+                        {
+                            var itemsList = itemList.Value.Varibles.Split('|').ToList();
+                            if (itemsList.Any(x => group.VisCondition.Contains(x)))
+                            {
+                                relatedItems.Add(itemList.Value);
+                            }
+                        }
+                    }
+                    group.DependToItems = relatedItems;
                     relatedItems.ForEach(x => x.NeedNotifyGroups.Add(group));
-                    group.RelatedItem = relatedItems;
                 }
                 foreach (var item in group.Items)
                 {
@@ -182,10 +200,10 @@ namespace FirePlatform.WebApi.Services.Parser
                                                         .ToList();
                         if (relatedToSelectedList.Any())
                         {
-                            foreach(var itemList in relatedToSelectedList)
+                            foreach (var itemList in relatedToSelectedList)
                             {
                                 var itemsList = itemList.Value.Varibles.Split('|').ToList();
-                                if(itemsList.Any(x=> condition.Contains(x)))
+                                if (itemsList.Any(x => condition.Contains(x)))
                                 {
                                     relatedItems.Add(itemList.Value);
                                 }
@@ -193,7 +211,10 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         item.DependToItems = relatedItems;
                         relatedItems.ForEach(x => x.NeedNotifyItems.Add(item));
-                        //item.RelatedItems.AddRange(relatedItems);
+                        if(item.Type == ItemType.Combo.ToString())
+                        {
+
+                        }
                     }
                 }
             }
@@ -271,25 +292,6 @@ namespace FirePlatform.WebApi.Services.Parser
             while (TagContent.Length > 0);
 
             return taglist.ToArray();
-        }
-
-        public static string GetFormulaString(this _Item item)
-        {
-            try
-            {
-                if (item.Type == ItemType.Formula.ToString())
-                {
-                    string fullFormula = item.Formula;
-                    var parts = fullFormula.Split('=');
-                    return parts[1].Trim().Split(' ')[0].Trim();
-                }
-                return string.Empty;
-            }
-            catch (Exception ex)
-            {
-                return string.Empty;
-            }
-
         }
     }
 }

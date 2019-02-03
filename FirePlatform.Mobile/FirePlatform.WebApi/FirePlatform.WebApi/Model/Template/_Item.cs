@@ -12,8 +12,6 @@ namespace FirePlatform.WebApi.Model
             MultiItemTags = new List<string>();
             MultiItemTitles = new List<string>();
             MultiItemDict = new List<MyComboItem>();
-            //RelatedItems = new List<_Item>();
-            //RelatedGroups = new List<_ItemGroup>();
 
             DependToItems = new List<_Item>();
             NeedNotifyItems = new List<_Item>();
@@ -45,16 +43,16 @@ namespace FirePlatform.WebApi.Model
         public List<MyComboItem> MultiItemDict { get; set; }
 
         [JsonIgnore]
+        public ModifiedFlag State { get; set; }
+        [JsonIgnore]
+        public dynamic InitialValue { get; set; }
+        [JsonIgnore]
         public List<_Item> DependToItems { get; set; }
         [JsonIgnore]
         public List<_Item> NeedNotifyItems { get; set; }
         [JsonIgnore]
         public List<_ItemGroup> NeedNotifyGroups { get; set; }
-
-        //[JsonIgnore]
-        //public List<_Item> RelatedItems { get; set; }
-        //[JsonIgnore]
-        //public List<_ItemGroup> RelatedGroups { get; set; }
     }
     public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture };
+    public enum ModifiedFlag { Unchanged, Modified }
 }

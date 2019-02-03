@@ -6,6 +6,7 @@ using FirePlatform.Services;
 using FirePlatform.WebApi.Model;
 using FirePlatform.WebApi.Services;
 using FirePlatform.WebApi.Services.Parser;
+using FirePlatform.WebApi.Services.Tools;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,11 +59,17 @@ namespace FirePlatform.WebApi.Controllers
             else if (item.Type == ItemType.Combo.ToString())
             {
                 item.NameVarible = value;
-                item.Value = true;
+                newValue = true;
             }
             item.Value = newValue;
             item.NotifyAboutChange();
-            return Ok(item.NeedNotifyItems);
+
+            var changedGroup = item.NeedNotifyGroups;
+            var changedItems = item.NeedNotifyItems.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID)).ToList();
+
+            (List<_ItemGroup>, List<_Item>) res = (groups: changedGroup, items: changedItems);
+
+            return Ok(res);
         }
 
         private string Download(int numberTmpl = 1)
