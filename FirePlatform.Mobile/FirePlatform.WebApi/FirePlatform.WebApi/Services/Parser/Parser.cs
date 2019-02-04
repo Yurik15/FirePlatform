@@ -181,6 +181,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 foreach (var item in group.Items)
                 {
                     bool isFormula = false;
+                    bool isVisibleConditions = false;
                     string condition = item.VisCondition ?? string.Empty;
                     if (item.Type == ItemType.Formula.ToString())
                     {
@@ -194,6 +195,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     }
                     if (!string.IsNullOrEmpty(condition))
                     {
+                        isVisibleConditions = true;
                         var relatedItems = data.Where(x => !string.IsNullOrEmpty(x.Key) && condition.Contains(x.Key.Trim()))
                                                   .Select(x => x.Value)
                                                   .Distinct()
@@ -213,12 +215,19 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         item.DependToItems = relatedItems;
                         relatedItems.ForEach(x => x.NeedNotifyItems.Add(item));
-                        if(isFormula)
-                        {
-                            var paramsDic = item.GetParams();
-                            var formula = item.GetFormulaString();
-                            item.Value = CalculationTools.Calculate(formula, paramsDic);
-                        }
+
+                    }
+                    if (isFormula)
+                    {
+                        var paramsDic = item.GetParams();
+                        var formula = item.GetFormulaString();
+                        item.Value = CalculationTools.Calculate(formula, paramsDic);
+                    }
+                    if (isVisibleConditions)
+                    {
+                        var paramsDic = item.GetParams();
+                        var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
+                        item.IsVisible = res.HasValue ? res.Value : false;
                     }
                 }
             }
