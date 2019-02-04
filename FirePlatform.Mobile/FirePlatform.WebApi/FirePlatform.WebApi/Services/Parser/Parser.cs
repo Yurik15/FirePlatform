@@ -180,9 +180,11 @@ namespace FirePlatform.WebApi.Services.Parser
                 }
                 foreach (var item in group.Items)
                 {
+                    bool isFormula = false;
                     string condition = item.VisCondition ?? string.Empty;
                     if (item.Type == ItemType.Formula.ToString())
                     {
+                        isFormula = true;
                         if (string.IsNullOrWhiteSpace(item.Formula))
                         {
                             throw new Exception("the item with 'FORMULA' type can't be null or empty!");
@@ -211,9 +213,11 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         item.DependToItems = relatedItems;
                         relatedItems.ForEach(x => x.NeedNotifyItems.Add(item));
-                        if(item.Type == ItemType.Combo.ToString())
+                        if(isFormula)
                         {
-
+                            var paramsDic = item.GetParams();
+                            var formula = item.GetFormulaString();
+                            item.Value = CalculationTools.Calculate(formula, paramsDic);
                         }
                     }
                 }

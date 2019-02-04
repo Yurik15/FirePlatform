@@ -211,6 +211,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         item.InitialValue = item.Value;
                         item.NameVarible = item.NameVarible.Trim();
+                        item.IsVisible = string.IsNullOrEmpty(item.VisCondition);
                     }
                 }
                 catch (Exception ex)
