@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using FirePlatform.Services;
 using FirePlatform.WebApi.Model;
+using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services;
 using FirePlatform.WebApi.Services.Parser;
 using Microsoft.AspNetCore.Cors;
@@ -63,6 +64,28 @@ namespace FirePlatform.WebApi.Controllers
             item.Value = newValue;
             item.NotifyAboutChange();
             return Ok(item.NeedNotifyItems);
+        }
+
+        [HttpGet("api/[controller]/LoadTemplates")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        public OkObjectResult LoadTemplatesTest(int countTemplates = 9)
+        {
+            var templates = new List<Template>();
+            for (int i = 1; i <= countTemplates; i++)
+            {
+                templates.Add(
+                    new Template
+                    {
+                        Id = i,
+                        Name = "Template " + i 
+                    }
+                );
+            }
+
+            return Ok(templates);
         }
 
         private string Download(int numberTmpl = 1)

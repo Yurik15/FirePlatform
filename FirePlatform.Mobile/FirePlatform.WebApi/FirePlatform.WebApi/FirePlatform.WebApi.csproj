@@ -22,7 +22,6 @@
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Services\Calculation\" />
-    <Folder Include="Model\Template\" />
     <Folder Include="Services\Parser\" />
   </ItemGroup>
   <ItemGroup>
