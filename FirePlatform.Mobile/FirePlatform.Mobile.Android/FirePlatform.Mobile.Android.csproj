@@ -65,18 +65,41 @@
     <PackageReference Include="LiveXAML">
       <Version>2.1.57</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.Common">
+      <Version>60.1142.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.Iid">
+      <Version>60.1142.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Firebase.Messaging">
+      <Version>60.1142.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Basement">
+      <Version>60.1142.1</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.GooglePlayServices.Tasks">
+      <Version>60.1142.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SplashActivity.cs" />
+    <Compile Include="PushNotification\PNIIDService.cs" />
+    <Compile Include="PushNotification\PNMessagingService.cs" />
+    <Compile Include="PushNotification\PushNotificationActionReceiver.cs" />
+    <Compile Include="PushNotification\PushNotificationDeletedReceiver.cs" />
+    <Compile Include="PushNotification\PushNotificationHandler.cs" />
+    <Compile Include="PushNotification\PushNotificationManager.cs" />
+    <Compile Include="MainApplication.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="FodyWeavers.xml" />
+    <GoogleServicesJson Include="google-services.json" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Tabbar.axml" />
@@ -106,11 +129,16 @@
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
     <Folder Include="Resources\drawable-xxxhdpi\" />
+    <Folder Include="PushNotification\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FirePlatform.Mobile\FirePlatform.Mobile.csproj">
       <Project>{5777802F-E6EF-45CB-A8BB-C901532926C7}</Project>
       <Name>FirePlatform.Mobile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FirePlatform.Mobile.Common\FirePlatform.Mobile.Common.csproj">
+      <Project>{457C1C55-7E58-47EB-9294-CB8EBE228A96}</Project>
+      <Name>FirePlatform.Mobile.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

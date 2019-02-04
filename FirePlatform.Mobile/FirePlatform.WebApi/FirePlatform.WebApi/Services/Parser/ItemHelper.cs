@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FirePlatform.WebApi.Model;
+using FirePlatform.WebApi.Services.Tools;
 using NCalc;
 
 namespace FirePlatform.WebApi.Services.Parser
@@ -91,7 +92,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         {
                             item.Type = ItemType.BackCalc.ToString();
                             item.IsVisible = true;
-
+                            item.NameVarible = nt.Replace("B:", "").Split('=')[0].Trim().ToLower();
                             item.Formula = nt.Substring(2).Trim().ToLowerInvariant();
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "D:")))
@@ -208,6 +209,8 @@ namespace FirePlatform.WebApi.Services.Parser
                             item.Type = ItemType.Text.ToString();
                             item.Value = nt.Substring(2);
                         }
+                        item.InitialValue = item.Value;
+                        item.NameVarible = item.NameVarible.Trim();
                     }
                 }
                 catch (Exception ex)
@@ -217,108 +220,6 @@ namespace FirePlatform.WebApi.Services.Parser
 
             }
             return item;
-        }
-
-        public static void NotifyAboutChange(this _Item item)
-        {
-            foreach (var relatedGroup in item.NeedNotifyGroups)
-            {
-                relatedGroup.UpdateGroup();
-            }
-            foreach (var relatedItem in item.NeedNotifyItems)
-            {
-                relatedItem.UpdateItem();
-            }
-        }
-        public static void UpdateItem(this _Item item, bool onlyFormula = false)
-        {
-            var paramsDic = item.GetParams();
-            var formula = item.GetFormulaString();
-            if (!paramsDic.Where(x => string.IsNullOrEmpty(x.Key)).Any())
-            {
-                if (!string.IsNullOrEmpty(formula))
-                {
-                    var resultValue = Calculate(formula, paramsDic);
-                    item.Value = resultValue;
-                }
-                if (!string.IsNullOrEmpty(item.VisCondition) && !onlyFormula)
-                {
-                    var resultValue = CalculateVis(item.VisCondition, paramsDic);
-                    item.IsVisible = resultValue;
-                }
-            }
-
-        }
-        public static void UpdateGroup(this _ItemGroup itemGroup)
-        {
-            var paramsDic = itemGroup.GetParams();
-        }
-        public static Dictionary<string, object> GetParams(this _Item item)
-        {
-            var paramsDic = new Dictionary<string, object>();
-            foreach (var relatedItem in item.DependToItems)
-            {
-                if (relatedItem.Type == ItemType.Formula.ToString())
-                {
-                    relatedItem.UpdateItem(true);
-                }
-                if (!paramsDic.ContainsKey(relatedItem.NameVarible))
-                {
-                    paramsDic.Add(relatedItem.NameVarible, relatedItem.Value);
-                }
-            }
-            return paramsDic;
-        }
-        public static Dictionary<string, object> GetParams(this _ItemGroup item)
-        {
-            var paramsDic = new Dictionary<string, object>();
-            foreach (var relatedItem in item.RelatedItem)
-            {
-                if (!paramsDic.ContainsKey(relatedItem.NameVarible))
-                {
-                    paramsDic.Add(relatedItem.NameVarible, relatedItem.Value);
-                }
-            }
-            return paramsDic;
-        }
-        public static double Calculate(string formula, Dictionary<string, object> parameters)
-        {
-            try
-            {
-                Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase);
-
-                expression.Parameters = parameters;
-                string result = Convert.ToDouble(expression.Evaluate()).ToString();
-                if (double.TryParse(result, out double res))
-                {
-                    return res;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[FORMULAS] {formula} - {ex.Message} \n");
-            }
-            return default(double);
-        }
-
-        public static bool CalculateVis(string formula, Dictionary<string, object> parameters)
-        {
-            try
-            {
-                Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase);
-
-                expression.Parameters = parameters;
-                string result = Convert.ToBoolean(expression.Evaluate()).ToString();
-                if (bool.TryParse(result, out bool res))
-                {
-                    return res;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[VISIBILITY] {formula} - {ex.Message} \n");
-            }
-            return default(bool);
         }
     }
 }

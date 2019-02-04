@@ -2,6 +2,7 @@
 using FirePlatform.Mobile.Common;
 using FirePlatform.Mobile.Common.Entities;
 using FirePlatform.Mobile.Common.Implements;
+using FirePlatform.Mobile.Common.PushNotification;
 using FirePlatform.Mobile.PageModels;
 using FirePlatform.Mobile.Pages;
 using FreshMvvm;
@@ -22,6 +23,7 @@ namespace FirePlatform.Mobile
             Application.Current.MainPage = basicNavContainer;
 
             FreshIOC.Container.Register<IParser<ArrayOfItemGroupSer>, ParserXml<ArrayOfItemGroupSer>>();
+            CrossPushNotification.Current.OnTokenRefresh += OnTokenRefresh;
         }
 
         protected override void OnStart()
@@ -37,6 +39,11 @@ namespace FirePlatform.Mobile
         protected override void OnResume()
         {
             // Handle when your app resumes
+        }
+
+        void OnTokenRefresh(object source, Common.PushNotification.Abstractions.PushNotificationTokenEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"TOKEN : {e.Token}");
         }
     }
 }

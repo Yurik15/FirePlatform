@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using FirePlatform.Mobile.iOS.PushNotification;
 using Foundation;
 using Syncfusion.ListView.XForms.iOS;
 using UIKit;
+using UserNotifications;
+using FirePlatform.Mobile.Common.PushNotification.Abstractions;
 
 namespace FirePlatform.Mobile.iOS
 {
@@ -12,7 +14,7 @@ namespace FirePlatform.Mobile.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IUNUserNotificationCenterDelegate
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -30,5 +32,22 @@ namespace FirePlatform.Mobile.iOS
 
             return base.FinishedLaunching(app, options);
         }
+        #region PushNotification
+
+        private async void FinishedLaunchingAsync(UIApplication app, NSDictionary options)
+        {
+            await PushNotificationManager.Initialize(options, new Lazy<IPushNotification>(() => { return new PushNotificationManager(); }), true);
+        }
+
+        public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+        {
+            PushNotificationManager.RemoteNotificationRegistrationFailed(error);
+        }
+
+        public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+        {
+            PushNotificationManager.DidReceiveMessage(userInfo);
+        }
+        #endregion PushNotification
     }
 }

@@ -6,6 +6,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using FirePlatform.Mobile.Droid.PushNotification;
+using Android.Content;
 
 namespace FirePlatform.Mobile.Droid
 {
@@ -14,12 +16,18 @@ namespace FirePlatform.Mobile.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            base.OnCreate(savedInstanceState);
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
-            base.OnCreate(savedInstanceState);
+            PushNotificationManager.ProcessIntent(this, Intent);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+        }
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+            PushNotificationManager.ProcessIntent(this, intent);
         }
     }
 }
