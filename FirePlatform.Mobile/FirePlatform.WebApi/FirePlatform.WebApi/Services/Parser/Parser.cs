@@ -165,6 +165,12 @@ namespace FirePlatform.WebApi.Services.Parser
         #region prepare depend controls
         private static void PrepareGroupDependToItems(List<_ItemGroup> _ItemGroups, List<DataDependItem> data)
         {
+            foreach(var a in data)
+            {
+                if(a.Name.Contains("|") || a.Name.Contains(",") || a.Name.Contains(".")){
+                    Debug.WriteLine($"TYPE : {a.ReferencedItem.Type}, GROUP_ID : {a.ReferencedItem.GroupID}, NUM_ID : {a.ReferencedItem.NumID}, VALUE : {a.Name}");
+                }
+            }
             foreach (var group in _ItemGroups)
             {
                 /*if (!string.IsNullOrEmpty(group.VisCondition))
