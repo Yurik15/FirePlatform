@@ -2,17 +2,38 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using FirePlatform.WebApi.Services.Tools;
 using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Model
 {
     public class _ItemGroup
     {
+        public _ItemGroup()
+        {
+            VisConditionNameVaribles = new List<string>();
+        }
+
         public bool Expanded { get; set; }
         public int IndexGroup { get; set; }
         public string Title { get; set; }
         public string Tag { get; set; }
-        public string VisCondition { get; set; }
+
+        private string _visCondition = String.Empty;
+        public string VisCondition
+        {
+            get => _visCondition;
+            set
+            {
+                _visCondition = value;
+                if (!string.IsNullOrEmpty(_visCondition))
+                {
+                    VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(_visCondition));
+                }
+            }
+        }
+        public List<string> VisConditionNameVaribles { get; set; }
+
         public bool IsVisible { get; set; }
         public List<_Item> Items { get; set; }
 

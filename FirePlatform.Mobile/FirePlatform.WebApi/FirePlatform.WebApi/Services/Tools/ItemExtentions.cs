@@ -20,23 +20,25 @@ namespace FirePlatform.WebApi.Services.Tools
         }
         public static void UpdateItem(this _Item item, bool onlyFormula = false)
         {
-            var paramsDic = item.GetParams();
-            var formula = item.GetFormulaString();
-            if (!paramsDic.Where(x => string.IsNullOrEmpty(x.Key)).Any())
+            if (item.ParentGroup.IsVisible)
             {
-                if (!string.IsNullOrEmpty(formula))
+                var paramsDic = item.GetParams();
+                var formula = item.GetFormulaString();
+                if (!paramsDic.Where(x => string.IsNullOrEmpty(x.Key)).Any())
                 {
-                    var resultValue = CalculationTools.Calculate(formula, paramsDic);
-                    item.Value = resultValue;
-                }
-                if (!string.IsNullOrEmpty(item.VisCondition) && !onlyFormula)
-                {
-                    var resultValue = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
-                    if (resultValue.HasValue)
-                        item.IsVisible = resultValue.Value;
+                    if (!string.IsNullOrEmpty(item.VisCondition) && !onlyFormula)
+                    {
+                        //var resultValue = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
+                        //if (resultValue.HasValue)
+                        //    item.IsVisible = resultValue.Value;
+                    }
+                    if (!string.IsNullOrEmpty(formula) && item.IsVisible)
+                    {
+                        //var resultValue = CalculationTools.Calculate(formula, paramsDic);
+                        //item.Value = resultValue;
+                    }
                 }
             }
-
         }
         public static void UpdateGroup(this _ItemGroup itemGroup)
         {
@@ -45,24 +47,86 @@ namespace FirePlatform.WebApi.Services.Tools
             {
                 if (!string.IsNullOrEmpty(itemGroup.VisCondition))
                 {
-                    var resultValue = CalculationTools.CalculateVis(itemGroup.VisCondition, paramsDic);
-                    if (resultValue.HasValue)
-                        itemGroup.IsVisible = resultValue.Value;
+                    //var resultValue = CalculationTools.CalculateVis(itemGroup.VisCondition, paramsDic);
+                    //if (resultValue.HasValue)
+                    //    itemGroup.IsVisible = resultValue.Value;
                 }
             }
         }
-        public static Dictionary<string, object> GetParams(this _Item item)
+
+        public static Dictionary<string, object> GetParamsForVisCondition(this _Item item)
         {
             var paramsDic = new Dictionary<string, object>();
-            foreach (var relatedItem in item.DependToItems)
+            foreach(var relatedItem in item.DependToItems)
             {
-                //if (relatedItem.Type == ItemType.Formula.ToString())
-                //{
-                //relatedItem.UpdateItem(true);
-                //}
-                if (!paramsDic.ContainsKey(relatedItem.NameVarible))
+                try
                 {
-                    paramsDic.Add(relatedItem.NameVarible, relatedItem.Value);
+                    if (relatedItem.Type == ItemType.Combo.ToString())
+                    {
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[GetParamsForVisCondition] {relatedItem.NameVarible} - {ex.Message} \n");
+                }
+            }
+            return paramsDic;
+        }
+
+        public static Dictionary<string, object> GetParams(this _Item item)
+        {
+            if(item.NumID == 4)
+            {
+
+            }
+            var paramsDic = new Dictionary<string, object>();
+
+            var onlyVisibleItem = item.DependToItems.Where(x => x.IsVisible).ToList();
+
+            foreach (var relatedItem in onlyVisibleItem)
+            {
+                try
+                {
+                    if (relatedItem.Type == ItemType.Combo.ToString())
+                    {
+                        var itemsFromCombo = relatedItem.Varibles;
+                        if (!string.IsNullOrEmpty(itemsFromCombo))
+                        {
+                            var listVarible = itemsFromCombo.Split('|').ToDictionary(x => x, y => false);
+                            if (!string.IsNullOrEmpty(relatedItem.NameVarible))
+                            {
+                                listVarible[relatedItem.NameVarible] = bool.Parse(relatedItem.Value);
+                            }
+                            foreach (var itemCombo in listVarible)
+                            {
+                                if (paramsDic.ContainsKey(itemCombo.Key))
+                                {
+                                    paramsDic[itemCombo.Key] = itemCombo.Value;
+                                }
+                                else
+                                {
+                                    paramsDic.Add(itemCombo.Key.Trim().ToLower(), itemCombo.Value);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!paramsDic.ContainsKey(relatedItem.NameVarible))
+                        {
+                            paramsDic.Add(relatedItem.NameVarible.Trim().ToLower(), relatedItem.Value);
+                        }
+                        else
+                        {
+                            var param = paramsDic[relatedItem.NameVarible];
+                            //Params exists
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[GetParams] {relatedItem.NameVarible} - {ex.Message} \n");
                 }
             }
             return paramsDic;

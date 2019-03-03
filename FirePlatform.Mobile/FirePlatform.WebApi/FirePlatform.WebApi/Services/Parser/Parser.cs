@@ -3,25 +3,51 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using FirePlatform.WebApi.Model;
+using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services.Tools;
 
 namespace FirePlatform.WebApi.Services.Parser
 {
     public static class Parser
     {
-        public static List<_ItemGroup> ParseDoc(string fileContent)
+        public static List<_ItemGroup> PrepareControls(string fileContent)
+        {
+            var startDate = DateTime.Now;
+            var controls = ParseDoc(fileContent);
+            var endDate = DateTime.Now;
+            var result = endDate - startDate;
+            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+
+            startDate = DateTime.Now;
+            var varibles = PrepareFieldNameDependToItem(controls);
+            endDate = DateTime.Now;
+            result = endDate - startDate;
+            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+
+            var a = varibles.Where(x => x.Name.Trim().ToLower() == "hhs33").ToList();
+
+            startDate = DateTime.Now;
+            PrepareGroupDependToItems(controls, varibles);
+            endDate = DateTime.Now;
+            result = endDate - startDate;
+            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+
+            return controls;
+        }
+
+        #region parser
+        private static List<_ItemGroup> ParseDoc(string fileContent)
         {
             string DATABASE = "Database";
             string SPACE = " ";
             string COMMENT_LINE = "---";
             string END = "END";
-            string SEPARATOR = "|";
             string COMMA_SEPARATOR = ",";
             char T = '\t';
             char NEW_LINE = '\n';
 
             var result = new List<_ItemGroup>();
-            Dictionary<string, List<string>> Databases = new Dictionary<string, List<string>>();
+            Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
 
             string[] initLines = fileContent.Split(NEW_LINE);
 
@@ -29,9 +55,9 @@ namespace FirePlatform.WebApi.Services.Parser
             Dictionary<Tuple<string, string>, List<string>> data = new Dictionary<Tuple<string, string>, List<string>>();
             foreach (var line in initLines)
             {
-                if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith(COMMENT_LINE)) continue;
+                if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
 
-                if (line.StartsWith(SPACE) || line.StartsWith(T.ToString()))
+                if (line.StartsWith(SPACE, StringComparison.Ordinal) || line.StartsWith(T.ToString(), StringComparison.Ordinal))
                 {
                     data.Last().Value.Add(line.Trim());
                 }
@@ -40,7 +66,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     string tag = string.Empty;
                     string title = line.Trim();
 
-                    var bracket = line.IndexOf("[");
+                    var bracket = line.IndexOf("[", StringComparison.Ordinal);
                     if (bracket > -1)
                     {
                         title = line.Substring(0, bracket).Trim();
@@ -56,38 +82,24 @@ namespace FirePlatform.WebApi.Services.Parser
                 var tag = group.Key.Item2;
                 var itemsFromGroup = group.Value;
 
-                if (title.StartsWith(DATABASE))
+                if (title.StartsWith(DATABASE, StringComparison.Ordinal))
                 {
-                    var tempDB = new List<string>();
-                    var txtLine = title.Substring(DATABASE.Length).Trim().TrimStart(T);
-                    var names = StringSplit(txtLine, SPACE);
-                    var dbTitle = names.First().ToLowerInvariant();
-                    var namesList = names.Skip(1).ToList();
-
-                    var countOfNames = namesList.Count();
+                    var tempDB = new List<ComboItem>();
+                    var dbTitle = title.Substring(DATABASE.Length).Trim().TrimStart(T).ToLowerInvariant();
 
                     foreach (var itemText in itemsFromGroup)
                     {
                         var line = itemText.Trim().TrimStart(T);
                         var dbItems = StringSplit(line, COMMA_SEPARATOR);
-                        var dbItemsList = new List<string>(dbItems);
 
-                        for (int index = 0; index < dbItems.Count() - 1; index++)
+                        var displayName = dbItems[0];
+                        var groupKey = String.Join(",", dbItems.Skip(1));
+                        var comboItem = new ComboItem()
                         {
-                            if (index < countOfNames)
-                            {
-                                dbItemsList.Add(namesList[index].Trim().ToLowerInvariant());
-                                dbItemsList.Add(dbItems[index + 1].Trim().ToLowerInvariant());
-                            }
-                            else
-                            {
-                                foreach (var dbtag in StringSplit(dbItems[index + 1], SEPARATOR))
-                                {
-                                    dbItemsList.Add(dbtag.ToLowerInvariant());
-                                    dbItemsList.Add(bool.TrueString);
-                                }
-                            }
-                        }
+                            DisplayName = displayName,
+                            GroupKey = groupKey
+                        };
+                        tempDB.Add(comboItem);
                     }
                     Databases.Add(dbTitle, tempDB);
                 }
@@ -100,7 +112,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 var tag = group.Key.Item2;
                 var itemsFromGroup = group.Value;
 
-                if (title.StartsWith(DATABASE)) continue;
+                if (title.StartsWith(DATABASE, StringComparison.Ordinal)) continue;
 
                 var items = new List<_Item>();
 
@@ -111,30 +123,32 @@ namespace FirePlatform.WebApi.Services.Parser
                 }
                 else
                 {
-
-                    for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
-                    {
-                        var itemText = itemsFromGroup[indexItems];
-                        if (itemText.StartsWith(END)) break;
-                        else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE)) continue;
-
-                        var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases);
-
-                        items.Add(item);
-                    }
                     var groupItems = new _ItemGroup
                     {
                         IndexGroup = indexGroup,
                         Title = title,
                         Tag = tag,
-                        Items = items,
                         IsVisible = true,
                         InitialVisibility = true
                     };
 
+                    for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
+                    {
+                        var itemText = itemsFromGroup[indexItems];
+                        if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
+                        else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
+
+                        var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases);
+                        item.ParentGroup = groupItems;
+                        items.Add(item);
+                    }
+
+                    groupItems.Items = items;
+
                     if (!string.IsNullOrEmpty(tag))
                     {
                         groupItems.VisCondition = tag.Split(':')[1].Trim();
+                        //groupItems.VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(groupItems.VisCondition));
                         groupItems.IsVisible = false;
                         groupItems.InitialVisibility = false;
                     }
@@ -144,46 +158,42 @@ namespace FirePlatform.WebApi.Services.Parser
                     indexGroup++;
                 }
             }
-
-            var varibles = PrepareFieldNameDependToItem(result);
-
-            PrepareGroupDependToItems(result, varibles);
-
             return result;
         }
+        #endregion parser
 
-        private static void PrepareGroupDependToItems(List<_ItemGroup> _ItemGroups, Dictionary<string, _Item> data)
+        #region prepare depend controls
+        private static void PrepareGroupDependToItems(List<_ItemGroup> _ItemGroups, List<DataDependItem> data)
         {
             foreach (var group in _ItemGroups)
             {
-                if (!string.IsNullOrEmpty(group.VisCondition))
+                /*if (!string.IsNullOrEmpty(group.VisCondition))
                 {
-                    var relatedItems = data.Where(x => group.VisCondition.Contains(x.Key.Trim()) && !string.IsNullOrEmpty(x.Key.Trim()))
-                                            .Select(x => x.Value)
-                                            .Distinct()
+                    var relatedItems = data.Where(x => group.VisCondition.Contains(x.Name.Trim()) && !string.IsNullOrEmpty(x.Name.Trim()))
+                                            .Select(x => x.ReferencedItem)
                                             .ToList();
-                    var relatedToSelectedList = data.Where(x => string.IsNullOrEmpty(x.Key) && !string.IsNullOrEmpty(x.Value.Varibles))
+                    var relatedToSelectedList = data.Where(x => string.IsNullOrEmpty(x.Name.Trim()) && !string.IsNullOrEmpty(x.ReferencedItem.Varibles))
                                                         .ToList();
                     if (relatedToSelectedList.Any())
                     {
                         foreach (var itemList in relatedToSelectedList)
                         {
-                            var itemsList = itemList.Value.Varibles.Split('|').ToList();
+                            var itemsList = itemList.ReferencedItem.Varibles.Split('|').ToList();
                             if (itemsList.Any(x => group.VisCondition.Contains(x)))
                             {
-                                relatedItems.Add(itemList.Value);
+                                relatedItems.Add(itemList.ReferencedItem);
                             }
                         }
                     }
                     group.DependToItems = relatedItems;
                     relatedItems.ForEach(x => x.NeedNotifyGroups.Add(group));
-                }
+                }*/
                 foreach (var item in group.Items)
                 {
                     bool isFormula = false;
                     bool isVisibleConditions = false;
                     string condition = item.VisCondition ?? string.Empty;
-                    if (item.Type == ItemType.Formula.ToString())
+                    /*if (item.Type == ItemType.Formula.ToString())
                     {
                         isFormula = true;
                         if (string.IsNullOrWhiteSpace(item.Formula))
@@ -192,24 +202,39 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         var formula = item.GetFormulaString();
                         condition += " " + formula;
-                    }
+                    }*/
                     if (!string.IsNullOrEmpty(condition))
                     {
                         isVisibleConditions = true;
-                        var relatedItems = data.Where(x => !string.IsNullOrEmpty(x.Key) && condition.Contains(x.Key.Trim()))
-                                                  .Select(x => x.Value)
-                                                  .Distinct()
-                                                  .ToList();
-                        var relatedToSelectedList = data.Where(x => string.IsNullOrEmpty(x.Key) && !string.IsNullOrEmpty(x.Value.Varibles))
-                                                        .ToList();
-                        if (relatedToSelectedList.Any())
+                        var relatedItems = new List<_Item>();
+                        foreach (var varibleName in item.VisConditionNameVaribles)
                         {
-                            foreach (var itemList in relatedToSelectedList)
+                            var foundItems = data.Where(x => x.Name.Trim().ToLower() == varibleName.Trim().ToLower());
+                            if (foundItems == null)
                             {
-                                var itemsList = itemList.Value.Varibles.Split('|').ToList();
-                                if (itemsList.Any(x => condition.Contains(x)))
+                                Debug.WriteLine($"{varibleName} - not found");
+                            }
+                            else
+                            {
+                                if(foundItems.Count() == 1)
                                 {
-                                    relatedItems.Add(itemList.Value);
+                                    var foundItem = foundItems.FirstOrDefault();
+                                    var alreadyExists = relatedItems.FirstOrDefault(x => x.GroupID == foundItem.ReferencedItem.GroupID && x.NumID == foundItem.ReferencedItem.NumID);
+                                    if(alreadyExists == null)
+                                    {
+                                        relatedItems.Add(foundItem.ReferencedItem);
+                                    }
+                                }
+                                else
+                                {
+                                    foreach(var foundItem in foundItems)
+                                    {
+                                        var alreadyExists = relatedItems.FirstOrDefault(x => x.GroupID == foundItem.ReferencedItem.GroupID && x.NumID == foundItem.ReferencedItem.NumID);
+                                        if (alreadyExists == null)
+                                        {
+                                            relatedItems.Add(foundItem.ReferencedItem);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -217,12 +242,12 @@ namespace FirePlatform.WebApi.Services.Parser
                         relatedItems.ForEach(x => x.NeedNotifyItems.Add(item));
 
                     }
-                    if (isFormula)
+                    /*if (isFormula)
                     {
                         var paramsDic = item.GetParams();
                         var formula = item.GetFormulaString();
                         item.Value = CalculationTools.Calculate(formula, paramsDic);
-                    }
+                    }*/
                     if (isVisibleConditions)
                     {
                         var paramsDic = item.GetParams();
@@ -233,30 +258,67 @@ namespace FirePlatform.WebApi.Services.Parser
             }
         }
 
-        private static Dictionary<string, _Item> PrepareFieldNameDependToItem(List<_ItemGroup> _ItemGroups)
+        private static List<DataDependItem> PrepareFieldNameDependToItem(List<_ItemGroup> _ItemGroups)
         {
-            Dictionary<string, _Item> data = new Dictionary<string, _Item>();
+            List<DataDependItem> dataDependItem = new List<DataDependItem>();
             foreach (var group in _ItemGroups)
             {
                 foreach (var item in group.Items)
                 {
                     var name = item.NameVarible;
-                    if (!string.IsNullOrEmpty(name) || !string.IsNullOrEmpty(item.Varibles))
+
+                    if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(item.Varibles))
                     {
-                        if (!data.ContainsKey(name))
+
+                    }
+                    if (item.GhostFormulas.Any())
+                    {
+                        foreach (var ghostFormula in item.GhostFormulas)
                         {
-                            data.Add(name, item);
+                            var dependItem = new DataDependItem()
+                            {
+                                Name = ghostFormula.Name,
+                                IsVisibile = true,
+                                IsGhostFormula = true,
+                                ReferencedItem = item
+                            };
+                            dataDependItem.Add(dependItem);
                         }
-                        else
+                    }
+
+                    if (!string.IsNullOrEmpty(name) && string.IsNullOrEmpty(item.Varibles))
+                    {
+                        var dependItem = new DataDependItem()
                         {
-                            Debug.WriteLine($"[{item.GroupID}-{item.NumID}]Name - {name} | [{data[name].GroupID}-{data[name].NumID}]Name - {name}");
+                            Name = name,
+                            IsVisibile = true,
+                            ReferencedItem = item
+                        };
+                        dataDependItem.Add(dependItem);
+                    }
+                    else if (!string.IsNullOrEmpty(item.Varibles))
+                    {
+                        var itemsCombo = item.Varibles.Split("|");
+                        foreach (var it in itemsCombo)
+                        {
+                            var dependItem = new DataDependItem()
+                            {
+                                Name = it,
+                                IsVisibile = true,
+                                ReferencedItem = item
+                            };
+                            dataDependItem.Add(dependItem);
                         }
                     }
 
                 }
             }
-            return data;
+            return dataDependItem;
         }
+
+        #endregion prepare depend controls
+
+        #region helper methods
 
         public static List<string> GetTags(string FullLine)
         {
@@ -267,8 +329,8 @@ namespace FirePlatform.WebApi.Services.Parser
 
             do
             {
-                bracketStart = FullLine.IndexOf("[");
-                bracketEnd = FullLine.IndexOf("]");
+                bracketStart = FullLine.IndexOf("[", StringComparison.Ordinal);
+                bracketEnd = FullLine.IndexOf("]", StringComparison.Ordinal);
 
                 TagLength = bracketEnd - bracketStart - 1;
                 TagContent = FullLine.Substring(bracketStart + 1, TagLength);
@@ -276,7 +338,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 taglist.Add(TagContent);
                 FullLine = FullLine.Remove(bracketStart, TagLength + 2);
             }
-            while (FullLine.IndexOf("[") >= 0);
+            while (FullLine.IndexOf("[", StringComparison.Ordinal) >= 0);
 
             return taglist;
         }
@@ -289,7 +351,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
             do
             {
-                DelStart = TagContent.IndexOf(Delimiter);
+                DelStart = TagContent.IndexOf(Delimiter, StringComparison.Ordinal);
                 if (DelStart > -1)
                 {
                     TagChunk = TagContent.Substring(0, DelStart).Trim();
@@ -306,5 +368,15 @@ namespace FirePlatform.WebApi.Services.Parser
 
             return taglist.ToArray();
         }
+
+
+        public static void LogExistsItem(string key, _Item item, _Item itemExists)
+        {
+            var infoItem = $"Title : {item.Title}, Group_ID : {item.GroupID}, Item_ID : {item.NumID}, Name : {key}";
+            var infoItemExists = $"Title : {itemExists.Title}, Group_ID : {itemExists.GroupID}, Item_ID : {itemExists.NumID}, Name : {itemExists.NameVarible}";
+            var resultInfo = $"[{item.Type.ToString().ToUpper()} - {itemExists.Type.ToString().ToUpper()}] - [{infoItem}] - EXISTS ITEM [{infoItemExists}]";
+            Debug.WriteLine(resultInfo);
+        }
+        #endregion helper methods
     }
 }

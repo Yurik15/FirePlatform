@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using FirePlatform.WebApi.Model.Template;
+using FirePlatform.WebApi.Services.Tools;
 using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Model
@@ -8,10 +11,11 @@ namespace FirePlatform.WebApi.Model
     {
         public _Item()
         {
-            GhostFormulas = new List<string>();
-            MultiItemTags = new List<string>();
-            MultiItemTitles = new List<string>();
-            MultiItemDict = new List<MyComboItem>();
+            GhostFormulas = new List<GhostFormula>();
+            ComboItems = new List<ComboItem>();
+
+            VisConditionNameVaribles = new List<string>();
+            FormulaNameVaribles = new List<string>();
 
             DependToItems = new List<_Item>();
             NeedNotifyItems = new List<_Item>();
@@ -23,11 +27,58 @@ namespace FirePlatform.WebApi.Model
         public string Title { get; set; }
         public string TooltipText { get; set; }
         public string Type { get; set; }
-        public string VisCondition { get; set; }
-        public string Formula { get; set; }
+
+        private string _visCondition = String.Empty;
+        public string VisCondition
+        {
+            get => _visCondition;
+            set
+            {
+                _visCondition = value;
+                if (!string.IsNullOrEmpty(_visCondition))
+                {
+                    VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(_visCondition));
+                }
+            }
+        }
+        public List<string> VisConditionNameVaribles { get; set; }
+
+        private string _formula = String.Empty;
+        public string Formula
+        {
+            get => _formula;
+            set
+            {
+                _formula = value;
+                if (!string.IsNullOrEmpty(_formula))
+                {
+                    FormulaNameVaribles.AddRange(CalculationTools.GetVaribliNames(_formula));
+                }
+            }
+        }
+        public List<string> FormulaNameVaribles { get; set; }
+
         public dynamic Value { get; set; }
         public string NameVarible { get; set; } = "";
-        public string Varibles { get; set; }
+
+        private string _varibles = "";
+        public string Varibles
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_varibles))
+                {
+                    var items = ComboItems;
+                    if (items.Any())
+                    {
+                        var separate = "|";
+                        var keys = items.Select(x => string.Join(separate, x.GroupKey));
+                        _varibles = string.Join(separate, keys);
+                    }
+                }
+                return _varibles;
+            }
+        }
 
 
         public double Min { get; set; }
@@ -37,11 +88,12 @@ namespace FirePlatform.WebApi.Model
         public bool IsVisible { get; set; } = true;
         public bool IsGroupVisible { get; set; } = true;
 
-        public List<string> GhostFormulas { get; set; }
-        public List<string> MultiItemTags { get; set; }
-        public List<string> MultiItemTitles { get; set; }
-        public List<MyComboItem> MultiItemDict { get; set; }
+        public List<GhostFormula> GhostFormulas { get; set; }
 
+        public List<ComboItem> ComboItems { get; set; }
+
+        [JsonIgnore]
+        public _ItemGroup ParentGroup { get; set; }
         [JsonIgnore]
         public ModifiedFlag State { get; set; }
         [JsonIgnore]

@@ -33,7 +33,7 @@ namespace FirePlatform.WebApi.Controllers
         {
             var content = Download(numberTmpl);
 
-            var res = Parser.ParseDoc(content);
+            var res = Parser.PrepareControls(content);
 
             UsersTmp = res;
             return Ok(res);

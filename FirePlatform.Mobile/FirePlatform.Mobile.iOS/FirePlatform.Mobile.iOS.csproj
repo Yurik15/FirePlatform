@@ -169,11 +169,11 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\FirePlatform.Mobile\FirePlatform.Mobile.csproj">
-      <Project>{5777802F-E6EF-45CB-A8BB-C901532926C7}</Project>
+      <Project>{823B9CE9-54AE-4864-A385-181DCB870700}</Project>
       <Name>FirePlatform.Mobile</Name>
     </ProjectReference>
     <ProjectReference Include="..\FirePlatform.Mobile.Common\FirePlatform.Mobile.Common.csproj">
-      <Project>{457C1C55-7E58-47EB-9294-CB8EBE228A96}</Project>
+      <Project>{EBE8CE97-47C1-42EE-BFB9-29D6D7BAA525}</Project>
       <Name>FirePlatform.Mobile.Common</Name>
     </ProjectReference>
   </ItemGroup>
