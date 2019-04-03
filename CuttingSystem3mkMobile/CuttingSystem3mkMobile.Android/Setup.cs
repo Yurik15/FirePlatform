@@ -1,4 +1,6 @@
 ﻿using System;
+using Android.Print;
+using CuttingSystem3mkMobile.Services;
 using Java.Util.Logging;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
@@ -12,6 +14,8 @@ namespace CuttingSystem3mkMobile.Droid
     {
         protected override Xamarin.Forms.Application CreateFormsApplication()
         {
+            Mvx.IoCProvider.RegisterSingleton<IPrintManager>(new CuttingSystem3mkMobile.Droid.Implementations.PrintManager());
+
             return new CuttingSystem3mkMobile.App();
         }
 

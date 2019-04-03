@@ -21,10 +21,18 @@
     <Folder Include="Pages\" />
     <Folder Include="PageModels\" />
     <Folder Include="Services\" />
+    <Folder Include="Models\" />
+    <Folder Include="Triggers\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Pages\ModelsPage.xaml.cs">
       <DependentUpon>ModelsPage.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="asus-zenfone-2-delux.plt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="asus-zenfone-2-delux.plt" />
   </ItemGroup>
 </Project>

@@ -87,6 +87,7 @@
     <Compile Include="Setup.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="SplashScreen.cs" />
+    <Compile Include="Implementations\PrintManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -119,6 +120,7 @@
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
     <Folder Include="Resources\drawable-xxxhdpi\" />
+    <Folder Include="Implementations\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CuttingSystem3mkMobile\CuttingSystem3mkMobile.csproj">

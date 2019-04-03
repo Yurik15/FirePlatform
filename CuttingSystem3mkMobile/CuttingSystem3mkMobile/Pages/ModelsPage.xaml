@@ -8,9 +8,19 @@
     x:TypeArguments                ="pageModels:ModelsPageModel"
     xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
     NavigationPage.HasNavigationBar="false">
-    <Label
-        Text             ="3mk Cutting system"
+    <StackLayout
         HorizontalOptions="Center"
-        VerticalOptions  ="Center"
-        FontSize         ="Large" />
+        VerticalOptions  ="Center">
+        <Label
+            Text    ="3mk Cutting system"
+            FontSize="Large" />
+        <Button
+            Text   ="Demo"
+            Command="{Binding DemoCommand}"
+            Style  ="{StaticResource FillButtonStyle}" />
+        <Label
+            Text             ="{Binding InfoMsg}"
+            TextColor        ="Teal"
+            HorizontalOptions="Center" />
+    </StackLayout>
 </base:BaseContentPage>
