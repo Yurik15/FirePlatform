@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CuttingSystem3mk.Models.Models;
 using CuttingSystem3mk.Repositories;
 using CuttingSystem3mk.Repositories.Repositories;
@@ -10,12 +6,9 @@ using CuttingSystem3mk.Services;
 using CuttingSystem3mk.Services.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace CuttingSystem3mk.Api
 {
@@ -54,6 +47,9 @@ namespace CuttingSystem3mk.Api
             services.AddScoped<CutModelRepository, CutModelRepository>();
             services.AddScoped<BaseRepository<CutModel, CutModelRepository>, BaseRepository<CutModel, CutModelRepository>>();
 
+            services.AddScoped<DeviceModelRepository, DeviceModelRepository>();
+            services.AddScoped<BaseRepository<DeviceModel, DeviceModelRepository>, BaseRepository<DeviceModel, DeviceModelRepository>>();
+
             //services
             services.AddScoped<Service, Service>();
 
@@ -62,6 +58,9 @@ namespace CuttingSystem3mk.Api
 
             services.AddScoped<CutModelService, CutModelService>();
             services.AddScoped<BaseService<CutModelService, CutModelRepository, CutModel>, BaseService<CutModelService, CutModelRepository, CutModel>>();
+
+            services.AddScoped<DeviceModelService, DeviceModelService>();
+            services.AddScoped<BaseService<DeviceModelService, DeviceModelRepository, DeviceModel>, BaseService<DeviceModelService, DeviceModelRepository, DeviceModel>>();
 
             #endregion
         }

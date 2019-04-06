@@ -6,15 +6,18 @@ namespace CuttingSystem3mk.Services
     {
         private readonly UserService _userService;
         private readonly CutModelService _cutModelService;
+        private readonly DeviceModelService _deviceModelService;
 
         public Service
             (
                 UserService userService,
-                CutModelService cutModelService
+                CutModelService cutModelService,
+                DeviceModelService deviceModelService
             )
         {
             _userService = userService;
             _cutModelService = cutModelService;
+            _deviceModelService = deviceModelService;
         }
 
         #region Methods
@@ -26,6 +29,10 @@ namespace CuttingSystem3mk.Services
         public CutModelService GetCutModelService()
         {
             return _cutModelService;
+        }
+        public DeviceModelService GetDeviceModelService()
+        {
+            return _deviceModelService;
         }
         #endregion
     }

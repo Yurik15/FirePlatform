@@ -12,5 +12,9 @@ namespace CuttingSystem3mk.Repositories
         {
             return Repositories.CutModelRepository.Instance;
         }
+        public static DeviceModelRepository DeviceModelRepository()
+        {
+            return Repositories.DeviceModelRepository.Instance;
+        }
     }
 }
