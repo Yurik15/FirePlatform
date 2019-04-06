@@ -85,7 +85,7 @@ namespace FirePlatform.Mobile.PageModels
             }
             catch (Exception ex)
             {
-
+                throw ex;
             }
 
             #endregion

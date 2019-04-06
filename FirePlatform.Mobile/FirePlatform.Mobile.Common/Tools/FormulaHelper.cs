@@ -90,6 +90,7 @@ namespace FirePlatform.Mobile.Common
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"{formula} - {ex.Message} \n");
+                throw ex;
             }
             return default(double);
         }
@@ -106,6 +107,7 @@ namespace FirePlatform.Mobile.Common
             {
                 nameVarible = null;
                 return string.Empty;
+                throw ex;
             }
 
         }

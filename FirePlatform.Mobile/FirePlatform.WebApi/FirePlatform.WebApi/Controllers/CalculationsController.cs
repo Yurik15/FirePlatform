@@ -16,7 +16,7 @@ namespace FirePlatform.WebApi.Controllers
     [ApiController]
     public class CalculationsController : BaseController
     {
-        public static List<_ItemGroup> UsersTmp { get; set; }
+        public static List<ItemGroup> UsersTmp { get; set; }
 
         readonly ICalculationService _calculationService;
         public CalculationsController(Service service, IMapper mapper, ICalculationService calculationService)
@@ -68,7 +68,7 @@ namespace FirePlatform.WebApi.Controllers
             var changedGroup = item.NeedNotifyGroups;
             var changedItems = item.NeedNotifyItems.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID)).ToList();
 
-            (List<_ItemGroup>, List<_Item>) res = (groups: changedGroup, items: changedItems);
+            (List<ItemGroup>, List<Item>) res = (groups: changedGroup, items: changedItems);
 
             return Ok(res);
         }

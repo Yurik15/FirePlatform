@@ -8,8 +8,10 @@ namespace FirePlatform.WebApi.Services.Tools
 {
     public static class CalculationTools
     {
-        public static List<string> NotFoundName = new List<string>();
-        public static double Calculate(string formula, Dictionary<string, object> parameters)
+        public static Dictionary<string, int> NotFoundName_Visibility = new Dictionary<string, int>();
+        public static Dictionary<string, int> NotFoundName_Formula = new Dictionary<string, int>();
+
+        public static bool? CalculateVis(string formula, Dictionary<string, object> parameters)
         {
             try
             {
@@ -17,40 +19,46 @@ namespace FirePlatform.WebApi.Services.Tools
                 {
                     Parameters = parameters
                 };
-                string result = Convert.ToDouble(expression.Evaluate()).ToString();
-                if (double.TryParse(result, out double res))
-                {
-                    return res;
-                }
+                return Convert.ToBoolean(expression.Evaluate());
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[FORMULAS] {formula} - {ex.Message} \n");
+                if (!NotFoundName_Visibility.ContainsKey(ex.Message))
+                {
+                    NotFoundName_Visibility.Add(ex.Message, 1);
+                }
+                else
+                {
+                    NotFoundName_Visibility[ex.Message] += 1;
+                }
+                //System.Diagnostics.Debug.WriteLine($"[VISIBILITY] {formula} - {ex.Message} \n");
+                return null;
             }
-            return default(double);
+            return default(bool);
         }
 
-        public static bool? CalculateVis(string formula, Dictionary<string, object> parameters)
+        public static object CalculateFormulas(string formula, Dictionary<string, object> parameters)
         {
             try
             {
-                Expression expression = new Expression(formula.ToLower(), EvaluateOptions.IgnoreCase)
+                Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase)
                 {
                     Parameters = parameters
                 };
-                string result = Convert.ToBoolean(expression.Evaluate()).ToString();
-                if (bool.TryParse(result, out bool res))
-                {
-                    return res;
-                }
+                var resultEvaluate = expression.Evaluate();
+                return resultEvaluate;
             }
             catch (Exception ex)
             {
-                if (!NotFoundName.Contains(ex.Message))
+                //System.Diagnostics.Debug.WriteLine($"[CalculateFormulas] {formula} - {ex.Message} \n");
+                if (!NotFoundName_Formula.ContainsKey(ex.Message))
                 {
-                    NotFoundName.Add(ex.Message);
+                    NotFoundName_Formula.Add(ex.Message, 1);
                 }
-                //System.Diagnostics.Debug.WriteLine($"[VISIBILITY] {formula} - {ex.Message} \n");
+                else
+                {
+                    NotFoundName_Formula[ex.Message] += 1;
+                }
                 return null;
             }
             return default(bool);
@@ -60,17 +68,19 @@ namespace FirePlatform.WebApi.Services.Tools
         {
             var names = new List<string>();
 
+            condition = condition.Replace(" or ", "||").Replace(" and ", "&&");
+
             if (string.IsNullOrEmpty(condition)) return names;
             //Debug.WriteLine($"ITEM VISIBILITY : {condition}");
 
-            char[] splitChars = new char[] { '&', '|', '!', '(', ')', '=', '<', '>' };
+            char[] splitChars = new char[] { '&', '|', '!', '(', ')', '=', '<', '>', ',', '?', '-', '+', '/', '*', '#' };
             var parts = condition.Split(splitChars).ToList();
             if (parts.Any())
             {
                 var result = parts.Where(x => !string.IsNullOrEmpty(x.Trim())).ToList();
                 foreach (var varible in result)
                 {
-                    var name = varible.Trim();
+                    var name = varible.Trim().ToLower();
                     //Debug.WriteLine(name);
                     names.Add(name);
                 }

@@ -10,7 +10,7 @@ namespace FirePlatform.WebApi.Services.Parser
 {
     public static class Parser
     {
-        public static List<_ItemGroup> PrepareControls(string fileContent)
+        public static List<ItemGroup> PrepareControls(string fileContent)
         {
             var startDate = DateTime.Now;
             var controls = ParseDoc(fileContent);
@@ -24,8 +24,6 @@ namespace FirePlatform.WebApi.Services.Parser
             result = endDate - startDate;
             Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
 
-            var a = varibles.Where(x => x.Name.Trim().ToLower() == "hhs33").ToList();
-
             startDate = DateTime.Now;
             PrepareGroupDependToItems(controls, varibles);
             endDate = DateTime.Now;
@@ -36,227 +34,296 @@ namespace FirePlatform.WebApi.Services.Parser
         }
 
         #region parser
-        private static List<_ItemGroup> ParseDoc(string fileContent)
+        private static List<ItemGroup> ParseDoc(string fileContent)
         {
-            string DATABASE = "Database";
-            string SPACE = " ";
-            string COMMENT_LINE = "---";
-            string END = "END";
-            string COMMA_SEPARATOR = ",";
-            char T = '\t';
-            char NEW_LINE = '\n';
-
-            var result = new List<_ItemGroup>();
-            Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
-
-            string[] initLines = fileContent.Split(NEW_LINE);
-
-
-            Dictionary<Tuple<string, string>, List<string>> data = new Dictionary<Tuple<string, string>, List<string>>();
-            foreach (var line in initLines)
+            try
             {
-                if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
+                string DATABASE = "Database";
+                string SPACE = " ";
+                string COMMENT_LINE = "---";
+                string END = "END";
+                string COMMA_SEPARATOR = ",";
+                char T = '\t';
+                char NEW_LINE = '\n';
 
-                if (line.StartsWith(SPACE, StringComparison.Ordinal) || line.StartsWith(T.ToString(), StringComparison.Ordinal))
-                {
-                    data.Last().Value.Add(line.Trim());
-                }
-                else
-                {
-                    string tag = string.Empty;
-                    string title = line.Trim();
+                var result = new List<ItemGroup>();
+                Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
+                List<(string title, string part1, string part2, string full)> ComposeComboItem = new List<(string title, string part1, string part2, string full)>();
 
-                    var bracket = line.IndexOf("[", StringComparison.Ordinal);
-                    if (bracket > -1)
+                string[] initLines = fileContent.Split(NEW_LINE);
+
+
+                Dictionary<Tuple<string, string>, List<string>> data = new Dictionary<Tuple<string, string>, List<string>>();
+                foreach (var line in initLines)
+                {
+                    if (string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
+
+                    if (line.StartsWith(SPACE, StringComparison.Ordinal) || line.StartsWith(T.ToString(), StringComparison.Ordinal))
                     {
-                        title = line.Substring(0, bracket).Trim();
-                        tag = string.Join(COMMA_SEPARATOR, GetTags(line));
+                        data.Last().Value.Add(line.Trim());
                     }
-                    data.Add(new Tuple<string, string>(title, tag), new List<string>());
-                }
-            }
-
-            foreach (var group in data)
-            {
-                var title = group.Key.Item1;
-                var tag = group.Key.Item2;
-                var itemsFromGroup = group.Value;
-
-                if (title.StartsWith(DATABASE, StringComparison.Ordinal))
-                {
-                    var tempDB = new List<ComboItem>();
-                    var dbTitle = title.Substring(DATABASE.Length).Trim().TrimStart(T).ToLowerInvariant();
-
-                    foreach (var itemText in itemsFromGroup)
+                    else
                     {
-                        var line = itemText.Trim().TrimStart(T);
-                        var dbItems = StringSplit(line, COMMA_SEPARATOR);
+                        string tag = string.Empty;
+                        string title = line.Trim();
 
-                        var displayName = dbItems[0];
-                        var groupKey = String.Join(",", dbItems.Skip(1));
-                        var comboItem = new ComboItem()
+                        var bracket = line.IndexOf("[", StringComparison.Ordinal);
+                        if (bracket > -1)
                         {
-                            DisplayName = displayName,
-                            GroupKey = groupKey
+                            title = line.Substring(0, bracket).Trim();
+                            tag = string.Join(COMMA_SEPARATOR, GetTags(line));
+                        }
+                        data.Add(new Tuple<string, string>(title, tag), new List<string>());
+                    }
+                }
+
+                foreach (var group in data)
+                {
+                    var title = group.Key.Item1;
+                    var tag = group.Key.Item2;
+                    var itemsFromGroup = group.Value;
+
+                    if (title.StartsWith(DATABASE, StringComparison.Ordinal))
+                    {
+                        var tempDB = new List<ComboItem>();
+                        var dbTitle = title.Substring(DATABASE.Length).Trim().TrimStart(T).ToLowerInvariant();
+
+                        foreach (var itemText in itemsFromGroup)
+                        {
+                            var line = itemText.Trim().TrimStart(T);
+                            var dbItems = StringSplit(line, line.IndexOf(",\t") == -1 ? ", \t" : ",\t"); //COMMA_SEPARATOR);
+
+                            var displayName = dbItems[0];
+                            var groupKey = String.Join(",", dbItems.Skip(1)).Trim(',');
+                            if (groupKey.Contains(","))
+                            {
+                                var parts = groupKey.Split(",");
+                                ComposeComboItem.Add((dbTitle, parts[0], parts[1], groupKey));
+                            }
+                            var comboItem = new ComboItem()
+                            {
+                                DisplayName = displayName,
+                                GroupKey = groupKey
+                            };
+                            tempDB.Add(comboItem);
+                        }
+                        Databases.Add(dbTitle, tempDB);
+                    }
+                }
+
+                int indexGroup = 0;
+                foreach (var group in data)
+                {
+                    var title = group.Key.Item1;
+                    var tag = group.Key.Item2;
+                    var itemsFromGroup = group.Value;
+
+                    if (title.StartsWith(DATABASE, StringComparison.Ordinal)) continue;
+
+                    var items = new List<Item>();
+
+                    if ("picture".Equals(group.Key.Item1.Split(' ')[0].ToLower()))
+                    {
+                        var item = ItemHelper.PreparePicture(group.Key.Item1, itemsFromGroup);
+                        //result.Add(new ItemGroup(indexGroup, title, tag, item));
+                    }
+                    else
+                    {
+                        var groupItems = new ItemGroup
+                        {
+                            IndexGroup = indexGroup,
+                            Title = title,
+                            Tag = tag,
+                            IsVisible = true,
+                            InitialVisibility = true
                         };
-                        tempDB.Add(comboItem);
-                    }
-                    Databases.Add(dbTitle, tempDB);
-                }
-            }
 
-            int indexGroup = 0;
-            foreach (var group in data)
+                        for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
+                        {
+                            var itemText = itemsFromGroup[indexItems];
+                            if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
+                            else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
+
+                            var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases);
+                            item.ParentGroup = groupItems;
+                            //if (!string.IsNullOrEmpty(item.Type))
+                            items.Add(item);
+                        }
+
+                        groupItems.Items = items;
+
+                        if (!string.IsNullOrEmpty(tag))
+                        {
+                            groupItems.VisCondition = tag.Split(':')[1].Trim();
+                            //groupItems.VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(groupItems.VisCondition));
+                            groupItems.IsVisible = false;
+                            groupItems.InitialVisibility = false;
+                        }
+
+
+                        result.Add(groupItems);
+                        indexGroup++;
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
             {
-                var title = group.Key.Item1;
-                var tag = group.Key.Item2;
-                var itemsFromGroup = group.Value;
-
-                if (title.StartsWith(DATABASE, StringComparison.Ordinal)) continue;
-
-                var items = new List<_Item>();
-
-                if ("picture".Equals(group.Key.Item1.Split(' ')[0].ToLower()))
-                {
-                    var item = ItemHelper.PreparePicture(group.Key.Item1, itemsFromGroup);
-                    //result.Add(new ItemGroup(indexGroup, title, tag, item));
-                }
-                else
-                {
-                    var groupItems = new _ItemGroup
-                    {
-                        IndexGroup = indexGroup,
-                        Title = title,
-                        Tag = tag,
-                        IsVisible = true,
-                        InitialVisibility = true
-                    };
-
-                    for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
-                    {
-                        var itemText = itemsFromGroup[indexItems];
-                        if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
-                        else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
-
-                        var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases);
-                        item.ParentGroup = groupItems;
-                        items.Add(item);
-                    }
-
-                    groupItems.Items = items;
-
-                    if (!string.IsNullOrEmpty(tag))
-                    {
-                        groupItems.VisCondition = tag.Split(':')[1].Trim();
-                        //groupItems.VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(groupItems.VisCondition));
-                        groupItems.IsVisible = false;
-                        groupItems.InitialVisibility = false;
-                    }
-
-
-                    result.Add(groupItems);
-                    indexGroup++;
-                }
+                throw ex;
             }
-            return result;
+            return null;
         }
         #endregion parser
 
         #region prepare depend controls
-        private static void PrepareGroupDependToItems(List<_ItemGroup> _ItemGroups, List<DataDependItem> data)
+        private static void PrepareGroupDependToItems(List<ItemGroup> _ItemGroups, List<DataDependItem> data)
         {
-            foreach(var a in data)
+
+            //-------DON'T REMOVE
+            /*foreach (var a in data)
             {
-                if(a.Name.Contains("|") || a.Name.Contains(",") || a.Name.Contains(".")){
+                if (a.Name.Contains("|") || a.Name.Contains(",") || a.Name.Contains("."))
+                {
                     Debug.WriteLine($"TYPE : {a.ReferencedItem.Type}, GROUP_ID : {a.ReferencedItem.GroupID}, NUM_ID : {a.ReferencedItem.NumID}, VALUE : {a.Name}");
                 }
-            }
+            }*/
+
+
             foreach (var group in _ItemGroups)
             {
-                /*if (!string.IsNullOrEmpty(group.VisCondition))
+                if (!string.IsNullOrEmpty(group.VisCondition))
                 {
-                    var relatedItems = data.Where(x => group.VisCondition.Contains(x.Name.Trim()) && !string.IsNullOrEmpty(x.Name.Trim()))
-                                            .Select(x => x.ReferencedItem)
-                                            .ToList();
-                    var relatedToSelectedList = data.Where(x => string.IsNullOrEmpty(x.Name.Trim()) && !string.IsNullOrEmpty(x.ReferencedItem.Varibles))
-                                                        .ToList();
-                    if (relatedToSelectedList.Any())
+                    var relatedItems = new List<DataDependItem>();
+                    foreach (var varibleName in group.VisConditionNameVaribles)
                     {
-                        foreach (var itemList in relatedToSelectedList)
+                        foreach (var dependElement in data)
                         {
-                            var itemsList = itemList.ReferencedItem.Varibles.Split('|').ToList();
-                            if (itemsList.Any(x => group.VisCondition.Contains(x)))
+                            var needToAdd = false;
+                            var nameDependElement = dependElement.Name;
+                            if (nameDependElement.Contains(","))
                             {
-                                relatedItems.Add(itemList.ReferencedItem);
+                                var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
+                                needToAdd = parts.Contains(varibleName.Trim().ToLower());
                             }
+                            else
+                            {
+                                needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                            }
+                            if (needToAdd)
+                                relatedItems.Add(dependElement);
                         }
                     }
                     group.DependToItems = relatedItems;
-                    relatedItems.ForEach(x => x.NeedNotifyGroups.Add(group));
-                }*/
+                    relatedItems.ForEach(x => x.ReferencedItem.NeedNotifyGroups.Add(group));
+
+                    var paramsDic = ItemExtentions.GetParams(group.DependToItems);
+                    var res = CalculationTools.CalculateVis(group.VisCondition, paramsDic);
+                    group.IsVisible = res.HasValue ? res.Value : false;
+                }
                 foreach (var item in group.Items)
                 {
-                    bool isFormula = false;
                     bool isVisibleConditions = false;
                     string condition = item.VisCondition ?? string.Empty;
-                    /*if (item.Type == ItemType.Formula.ToString())
+                    if (item.Type == ItemType.Formula.ToString())
                     {
-                        isFormula = true;
                         if (string.IsNullOrWhiteSpace(item.Formula))
                         {
                             throw new Exception("the item with 'FORMULA' type can't be null or empty!");
                         }
-                        var formula = item.GetFormulaString();
+                        var formula = item.Formula;
                         condition += " " + formula;
-                    }*/
+                    }
                     if (!string.IsNullOrEmpty(condition))
                     {
                         isVisibleConditions = true;
-                        var relatedItems = new List<_Item>();
+                        var relatedItems = new List<DataDependItem>();
                         foreach (var varibleName in item.VisConditionNameVaribles)
                         {
-                            var foundItems = data.Where(x => x.Name.Trim().ToLower() == varibleName.Trim().ToLower());
-                            if (foundItems == null)
+                            var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
+                            if (item.GroupID > 0)
                             {
-                                Debug.WriteLine($"{varibleName} - not found");
+                                elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
                             }
-                            else
+                            if (elmentesBeforCurrentElement.Count == 0)
                             {
-                                if(foundItems.Count() == 1)
+                                elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
+                            }
+                            if (elmentesBeforCurrentElement.Count == 0)
+                            {
+                                throw new Exception("The element doesn't exists before!!!");
+                            }
+
+                            foreach (var dependElement in elmentesBeforCurrentElement)
+                            {
+                                var needToAdd = false;
+                                var nameDependElement = dependElement.Name;
+                                if (nameDependElement.Contains(","))
                                 {
-                                    var foundItem = foundItems.FirstOrDefault();
-                                    var alreadyExists = relatedItems.FirstOrDefault(x => x.GroupID == foundItem.ReferencedItem.GroupID && x.NumID == foundItem.ReferencedItem.NumID);
-                                    if(alreadyExists == null)
-                                    {
-                                        relatedItems.Add(foundItem.ReferencedItem);
-                                    }
+                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
+                                    needToAdd = parts.Contains(varibleName.Trim().ToLower());
                                 }
                                 else
                                 {
-                                    foreach(var foundItem in foundItems)
-                                    {
-                                        var alreadyExists = relatedItems.FirstOrDefault(x => x.GroupID == foundItem.ReferencedItem.GroupID && x.NumID == foundItem.ReferencedItem.NumID);
-                                        if (alreadyExists == null)
-                                        {
-                                            relatedItems.Add(foundItem.ReferencedItem);
-                                        }
-                                    }
+                                    needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
                                 }
+                                if (needToAdd)
+                                    relatedItems.Add(dependElement);
                             }
+
                         }
                         item.DependToItems = relatedItems;
-                        relatedItems.ForEach(x => x.NeedNotifyItems.Add(item));
+                        relatedItems.ForEach(x => x.ReferencedItem.NeedNotifyItems.Add(item));
 
                     }
-                    /*if (isFormula)
+                    if (!string.IsNullOrEmpty(item.Formula))
                     {
-                        var paramsDic = item.GetParams();
-                        var formula = item.GetFormulaString();
-                        item.Value = CalculationTools.Calculate(formula, paramsDic);
-                    }*/
+                        var relatedItems = new List<DataDependItem>();
+                        foreach (var varibleName in item.FormulaNameVaribles)
+                        {
+                            var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
+                            if (item.GroupID > 0)
+                            {
+                                elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
+                            }
+                            if (elmentesBeforCurrentElement.Count == 0)
+                            {
+                                elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
+                            }
+                            if (elmentesBeforCurrentElement.Count == 0)
+                            {
+                                throw new Exception("The element doesn't exists before!!!");
+                            }
+
+                            foreach (var dependElement in elmentesBeforCurrentElement)
+                            {
+                                var needToAdd = false;
+                                var nameDependElement = dependElement.Name;
+                                if (nameDependElement.Contains(","))
+                                {
+                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
+                                    needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                }
+                                else
+                                {
+                                    needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                }
+                                if (needToAdd)
+                                    relatedItems.Add(dependElement);
+                            }
+
+                        }
+                        item.DependToItemsForFormulas = relatedItems;
+                        relatedItems.ForEach(x => x.ReferencedItem.NeedNotifyItems.Add(item));
+
+                        //--------//
+                        var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
+                        var res = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                        item.Value = res;
+                        //--------//
+                    }
                     if (isVisibleConditions)
                     {
-                        var paramsDic = item.GetParams();
+                        var paramsDic = ItemExtentions.GetParams(item.DependToItems);
                         var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
                         item.IsVisible = res.HasValue ? res.Value : false;
                     }
@@ -264,7 +331,7 @@ namespace FirePlatform.WebApi.Services.Parser
             }
         }
 
-        private static List<DataDependItem> PrepareFieldNameDependToItem(List<_ItemGroup> _ItemGroups)
+        private static List<DataDependItem> PrepareFieldNameDependToItem(List<ItemGroup> _ItemGroups)
         {
             List<DataDependItem> dataDependItem = new List<DataDependItem>();
             foreach (var group in _ItemGroups)
@@ -281,6 +348,45 @@ namespace FirePlatform.WebApi.Services.Parser
                     {
                         foreach (var ghostFormula in item.GhostFormulas)
                         {
+                            var conditionVaribles = CalculationTools.GetVaribliNames(ghostFormula.Conditions);
+                            var dependItems = dataDependItem.Where(x => conditionVaribles.Contains(x.Name)).ToList();
+                            if (dependItems.Any())
+                            {
+                                foreach (var varible in conditionVaribles)
+                                {
+                                    var items = dataDependItem.Where(x => x.Name == varible).ToList();
+                                    if (items.Count > 0)
+                                    {
+                                        var visibleItems = items.Where(x => x.ReferencedItem.IsVisible).ToList();
+                                        if (visibleItems.Any())
+                                        {
+                                            if (visibleItems.Count() > 1)
+                                            {
+                                                throw new Exception("On the screen exists two or more a elements with the same 'name'");
+                                            }
+                                            ghostFormula.DependToItems.Add(new DataDependItem()
+                                            {
+                                                Name = varible,
+                                                IsGhostFormula = true,
+                                                IsVisibile = false,
+                                                ReferencedItem = visibleItems.FirstOrDefault().ReferencedItem
+                                            });
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            ghostFormula.DependToItems.Add(new DataDependItem()
+                                            {
+                                                Name = varible,
+                                                IsGhostFormula = true,
+                                                IsVisibile = false,
+                                                ReferencedItem = items.FirstOrDefault().ReferencedItem
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+
                             var dependItem = new DataDependItem()
                             {
                                 Name = ghostFormula.Name,
@@ -288,6 +394,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                 IsGhostFormula = true,
                                 ReferencedItem = item
                             };
+                            // Debug.WriteLine(dependItem.Name);
                             dataDependItem.Add(dependItem);
                         }
                     }
@@ -376,7 +483,7 @@ namespace FirePlatform.WebApi.Services.Parser
         }
 
 
-        public static void LogExistsItem(string key, _Item item, _Item itemExists)
+        public static void LogExistsItem(string key, Item item, Item itemExists)
         {
             var infoItem = $"Title : {item.Title}, Group_ID : {item.GroupID}, Item_ID : {item.NumID}, Name : {key}";
             var infoItemExists = $"Title : {itemExists.Title}, Group_ID : {itemExists.GroupID}, Item_ID : {itemExists.NumID}, Name : {itemExists.NameVarible}";

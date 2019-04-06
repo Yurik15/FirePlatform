@@ -12,17 +12,17 @@ namespace FirePlatform.WebApi.Services.Parser
 
     public static class ItemHelper
     {
-        public static _Item PreparePicture(string Text_line, List<string> dataPictures)
+        public static Item PreparePicture(string Text_line, List<string> dataPictures)
         {
-            _Item item = new _Item();
+            Item item = new Item();
             item.Title = Text_line.Split(' ')[1];
             item.Value = string.Join(" ", dataPictures);
             item.Type = ItemType.Picture.ToString();
             return item;
         }
-        public static _Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases)
+        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases)
         {
-            _Item item = new _Item();
+            Item item = new Item();
 
             Text_line = Text_line.Trim();
 
@@ -39,6 +39,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     item.Title = Text_line.Remove(bracket).Trim();
 
                     var nodetag = Text_line.Substring(bracket);
+
                     var nodetags = Parser.GetTags(nodetag).ToArray();
 
                     foreach (String nt in nodetags)
@@ -50,23 +51,31 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "G:")))
                         {
-                            var parts = nt.Replace("G:", "").Split("=");
+                            var regex = nt.Replace("G:", "");
+                            var indexOfEquals = regex.IndexOf("=", StringComparison.Ordinal);
+                            var name = regex.Substring(0, indexOfEquals);
+                            var condition = regex.Substring(indexOfEquals + 1);
+
                             var ghostFormula = new GhostFormula()
                             {
-                                Name = parts[0],
-                                Conditions = parts[1],
-                                Tag = nt.Substring(2).Trim().ToLowerInvariant()
+                                Name = name,
+                                Tag = nt.Substring(2).Trim().ToLowerInvariant(),
+                                Conditions = condition
                             };
                             item.GhostFormulas.Add(ghostFormula);
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "H:")))
                         {
-                            var parts = nt.Replace("H:", "").Split("=");
+                            item.Type = ItemType.Hidden.ToString();
+                            var regex = nt.Replace("H:", "");
+                            var indexOfEquals = regex.IndexOf("=", StringComparison.Ordinal);
+                            var name = regex.Substring(0, indexOfEquals);
+                            var condition = regex.Substring(indexOfEquals+1);
                             var ghostFormula = new GhostFormula()
                             {
-                                Name = parts[0],
-                                Conditions = parts[1],
-                                Tag = nt.Substring(2).Trim().ToLowerInvariant()
+                                Name = name,
+                                Tag = nt.Substring(2).Trim().ToLowerInvariant(),
+                                Conditions = condition
                             };
                             item.GhostFormulas.Add(ghostFormula);
                         }
@@ -95,7 +104,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         {
                             item.Type = ItemType.Formula.ToString();
                             item.NameVarible = nt.Replace("F:", "").Split('=')[0].Trim().ToLower();
-                            item.Formula = nt.Substring(2).Trim().ToLowerInvariant();
+                            item.Formula = nt.Replace("F:", "").Substring(item.NameVarible.Length + 2).Trim().ToLowerInvariant();
                         }
                         else if (nt.Length > 2 && nt.Substring(0, 2) == "B:")
                         {
@@ -133,6 +142,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                     GroupKey = groupKey,
                                     IsVisible = true
                                 };
+
                                 item.ComboItems.Add(comboItem);
                             }
 
@@ -143,6 +153,8 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "T:")))
                         {
+                            if (nt.Contains("="))
+                                item.NameVarible = nt.Replace("T:", "").Split('=')[0].Trim().ToLower();
                             item.Type = ItemType.Text.ToString();
                             item.Value = nt.Substring(2);
                         }
@@ -153,7 +165,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 }
                 catch (Exception ex)
                 {
-
+                    throw ex;
                 }
 
             }
