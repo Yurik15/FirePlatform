@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CuttingSystem.Models\CuttingSystem3mk.Models.csproj" />
+    <ProjectReference Include="..\CuttingSystem.Repositories\CuttingSystem3mk.Repositories.csproj" />
+    <ProjectReference Include="..\CuttingSystem.Services\CuttingSystem3mk.Services.csproj" />
+  </ItemGroup>
+
+</Project>
