@@ -125,7 +125,7 @@ namespace FirePlatform.WebApi.Services.Tools
                         paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? false);
                     }
                 }
-                else if (relatedItem.ReferencedItem.Type == ItemType.Formula.ToString())
+                else if (relatedItem.ReferencedItem.Type == ItemType.Formula.ToString() || relatedItem.ReferencedItem.Type == ItemType.Hidden.ToString())
                 {
                     if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
                     {
