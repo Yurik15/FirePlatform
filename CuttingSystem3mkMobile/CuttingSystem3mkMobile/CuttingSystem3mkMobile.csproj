@@ -24,6 +24,8 @@
     <Folder Include="Services\" />
     <Folder Include="Models\" />
     <Folder Include="Triggers\" />
+    <Folder Include="Controls\" />
+    <Folder Include="Convertors\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Pages\ModelsPage.xaml.cs">

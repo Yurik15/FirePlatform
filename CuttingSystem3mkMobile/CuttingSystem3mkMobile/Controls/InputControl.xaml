@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView
+    xmlns     ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x    ="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CuttingSystem3mkMobile.Controls"
+    x:Class    ="CuttingSystem3mkMobile.Controls.InputControl">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style
+                x:Key     ="InternalCustomEntryStyle"
+                TargetType="local:CustomEntry">
+                <Setter
+                    Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList
+                        x:Name="CommonStates">
+                        <VisualStateGroup>
+                            <VisualState
+                                x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter
+                                        Property="TextColor"
+                                        Value   ="{StaticResource TextGrayColor}" />
+                                    <Setter
+                                        Property="BorderColor"
+                                        Value   ="{StaticResource TextGrayColor}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="3*" />
+            <RowDefinition
+                Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            RowSpacing="0">
+            <Label
+                x:Name         ="TitleLbl"
+                IsVisible      ="false"
+                BackgroundColor="Transparent"
+                FontSize       ="15" />
+            <local:CustomEntry
+                x:Name       ="EntryCtr"
+                FontSize     ="15"
+                InactiveColor="{StaticResource TextGrayColor}"
+                PressedColor ="{StaticResource BlackColor}"
+                Style        ="{StaticResource InternalCustomEntryStyle}">
+                <local:CustomEntry.Margin>
+                    <OnPlatform
+                        x:TypeArguments="Thickness">
+                        <On
+                            Platform="iOS"
+                            Value   ="0,20,0,0" />
+                        <On
+                            Platform="Android"
+                            Value   ="0,10,0,0" />
+                    </OnPlatform>
+                </local:CustomEntry.Margin>
+            </local:CustomEntry>
+            <StackLayout
+                x:Name           ="DescriptionCtrl"
+                HorizontalOptions="End"
+                VerticalOptions  ="Start"
+                Margin           ="0,0,0,5">
+                <Label
+                    HorizontalOptions="End"
+                    x:Name           ="DescriptionFirstRowLbl"
+                    TextColor        ="{StaticResource TextGrayColor}" />
+                <Label
+                    HorizontalOptions="End"
+                    x:Name           ="DescriptionSecondRowLbl"
+                    TextColor        ="{StaticResource TextGrayColor}" />
+            </StackLayout>
+            <Image
+                x:Name           ="ErroImg"
+                IsVisible        ="false"
+                HorizontalOptions="End"
+                VerticalOptions  ="End"
+                Margin           ="10"
+                HeightRequest    ="15"
+                WidthRequest     ="15"
+                Source           ="errorIcon.png" />
+        </Grid>
+        <Label
+            Grid.Row  ="1"
+            x:Name    ="ErrorLbl"
+            IsVisible ="false"
+            TextColor ="{StaticResource LightRedColor}"
+            FontSize  ="15" />
+    </Grid>
+</ContentView>

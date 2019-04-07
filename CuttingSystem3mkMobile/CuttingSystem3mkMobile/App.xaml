@@ -13,6 +13,29 @@
             x:Key="LightBlackColor">#F5F5F5</Color>
         <Color
             x:Key="DarkBlackColor">#000000</Color>
+        <Color
+            x:Key="TextGrayColor">#B4B4B4</Color>
+        <Color
+            x:Key="LightRedColor">#ff7474</Color>
+        <Style
+            x:Key     ="TitleLabelStyle"
+            TargetType="Label">
+            <Setter
+                Property="VerticalTextAlignment"
+                Value   ="Center" />
+            <Setter
+                Property="HorizontalTextAlignment"
+                Value   ="Center" />
+            <Setter
+                Property="Margin"
+                Value   ="0,0,0,10" />
+            <Setter
+                Property="FontSize"
+                Value   ="20" />
+            <Setter
+                Property="TextColor"
+                Value   ="{StaticResource BlackColor}" />
+        </Style>
         <Style
             x:Key     ="BasedButtonStyle"
             TargetType="Button">
