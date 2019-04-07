@@ -71,13 +71,15 @@ namespace FirePlatform.WebApi.Services.Parser
                             var indexOfEquals = regex.IndexOf("=", StringComparison.Ordinal);
                             var name = regex.Substring(0, indexOfEquals);
                             var condition = regex.Substring(indexOfEquals+1);
-                            var ghostFormula = new GhostFormula()
+                            /*var ghostFormula = new GhostFormula()
                             {
                                 Name = name,
                                 Tag = nt.Substring(2).Trim().ToLowerInvariant(),
                                 Conditions = condition
                             };
-                            item.GhostFormulas.Add(ghostFormula);
+                            item.GhostFormulas.Add(ghostFormula);*/
+                            item.NameVarible = name;
+                            item.Formula = condition;
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "N:")))
                         {
