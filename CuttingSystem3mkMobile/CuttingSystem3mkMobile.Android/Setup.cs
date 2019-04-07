@@ -15,6 +15,7 @@ namespace CuttingSystem3mkMobile.Droid
         protected override Xamarin.Forms.Application CreateFormsApplication()
         {
             Mvx.IoCProvider.RegisterSingleton<IPrintManager>(new CuttingSystem3mkMobile.Droid.Implementations.PrintManager());
+            Mvx.IoCProvider.RegisterSingleton<IQrScanningService>(new CuttingSystem3mkMobile.Droid.Implementations.QrScanningService());
 
             return new CuttingSystem3mkMobile.App();
         }

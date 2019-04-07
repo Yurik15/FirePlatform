@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<base:BaseContentPage
+    xmlns                         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="CuttingSystem3mkMobile.Pages.LoginPage"
+    xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
+    x:TypeArguments                ="pageModels:LoginPageModel"
+    xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
+    xmlns:controls                 ="clr-namespace:CuttingSystem3mkMobile.Controls"
+    NavigationPage.HasNavigationBar="false"
+    BackgroundImage                ="background.jpg">
+    <Grid>
+        <ContentView
+            VerticalOptions="FillAndExpand">
+            <ScrollView>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="*" />
+                        <ColumnDefinition
+                            Width="25*" />
+                        <ColumnDefinition
+                            Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="*" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackLayout
+                        Grid.Column="1"
+                        Grid.Row   ="1">
+                        <Frame
+                            HasShadow      ="false"
+                            BackgroundColor="White">
+                            <StackLayout
+                                Spacing        ="25"
+                                VerticalOptions="CenterAndExpand">
+                                <Label
+                                    HeightRequest       ="50"
+                                    MinimumHeightRequest="35"
+                                    HorizontalOptions   ="FillAndExpand"
+                                    Style               ="{StaticResource TitleLabelStyle}"
+                                    Text                ="Login Or Register">
+                                </Label>
+                                <controls:InputControl
+                                    EntryAutomationID="IdUsername"
+                                    Placeholder      ="Username"
+                                    Text             ="{Binding UserName}" />
+                                <controls:InputControl
+                                    EntryAutomationID="IdPassword"
+                                    Placeholder      ="Password"
+                                    IsPassword       ="True"
+                                    Text             ="{Binding Password}" />
+                                <Button
+                                    AutomationId="IdLogin"
+                                    IsEnabled   ="{Binding IsLoginButtonEnabled}"
+                                    Command     ="{Binding LoginCommand}"
+                                    Text        ="Login"
+                                    Style       ="{StaticResource FillButtonStyle}" />
+                                <Button
+                                    AutomationId="IdRegister"
+                                    Text        ="Register"
+                                    Command     ="{Binding GoToSignUpCommand}"
+                                    Style       ="{StaticResource ButtonStyle}" />
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
+            </ScrollView>
+        </ContentView>
+    </Grid>
+</base:BaseContentPage>

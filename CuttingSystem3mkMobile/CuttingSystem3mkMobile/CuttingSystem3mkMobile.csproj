@@ -16,6 +16,7 @@
     <PackageReference Include="LiveXAML" Version="2.1.70" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
     <PackageReference Include="MvvmCross.Forms" Version="6.2.3" />
+    <PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\" />
@@ -23,6 +24,8 @@
     <Folder Include="Services\" />
     <Folder Include="Models\" />
     <Folder Include="Triggers\" />
+    <Folder Include="Controls\" />
+    <Folder Include="Convertors\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Pages\ModelsPage.xaml.cs">
