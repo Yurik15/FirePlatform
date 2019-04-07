@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -115,18 +115,20 @@
     <AndroidResource Include="Resources\drawable\splash.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\drawable\" />
     <Folder Include="Resources\drawable-hdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
     <Folder Include="Resources\drawable-xxxhdpi\" />
-    <Folder Include="Implementations\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CuttingSystem3mkMobile\CuttingSystem3mkMobile.csproj">
+    <ProjectReference Include="..\CuttingSystem.Mobile.Common\CuttingSystem.Mobile.Common.csproj">
+      <Project>{3b11fde1-4dff-43c6-9819-f138b476a342}</Project>
+      <Name>CuttingSystem.Mobile.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CuttingSystem3mkMobile\CuttingSystem3mk.Mobile.csproj">
       <Project>{38F8B3C1-35EB-4C50-866B-072B180DD991}</Project>
-      <Name>CuttingSystem3mkMobile</Name>
+      <Name>CuttingSystem3mk.Mobile</Name>
     </ProjectReference>
   </ItemGroup>
- <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

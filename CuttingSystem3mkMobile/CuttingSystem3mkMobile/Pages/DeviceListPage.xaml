@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<base:BaseContentPage
+    xmlns                          ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="CuttingSystem3mk.Mobile.Pages.DeviceListPage"
+    xmlns:views                    ="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+    xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
+    x:TypeArguments                ="pageModels:DeviceListPageModel"
+    xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile">
+    <ListView
+            ItemsSource    ="{Binding DeviceModels}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <ViewCell.View>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                        Width="*" />
+                                <ColumnDefinition
+                                        Width="30" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                    HorizontalOptions="StartAndExpand"
+                                    FontSize         ="Micro"
+                                    Grid.Column      ="0"
+                                    Text             ="{Binding Name}" />
+                        </Grid>
+                    </ViewCell.View>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</base:BaseContentPage>
