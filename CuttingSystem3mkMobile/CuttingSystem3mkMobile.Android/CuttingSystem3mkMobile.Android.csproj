@@ -79,6 +79,9 @@
     <PackageReference Include="MvvmCross.Droid.Support.V7.AppCompat">
       <Version>6.2.3</Version>
     </PackageReference>
+    <PackageReference Include="ZXing.Net.Mobile">
+      <Version>2.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -88,6 +91,7 @@
     <Compile Include="LinkerPleaseInclude.cs" />
     <Compile Include="SplashScreen.cs" />
     <Compile Include="Implementations\PrintManager.cs" />
+    <Compile Include="Implementations\QrScanningService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

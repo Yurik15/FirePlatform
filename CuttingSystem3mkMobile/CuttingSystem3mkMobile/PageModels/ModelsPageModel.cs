@@ -4,6 +4,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CuttingSystem3mkMobile.Services;
+using MvvmCross;
+using MvvmCross.Navigation;
 using Xamarin.Forms;
 
 namespace CuttingSystem3mkMobile.PageModels
@@ -12,7 +14,7 @@ namespace CuttingSystem3mkMobile.PageModels
     {
         #region fields
         private readonly IPrintManager _printManager;
-        private string infoMsg;
+        private string _infoMsg;
         #endregion fields
 
         #region ctors
@@ -25,10 +27,10 @@ namespace CuttingSystem3mkMobile.PageModels
         #region bound props
         public string InfoMsg
         {
-            get => infoMsg;
+            get => _infoMsg;
             set
             {
-                infoMsg = value;
+                _infoMsg = value;
                 RaisePropertyChanged();
             }
         }
@@ -57,6 +59,19 @@ namespace CuttingSystem3mkMobile.PageModels
             {
                 InfoMsg = "Not found devices.";
             }
+        }
+        private ICommand _qRScannerCommand;
+        public ICommand QRScannerCommand
+        {
+            get
+            {
+                return _qRScannerCommand ?? (_qRScannerCommand = new Command(x => ExecuteQRScannerCommand()));
+            }
+        }
+
+        private async void ExecuteQRScannerCommand()
+        {
+            await _mvxNavigationService.Navigate<QrCodeScannerPageModel>();
         }
         #endregion commands
 

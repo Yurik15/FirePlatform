@@ -5951,6 +5951,9 @@ namespace CuttingSystem3mkMobile.Droid
 			global::Xamarin.Forms.Platform.Android.Resource.Styleable.ViewStubCompat_android_id = global::CuttingSystem3mkMobile.Droid.Resource.Styleable.ViewStubCompat_android_id;
 			global::Xamarin.Forms.Platform.Android.Resource.Styleable.ViewStubCompat_android_inflatedId = global::CuttingSystem3mkMobile.Droid.Resource.Styleable.ViewStubCompat_android_inflatedId;
 			global::Xamarin.Forms.Platform.Android.Resource.Styleable.ViewStubCompat_android_layout = global::CuttingSystem3mkMobile.Droid.Resource.Styleable.ViewStubCompat_android_layout;
+			global::ZXing.Mobile.Resource.Id.contentFrame = global::CuttingSystem3mkMobile.Droid.Resource.Id.contentFrame;
+			global::ZXing.Mobile.Resource.Layout.zxingscanneractivitylayout = global::CuttingSystem3mkMobile.Droid.Resource.Layout.zxingscanneractivitylayout;
+			global::ZXing.Mobile.Resource.Layout.zxingscannerfragmentlayout = global::CuttingSystem3mkMobile.Droid.Resource.Layout.zxingscannerfragmentlayout;
 		}
 		
 		public partial class Animation
@@ -9140,6 +9143,9 @@ namespace CuttingSystem3mkMobile.Droid
 			// aapt resource value: 0x7f0a0091
 			public const int container = 2131361937;
 			
+			// aapt resource value: 0x7f0a00d6
+			public const int contentFrame = 2131362006;
+			
 			// aapt resource value: 0x7f0a0068
 			public const int contentPanel = 2131361896;
 			
@@ -9281,8 +9287,8 @@ namespace CuttingSystem3mkMobile.Droid
 			// aapt resource value: 0x7f0a00cd
 			public const int main_toolbar = 2131361997;
 			
-			// aapt resource value: 0x7f0a00d7
-			public const int masked = 2131362007;
+			// aapt resource value: 0x7f0a00d8
+			public const int masked = 2131362008;
 			
 			// aapt resource value: 0x7f0a00bf
 			public const int media_actions = 2131361983;
@@ -9626,8 +9632,8 @@ namespace CuttingSystem3mkMobile.Droid
 			// aapt resource value: 0x7f0a0016
 			public const int view_offset_helper = 2131361814;
 			
-			// aapt resource value: 0x7f0a00d6
-			public const int visible = 2131362006;
+			// aapt resource value: 0x7f0a00d7
+			public const int visible = 2131362007;
 			
 			// aapt resource value: 0x7f0a00b1
 			public const int volume_item_container = 2131361969;
@@ -9937,6 +9943,12 @@ namespace CuttingSystem3mkMobile.Droid
 			
 			// aapt resource value: 0x7f040047
 			public const int tooltip = 2130968647;
+			
+			// aapt resource value: 0x7f040048
+			public const int zxingscanneractivitylayout = 2130968648;
+			
+			// aapt resource value: 0x7f040049
+			public const int zxingscannerfragmentlayout = 2130968649;
 			
 			static Layout()
 			{

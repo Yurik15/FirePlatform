@@ -2,29 +2,26 @@
 <base:BaseContentPage
     xmlns                         ="http://xamarin.com/schemas/2014/forms"
     xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class                        ="CuttingSystem3mkMobile.Pages.ModelsPage"
+    x:Class                        ="CuttingSystem3mkMobile.Pages.QrCodeScannerPage"
     xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
-    x:TypeArguments                ="pageModels:ModelsPageModel"
+    x:TypeArguments                ="pageModels:QrCodeScannerPageModel"
     xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
     NavigationPage.HasNavigationBar="false">
     <StackLayout
         HorizontalOptions="Center"
         VerticalOptions  ="Center">
         <Label
-            Text    ="3mk Cutting system"
+            Text    ="3mk Cutting system(QR Scanner)"
             FontSize="Large" />
         <Button
-            Text   ="Demo"
-            Command="{Binding DemoCommand}"
-            Style  ="{StaticResource FillButtonStyle}" />
+            HorizontalOptions="Center"
+            Text             ="QR Scanner"
+            Command          ="{Binding QRScannerCommand}"
+            Style            ="{StaticResource FillButtonStyle}" />
         <Label
             HorizontalTextAlignment="Center"
             Text                   ="{Binding InfoMsg}"
             TextColor              ="Teal"
             HorizontalOptions      ="Center" />
-        <Button
-            Text   ="QR scanner"
-            Command="{Binding QRScannerCommand}"
-            Style  ="{StaticResource FillButtonStyle}" />
     </StackLayout>
 </base:BaseContentPage>
