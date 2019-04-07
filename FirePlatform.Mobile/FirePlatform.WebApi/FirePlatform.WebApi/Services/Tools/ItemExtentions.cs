@@ -37,6 +37,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
                     var res = CalculationTools.CalculateFormulas(formula, paramsDic);
                     item.Value = res;
+                    item?.NotifyAboutChange();
                 }
             }
         }

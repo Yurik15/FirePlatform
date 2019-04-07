@@ -68,6 +68,15 @@ namespace FirePlatform.WebApi.Controllers
             var changedGroup = item.NeedNotifyGroups;
             var changedItems = item.NeedNotifyItems.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID)).ToList();
 
+            foreach (var needNotifyItem in item.NeedNotifyItems)
+            {
+                if (needNotifyItem.Type == ItemType.Formula.ToString() || needNotifyItem.Type == ItemType.Hidden.ToString())
+                {
+                    changedGroup.AddRange(needNotifyItem.NeedNotifyGroups);
+                    changedItems.AddRange(needNotifyItem.NeedNotifyItems);
+                }
+            }
+
             (List<ItemGroup>, List<Item>) res = (groups: changedGroup, items: changedItems);
 
             return Ok(res);
@@ -87,7 +96,7 @@ namespace FirePlatform.WebApi.Controllers
                     new Template
                     {
                         Id = i,
-                        Name = "Template " + i 
+                        Name = "Template " + i
                     }
                 );
             }
