@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.Print;
+using CuttingSystem3mkMobile.RestAPI;
 using CuttingSystem3mkMobile.Services;
 using Java.Util.Logging;
 using MvvmCross;
@@ -16,6 +17,7 @@ namespace CuttingSystem3mkMobile.Droid
         {
             Mvx.IoCProvider.RegisterSingleton<IPrintManager>(new CuttingSystem3mkMobile.Droid.Implementations.PrintManager());
             Mvx.IoCProvider.RegisterSingleton<IQrScanningService>(new CuttingSystem3mkMobile.Droid.Implementations.QrScanningService());
+            Mvx.IoCProvider.RegisterSingleton<IRemoteService>(new MockRemoteService());
 
             return new CuttingSystem3mkMobile.App();
         }

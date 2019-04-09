@@ -5,11 +5,12 @@ namespace CuttingSystem3mkMobile
 {
     public partial class App : Application
     {
+        public static new App Current;
+
         public App()
         {
+            Current = this;
             InitializeComponent();
-
-            SetMainPage(GetCurrentPage());
         }
 
         protected override void OnStart()
@@ -33,7 +34,12 @@ namespace CuttingSystem3mkMobile
         }
         private ContentPage GetCurrentPage()
         {
-            return new ModelsPage();
+            return new DevicesPage();
+        }
+        public void InitializeNavigation()
+        {
+            var currentPage = GetCurrentPage();
+            SetMainPage(currentPage);
         }
     }
 }

@@ -76,7 +76,7 @@ namespace CuttingSystem3mkMobile.PageModels
         }
         protected async void ExecuteLoginCommand()
         {
-            await _mvxNavigationService.Navigate<ModelsPageModel>();
+            await _mvxNavigationService.Navigate<DevicesPageModel>();
         }
         private ICommand _goToSignUpCommand;
         public ICommand GoToSignUpCommand

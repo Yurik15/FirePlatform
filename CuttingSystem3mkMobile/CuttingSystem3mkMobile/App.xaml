@@ -148,5 +148,36 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+        <ControlTemplate
+            x:Key="ModalPage">
+            <AbsoluteLayout>
+                <Grid
+                    AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                    AbsoluteLayout.LayoutFlags ="All"
+                    Padding                    ="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="Auto" />
+                        <RowDefinition
+                            Height="*" />
+                    </Grid.RowDefinitions>
+                    <ContentPresenter
+                        Grid.Row="1" />
+                </Grid>
+                <Grid
+                    BackgroundColor            ="{StaticResource LightBlackColor}"
+                    AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                    AbsoluteLayout.LayoutFlags ="All"
+                    IsVisible                  ="{TemplateBinding BindingContext.Busy}">
+                    <ActivityIndicator
+                        Grid.Row         ="0"
+                        Grid.Column      ="0"
+                        HorizontalOptions="Center"
+                        IsRunning        ="{TemplateBinding BindingContext.Busy}"
+                        IsVisible        ="{TemplateBinding BindingContext.Busy}"
+                        VerticalOptions  ="Center" />
+                </Grid>
+            </AbsoluteLayout>
+        </ControlTemplate>
     </Application.Resources>
 </Application>

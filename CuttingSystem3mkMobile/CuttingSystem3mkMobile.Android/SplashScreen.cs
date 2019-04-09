@@ -14,7 +14,7 @@ namespace CuttingSystem3mkMobile.Droid
         , Theme = "@style/SplashTheme"
         , NoHistory = true
         , ScreenOrientation = ScreenOrientation.Portrait)]
-    public class SplashScreen : MvxFormsSplashScreenActivity<Setup, CoreApp, App>
+    public class SplashScreen : MvxFormsSplashScreenActivity<Setup, CoreApp, CuttingSystem3mkMobile.App>
     {
         public SplashScreen()
             : base()
