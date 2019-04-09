@@ -27,7 +27,7 @@ namespace CuttingSystem3mkMobile
                     RegisterAppStart<LoginPageModel>();
                 }
             }*/
-            RegisterAppStart<DeviceListPageModel>();
+            RegisterAppStart<ModelsPageModel>();
         }
     }
 }
