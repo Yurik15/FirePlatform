@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<base:BaseContentPage
+    xmlns                         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="CuttingSystem3mkMobile.Pages.ModelDetailsPage"
+    xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
+    x:TypeArguments                ="pageModels:ModelDetailsPageModel"
+    xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
+    xmlns:controls                 ="clr-namespace:CuttingSystem3mkMobile.Controls"
+    NavigationPage.HasNavigationBar="false">
+    <ContentView
+        ControlTemplate="{StaticResource ModalPage}"
+        BackgroundColor="#ededed">
+        <StackLayout
+            BackgroundColor="Transparent"
+            Padding        ="20,10,20,0">
+            <Label
+                Text                   ="{Binding Name}"
+                FontSize               ="20"
+                HorizontalOptions      ="Center"
+                HorizontalTextAlignment="Center" />
+            <Label
+                FontSize               ="15"
+                HorizontalOptions      ="Center"
+                HorizontalTextAlignment="Center" />
+            <controls:CustomImage
+                HeightRequest  ="300"
+                WidthRequest   ="200"
+                ImageArrayBytes="{Binding ImagePreview}" />
+            <Button
+                Text           ="Start"
+                VerticalOptions="EndAndExpand"
+                Command        ="{Binding StartCommand}"
+                Style          ="{StaticResource ButtonStyle}"
+                Margin         ="10" />
+        </StackLayout>
+    </ContentView>
+</base:BaseContentPage>

@@ -22,7 +22,6 @@ namespace CuttingSystem3mkMobile.RestAPI
 
         public Task<ServiceStatusMessage<DevicesResponse>> LoadDevices(int customerId)
         {
-            byte[] deviceCover = FakeDocument("deviceIcon.png");
             var response = new DevicesResponse()
             {
                 Devices = new DeviceDetails[]
@@ -30,20 +29,32 @@ namespace CuttingSystem3mkMobile.RestAPI
                     new DeviceDetails()
                     {
                          Id = Guid.NewGuid(),
-                         Name = "asus-zenfone-2-delux",
-                         ImageData = null
+                         Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
                          Id = Guid.NewGuid(),
-                         Name = "asus-zenfone-2-delux",
-                         ImageData = null
+                         Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
                          Id = Guid.NewGuid(),
-                         Name = "asus-zenfone-2-delux",
-                         ImageData = null
+                         Name = "asus-zenfone-2-delux"
+                    },
+                    new DeviceDetails()
+                    {
+                         Id = Guid.NewGuid(),
+                         Name = "asus-zenfone-2-delux"
+                    },
+                    new DeviceDetails()
+                    {
+                         Id = Guid.NewGuid(),
+                         Name = "asus-zenfone-2-delux"
+                    },
+                    new DeviceDetails()
+                    {
+                         Id = Guid.NewGuid(),
+                         Name = "asus-zenfone-2-delux"
                     }
                 }
             };
@@ -60,8 +71,8 @@ namespace CuttingSystem3mkMobile.RestAPI
 
         public Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int customerId, int deviceId)
         {
-            byte[] modelFoil = FakeDocument("foilIcon.png");
             byte[] fileData = FakeDocument("asus-zenfone-2-delux.plt");
+            byte[] imageData = FakeDocument("foilIcon.png");
 
             var response = new ModelsResponse()
             {
@@ -71,24 +82,24 @@ namespace CuttingSystem3mkMobile.RestAPI
                      {
                           Id = Guid.NewGuid(),
                           Name = "asus-zenfone-2-delux",
-                          FileData = null,
-                          ImageData = null,
+                          FileData = fileData,
+                          ImageData = imageData,
                           Side = Enums.ModelSideEnum.Front
                      },
                      new ModelDetails()
                      {
                           Id = Guid.NewGuid(),
                           Name = "asus-zenfone-2-delux",
-                          FileData = null,
-                          ImageData = null,
+                          FileData = fileData,
+                          ImageData = imageData,
                           Side = Enums.ModelSideEnum.Front
                      },
                      new ModelDetails()
                      {
                           Id = Guid.NewGuid(),
                           Name = "asus-zenfone-2-delux",
-                          FileData = null,
-                          ImageData = null,
+                          FileData = fileData,
+                          ImageData = imageData,
                           Side = Enums.ModelSideEnum.Front
                      }
                  }

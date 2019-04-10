@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentView
+    xmlns ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="CuttingSystem3mkMobile.Controls.NavigationBarControl">
+    <Grid
+        HeightRequest="60">
+        <Image
+            Source="background"
+            Aspect="AspectFill" />
+        <Grid
+            ColumnSpacing  ="0"
+            BackgroundColor="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*" />
+                <ColumnDefinition
+                    Width="auto" />
+                <ColumnDefinition
+                    Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackLayout
+                x:Name         ="BackCtrl"
+                Orientation    ="Horizontal"
+                Grid.Column    ="0"
+                VerticalOptions="Center"
+                IsVisible      ="{TemplateBinding BindingContext.IsBackArrowVisible}">
+                <Image
+                    Margin         ="10,0,0,0"
+                    AutomationId   ="IdBack"
+                    x:Name         ="backArrowImg"
+                    VerticalOptions="Start"
+                    HeightRequest  ="26"
+                    WidthRequest   ="26"
+                    Aspect         ="Fill"
+                    Source         ="backarrowwhite.png" />
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{TemplateBinding BindingContext.BackCommand}" />
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+            <Label
+                Margin         ="0,0,0,1"
+                x:Name         ="titleLbl"
+                TextColor      ="White"
+                FontSize       ="15"
+                Text           ="{TemplateBinding BindingContext.PageTitle}"
+                Grid.Column    ="1"
+                VerticalOptions="Center" />
+        </Grid>
+    </Grid>
+</ContentView>

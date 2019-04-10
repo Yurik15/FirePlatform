@@ -6,25 +6,55 @@
     xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
     x:TypeArguments                ="pageModels:ModelsPageModel"
     xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
+    xmlns:controls                 ="clr-namespace:CuttingSystem3mkMobile.Controls"
     NavigationPage.HasNavigationBar="false">
-    <StackLayout
-        HorizontalOptions="Center"
-        VerticalOptions  ="Center">
-        <Label
-            Text    ="3mk Cutting system"
-            FontSize="Large" />
-        <Button
-            Text   ="Demo"
-            Command="{Binding DemoCommand}"
-            Style  ="{StaticResource FillButtonStyle}" />
-        <Label
-            HorizontalTextAlignment="Center"
-            Text                   ="{Binding InfoMsg}"
-            TextColor              ="Teal"
-            HorizontalOptions      ="Center" />
-        <Button
-            Text   ="QR scanner"
-            Command="{Binding QRScannerCommand}"
-            Style  ="{StaticResource FillButtonStyle}" />
-    </StackLayout>
+    <ContentView
+        ControlTemplate="{StaticResource ModalPage}"
+        BackgroundColor="#ededed">
+        <StackLayout
+            BackgroundColor="Transparent"
+            Padding        ="20,10,20,0">
+            <controls:CustomEntry
+                Placeholder     ="Search"
+                PressedColor    ="{StaticResource TextGrayColor}"
+                TextColor       ="{StaticResource TextGrayColor}"
+                InactiveColor   ="{StaticResource TextGrayColor}"
+                PlaceholderColor="{StaticResource TextGrayColor}"
+                BorderColor     ="{StaticResource TextGrayColor}" />
+            <ListView
+                BackgroundColor    ="Transparent"
+                ItemsSource        ="{Binding Models}"
+                SelectedItem       ="{Binding SelectedModel}"
+                SeparatorVisibility="None"
+                HasUnevenRows      ="true"
+                HorizontalOptions  ="FillAndExpand"
+                VerticalOptions    ="FillAndExpand">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout
+                                    Margin ="5"
+                                    Spacing="0">
+                                    <Frame
+                                        Padding        ="10,20,0,20"
+                                        BackgroundColor="White"
+                                        BorderColor    ="{StaticResource TextGrayColor}">
+                                        <Label
+                                            Text     ="{Binding Name}"
+                                            FontSize ="15"
+                                            TextColor="Black" />
+                                    </Frame>
+                                    <BoxView
+                                        Margin         ="0,-1,0,0"
+                                        HeightRequest  ="4"
+                                        BackgroundColor="{StaticResource DarkBlackColor}" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentView>
 </base:BaseContentPage>

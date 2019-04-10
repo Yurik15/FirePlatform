@@ -3,6 +3,7 @@
     xmlns        ="http://xamarin.com/schemas/2014/forms"
     xmlns:x       ="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class       ="CuttingSystem3mkMobile.App"
+    xmlns:controls="clr-namespace:CuttingSystem3mkMobile.Controls"
     xmlns:triggers="clr-namespace:CuttingSystem3mkMobile.Triggers">
     <Application.Resources>
         <Color
@@ -161,6 +162,8 @@
                         <RowDefinition
                             Height="*" />
                     </Grid.RowDefinitions>
+                    <controls:NavigationBarControl
+                        Grid.Row="0" />
                     <ContentPresenter
                         Grid.Row="1" />
                 </Grid>

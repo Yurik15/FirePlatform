@@ -13,6 +13,19 @@ namespace CuttingSystem3mkMobile.PageModels
         #endregion fields
 
         #region bound props
+
+        public DeviceDetails SelectedDevice
+        {
+            get => null;
+            set
+            {
+                if (value != null)
+                {
+                    SelectDeviceCommand?.Execute(value);
+                }
+            }
+        }
+
         public DeviceDetails[] Devices
         {
             get => _devices;
@@ -27,6 +40,7 @@ namespace CuttingSystem3mkMobile.PageModels
         #region CTOR
         public DevicesPageModel()
         {
+            PageTitle = "Devices";
         }
         #endregion CTOR
 
@@ -36,10 +50,7 @@ namespace CuttingSystem3mkMobile.PageModels
             Devices = LoadDevices(0).Result;
             return base.Initialize();
         }
-        public async override void ViewAppearing()
-        {
-            //;
-        }
+
         #endregion override
 
         #region [Commands]
@@ -56,9 +67,9 @@ namespace CuttingSystem3mkMobile.PageModels
             }
         }
 
-        private void SelectDeviceClick(DeviceDetails deviceDetails)
+        private async void SelectDeviceClick(DeviceDetails deviceDetails)
         {
-
+            await _mvxNavigationService.Navigate<ModelsPageModel, DeviceDetails>(deviceDetails);
         }
         #endregion [Commands]
 

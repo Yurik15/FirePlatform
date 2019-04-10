@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using CuttingSystem3mkMobile.RestAPI;
 using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Xamarin.Forms;
 
 namespace CuttingSystem3mkMobile.PageModels
 {
@@ -17,9 +20,17 @@ namespace CuttingSystem3mkMobile.PageModels
         protected readonly IRemoteService _restAPI;
         #endregion fields
 
+        public string PageTitle
+        {
+            get;set;
+        }
         public bool Busy
         {
             get; set;
+        }
+        public bool IsBackArrowVisible
+        {
+            get;set;
         }
 
         protected BasePageModel()
@@ -30,5 +41,23 @@ namespace CuttingSystem3mkMobile.PageModels
                 _restAPI = Mvx.IoCProvider.Resolve<IRemoteService>();
             }
         }
+
+        #region commands
+        private ICommand _backCommand;
+
+
+        public ICommand BackCommand
+        {
+            get
+            {
+                return _backCommand ?? (_backCommand = new Command(async () => await ExecuteBackCommand()));
+            }
+        }
+
+        protected virtual async Task ExecuteBackCommand()
+        {
+            await _mvxNavigationService.Close(this);
+        }
+        #endregion commands
     }
 }
