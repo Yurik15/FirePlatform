@@ -55,6 +55,11 @@ namespace CuttingSystem3mkMobile.RestAPI
                     {
                          Id = Guid.NewGuid(),
                          Name = "asus-zenfone-2-delux"
+                    },
+                    new DeviceDetails()
+                    {
+                         Id = Guid.NewGuid(),
+                         Name = "AAAAA"
                     }
                 }
             };
