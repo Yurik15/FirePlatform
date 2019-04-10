@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<base:BaseContentPage
+    xmlns                         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="CuttingSystem3mkMobile.Pages.CuttingPage"
+    xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
+    x:TypeArguments                ="pageModels:CuttingPageModel"
+    xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
+    xmlns:controls                 ="clr-namespace:CuttingSystem3mkMobile.Controls"
+    NavigationPage.HasNavigationBar="false">
+    <ContentView
+        ControlTemplate="{StaticResource ModalPage}"
+        BackgroundColor="#ededed">
+        <Grid>
+            <StackLayout
+                BackgroundColor="Transparent"
+                Padding        ="20,10,20,0">
+                <Label
+                    HorizontalOptions="Center"
+                    VerticalOptions  ="Center"
+                    Font             ="Bold,20"
+                    Text             ="{Binding InfoMsg}"
+                    TextColor        ="{StaticResource LightRedColor}" />
+                <Button
+                    Text           ="Wyciąć"
+                    Command        ="{Binding CutCommand}"
+                    Margin         ="10"
+                    VerticalOptions="EndAndExpand"
+                    Style          ="{StaticResource FillButtonStyle}" />
+            </StackLayout>
+        </Grid>
+    </ContentView>
+</base:BaseContentPage>

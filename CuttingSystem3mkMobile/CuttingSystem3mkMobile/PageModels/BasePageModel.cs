@@ -16,21 +16,27 @@ namespace CuttingSystem3mkMobile.PageModels
     public abstract class BasePageModel : MvxViewModel
     {
         #region fields
+        private bool _busy;
         protected readonly IMvxNavigationService _mvxNavigationService;
         protected readonly IRemoteService _restAPI;
         #endregion fields
 
         public string PageTitle
         {
-            get;set;
-        }
+            get; set;
+        } = "3mk Cutting system";
         public bool Busy
         {
-            get; set;
+            get => _busy;
+            set
+            {
+                _busy = value;
+                RaisePropertyChanged(nameof(Busy));
+            }
         }
         public bool IsBackArrowVisible
         {
-            get;set;
+            get; set;
         }
 
         protected BasePageModel()
@@ -44,8 +50,6 @@ namespace CuttingSystem3mkMobile.PageModels
 
         #region commands
         private ICommand _backCommand;
-
-
         public ICommand BackCommand
         {
             get

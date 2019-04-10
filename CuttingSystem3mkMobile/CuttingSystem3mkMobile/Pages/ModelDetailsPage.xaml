@@ -24,6 +24,7 @@
                 HorizontalOptions      ="Center"
                 HorizontalTextAlignment="Center" />
             <controls:CustomImage
+                VerticalOptions="CenterAndExpand"
                 HeightRequest  ="300"
                 WidthRequest   ="200"
                 ImageArrayBytes="{Binding ImagePreview}" />
@@ -31,7 +32,7 @@
                 Text           ="Start"
                 VerticalOptions="EndAndExpand"
                 Command        ="{Binding StartCommand}"
-                Style          ="{StaticResource ButtonStyle}"
+                Style          ="{StaticResource FillButtonStyle}"
                 Margin         ="10" />
         </StackLayout>
     </ContentView>

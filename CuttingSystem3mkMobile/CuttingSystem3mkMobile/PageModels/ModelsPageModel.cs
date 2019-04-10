@@ -16,6 +16,7 @@ namespace CuttingSystem3mkMobile.PageModels
         #region fields
         private DeviceDetails _deviceDetails;
         private ModelDetails[] _models;
+        bool _loaded;
         #endregion fields
 
         #region bound props
@@ -47,18 +48,24 @@ namespace CuttingSystem3mkMobile.PageModels
         public ModelsPageModel()
         {
             IsBackArrowVisible = true;
-            PageTitle = "Models";
         }
         #endregion CTOR
 
         #region override
-        public async override void Prepare(DeviceDetails parameter)
+        public override void Prepare(DeviceDetails parameter)
         {
             _deviceDetails = parameter;
-
-            Models = await LoadModels(0, 0);
-
             base.Prepare(parameter);
+        }
+        public async override void ViewAppeared()
+        {
+            if (!_loaded)
+            {
+                Models = await LoadModels(0, 0);
+                _loaded = true;
+            }
+            await RaisePropertyChanged(nameof(SelectedModel));
+            base.ViewAppearing();
         }
         #endregion override
 
@@ -85,9 +92,10 @@ namespace CuttingSystem3mkMobile.PageModels
         #region api methods
         private async Task<ModelDetails[]> LoadModels(int customerId, int deviceId)
         {
-            //Busy = true;
+            Busy = true;
+            await Task.Delay(3000);
             var apiReturn = await _restAPI.LoadModels(customerId, deviceId);
-            //Busy = false;
+            Busy = false;
 
             if (apiReturn.DidSucceed)
             {

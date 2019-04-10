@@ -6,22 +6,68 @@
     xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
     x:TypeArguments                ="pageModels:QrCodeScannerPageModel"
     xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
+    xmlns:ValueConverters          ="clr-namespace:CuttingSystem3mkMobile.Convertors;assembly=CuttingSystem3mkMobile"
     NavigationPage.HasNavigationBar="false">
-    <StackLayout
-        HorizontalOptions="Center"
-        VerticalOptions  ="Center">
-        <Label
-            Text    ="3mk Cutting system(QR Scanner)"
-            FontSize="Large" />
-        <Button
-            HorizontalOptions="Center"
-            Text             ="QR Scanner"
-            Command          ="{Binding QRScannerCommand}"
-            Style            ="{StaticResource FillButtonStyle}" />
-        <Label
-            HorizontalTextAlignment="Center"
-            Text                   ="{Binding InfoMsg}"
-            TextColor              ="Teal"
-            HorizontalOptions      ="Center" />
-    </StackLayout>
+    <ContentView
+        ControlTemplate="{StaticResource ModalPage}"
+        BackgroundColor="#ededed">
+        <StackLayout
+            BackgroundColor="Transparent"
+            Padding        ="20,10,20,0">
+            <StackLayout
+                IsVisible="{Binding HasBeenScanned, Converter={StaticResource InvertedBooleanConvertor}}}">
+                <Label
+                    HorizontalOptions      ="Center"
+                    HorizontalTextAlignment="Center"
+                    Text                   ="Zeskanuj kod QR na folii"
+                    FontSize               ="20" />
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Text                   ="{Binding InfoMsg}"
+                    TextColor              ="Teal"
+                    HorizontalOptions      ="Center" />
+                <Frame
+                    VerticalOptions  ="Center"
+                    HorizontalOptions="Center"
+                    Padding          ="10">
+                    <Image
+                        Source       ="qrcodeicon.png"
+                        Aspect       ="AspectFit"
+                        HeightRequest="150"
+                        WidthRequest ="150" />
+                </Frame>
+            </StackLayout>
+            <StackLayout
+                VerticalOptions="CenterAndExpand"
+                IsVisible      ="{Binding HasBeenScanned}">
+                <Label
+                    HorizontalOptions="Center"
+                    VerticalOptions  ="Center"
+                    FontSize         ="15"
+                    Text             ="Znaleziony kod QR:" />
+                <Label
+                    HorizontalOptions="Center"
+                    VerticalOptions  ="Center"
+                    Font             ="Bold,20"
+                    Text             ="{Binding ResultQR}" />
+            </StackLayout>
+            <Button
+                Margin         ="10"
+                VerticalOptions="EndAndExpand"
+                Command        ="{Binding QRScannerCommand}"
+                Style          ="{StaticResource FillButtonStyle}">
+                <Button.Text>
+                    <Binding
+                        Path="HasBeenScanned">
+                        <Binding.Converter>
+                            <ValueConverters:BoolToObjectConverter
+                                x:TypeArguments="x:String"
+                                TrueObject     ="Dalej"
+                                FalseObject    ="Zeskanować kod qr" />
+                        </Binding.Converter>
+                    </Binding>
+                </Button.Text>
+            </Button>
+        </StackLayout>
+    </ContentView>
 </base:BaseContentPage>

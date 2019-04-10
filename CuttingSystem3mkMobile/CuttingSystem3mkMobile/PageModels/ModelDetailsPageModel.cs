@@ -26,7 +26,6 @@ namespace CuttingSystem3mkMobile.PageModels
         public ModelDetailsPageModel()
         {
             IsBackArrowVisible = true;
-            PageTitle = "Model details";
         }
         #endregion CTOR
 
@@ -46,15 +45,15 @@ namespace CuttingSystem3mkMobile.PageModels
             {
                 if (_startCommand == null)
                 {
-                    _startCommand = new Command<ModelDetails>((x) => StartClick(x));
+                    _startCommand = new Command(() => StartClick());
                 }
                 return _startCommand;
             }
         }
 
-        private void StartClick(ModelDetails modelDetails)
+        private async void StartClick()
         {
-
+            await _mvxNavigationService.Navigate<QrCodeScannerPageModel, ModelDetails>(_modelDetails);
         }
         #endregion [Commands]
     }
