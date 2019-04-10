@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Application
-    xmlns        ="http://xamarin.com/schemas/2014/forms"
-    xmlns:x       ="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class       ="CuttingSystem3mkMobile.App"
-    xmlns:triggers="clr-namespace:CuttingSystem3mkMobile.Triggers">
+    xmlns               ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x              ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class              ="CuttingSystem3mkMobile.App"
+    xmlns:controls       ="clr-namespace:CuttingSystem3mkMobile.Controls"
+    xmlns:triggers       ="clr-namespace:CuttingSystem3mkMobile.Triggers"
+    xmlns:ValueConverters="clr-namespace:CuttingSystem3mkMobile.Convertors;assembly=CuttingSystem3mkMobile">
     <Application.Resources>
         <Color
             x:Key="WhiteColor">#ffffff</Color>
@@ -148,6 +150,8 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+        <ValueConverters:InvertedBooleanConvertor
+            x:Key="InvertedBooleanConvertor" />
         <ControlTemplate
             x:Key="ModalPage">
             <AbsoluteLayout>
@@ -161,11 +165,14 @@
                         <RowDefinition
                             Height="*" />
                     </Grid.RowDefinitions>
+                    <controls:NavigationBarControl
+                        Grid.Row="0" />
                     <ContentPresenter
                         Grid.Row="1" />
                 </Grid>
                 <Grid
-                    BackgroundColor            ="{StaticResource LightBlackColor}"
+                    BackgroundColor            ="{StaticResource BlackColor}"
+                    Opacity                    ="0.2"
                     AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
                     AbsoluteLayout.LayoutFlags ="All"
                     IsVisible                  ="{TemplateBinding BindingContext.Busy}">

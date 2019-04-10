@@ -12,65 +12,64 @@
     <Grid>
         <ContentView
             VerticalOptions="FillAndExpand">
-            <ScrollView>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition
-                            Width="*" />
-                        <ColumnDefinition
-                            Width="25*" />
-                        <ColumnDefinition
-                            Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition
-                            Height="*" />
-                        <RowDefinition
-                            Height="auto" />
-                        <RowDefinition
-                            Height="*" />
-                    </Grid.RowDefinitions>
-                    <StackLayout
-                        Grid.Column="1"
-                        Grid.Row   ="1">
-                        <Frame
-                            HasShadow      ="false"
-                            BackgroundColor="White">
-                            <StackLayout
-                                Spacing        ="25"
-                                VerticalOptions="CenterAndExpand">
-                                <Label
-                                    HeightRequest       ="50"
-                                    MinimumHeightRequest="35"
-                                    HorizontalOptions   ="FillAndExpand"
-                                    Style               ="{StaticResource TitleLabelStyle}"
-                                    Text                ="Login Or Register">
-                                </Label>
-                                <controls:InputControl
-                                    EntryAutomationID="IdUsername"
-                                    Placeholder      ="Username"
-                                    Text             ="{Binding UserName}" />
-                                <controls:InputControl
-                                    EntryAutomationID="IdPassword"
-                                    Placeholder      ="Password"
-                                    IsPassword       ="True"
-                                    Text             ="{Binding Password}" />
-                                <Button
-                                    AutomationId="IdLogin"
-                                    IsEnabled   ="{Binding IsLoginButtonEnabled}"
-                                    Command     ="{Binding LoginCommand}"
-                                    Text        ="Login"
-                                    Style       ="{StaticResource FillButtonStyle}" />
-                                <Button
-                                    AutomationId="IdRegister"
-                                    Text        ="Register"
-                                    Command     ="{Binding GoToSignUpCommand}"
-                                    Style       ="{StaticResource ButtonStyle}" />
-                            </StackLayout>
-                        </Frame>
-                    </StackLayout>
-                </Grid>
-            </ScrollView>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="*" />
+                    <ColumnDefinition
+                        Width="25*" />
+                    <ColumnDefinition
+                        Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="auto" />
+                    <RowDefinition
+                        Height="*" />
+                </Grid.RowDefinitions>
+                <StackLayout
+                    Grid.Column="1"
+                    Grid.Row   ="1">
+                    <Frame
+                        HasShadow      ="false"
+                        BackgroundColor="White">
+                        <StackLayout
+                            Spacing        ="15"
+                            VerticalOptions="CenterAndExpand">
+                            <Label
+                                HeightRequest       ="50"
+                                MinimumHeightRequest="35"
+                                HorizontalOptions   ="FillAndExpand"
+                                Style               ="{StaticResource TitleLabelStyle}"
+                                Text                ="Login">
+                            </Label>
+                            <controls:InputControl
+                                EntryAutomationID="IdUsername"
+                                Placeholder      ="Username"
+                                Text             ="{Binding UserName}" />
+                            <controls:InputControl
+                                EntryAutomationID="IdPassword"
+                                Placeholder      ="Password"
+                                IsPassword       ="True"
+                                Text             ="{Binding Password}" />
+                            <Button
+                                AutomationId="IdLogin"
+                                IsEnabled   ="{Binding IsLoginButtonEnabled}"
+                                Command     ="{Binding LoginCommand}"
+                                Text        ="Login"
+                                Style       ="{StaticResource FillButtonStyle}" />
+                            <Button
+                                IsVisible   ="false"
+                                AutomationId="IdRegister"
+                                Text        ="Register"
+                                Command     ="{Binding GoToSignUpCommand}"
+                                Style       ="{StaticResource ButtonStyle}" />
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </Grid>
         </ContentView>
     </Grid>
 </base:BaseContentPage>

@@ -6,9 +6,10 @@ using Xamarin.Forms;
 
 namespace CuttingSystem3mkMobile.Pages
 {
-    public partial class ModelsPage : BaseContentPage<ModelsPageModel>
+    [MvxContentPagePresentation(NoHistory = true)]
+    public partial class CuttingPage : BaseContentPage<CuttingPageModel>
     {
-        public ModelsPage()
+        public CuttingPage()
         {
             InitializeComponent();
         }

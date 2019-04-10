@@ -5,6 +5,5 @@ namespace CuttingSystem3mkMobile.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public byte[] ImageData { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace CuttingSystem3mkMobile.Droid.Implementations
 
             var scanner = new MobileBarcodeScanner()
             {
-                TopText = "Scan the QR Code",
-                BottomText = "Please Wait",
+                TopText = "Zeskanuj kod QR na folii",
+                BottomText = "Proszę czekać",
             };
 
             var scanResult = await scanner.Scan(Android.App.Application.Context, optionsCustom);

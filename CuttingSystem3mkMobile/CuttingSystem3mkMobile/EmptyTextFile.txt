@@ -1,0 +1,22 @@
+﻿<ScrollView>
+                <controls:RepeaterView
+                    HorizontalOptions="EndAndExpand"
+                    ItemsSource      ="{Binding Devices}"
+                    Direction        ="Row"
+                    Wrap             ="Wrap">
+                    <controls:RepeaterView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <controls:DeviceControl
+                                    Margin                ="5"
+                                    HeightRequest         ="200"
+                                    WidthRequest          ="150"
+                                    NameDevice            ="{Binding Name}"
+                                    ImageByteArray        ="{Binding ImageData}"
+                                    DeviceCommandParameter="{Binding .}"
+                                    DeviceCommand         ="{Binding Source={x:Reference MainView}, Path=BindingContext.SelectDeviceCommand}" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </controls:RepeaterView.ItemTemplate>
+                </controls:RepeaterView>
+            </ScrollView>

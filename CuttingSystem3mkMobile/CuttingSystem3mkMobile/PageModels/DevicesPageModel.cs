@@ -10,9 +10,23 @@ namespace CuttingSystem3mkMobile.PageModels
     {
         #region fields
         private DeviceDetails[] _devices;
+        bool _loaded;
         #endregion fields
 
         #region bound props
+
+        public DeviceDetails SelectedDevice
+        {
+            get => null;
+            set
+            {
+                if (value != null)
+                {
+                    SelectDeviceCommand?.Execute(value);
+                }
+            }
+        }
+
         public DeviceDetails[] Devices
         {
             get => _devices;
@@ -31,14 +45,15 @@ namespace CuttingSystem3mkMobile.PageModels
         #endregion CTOR
 
         #region override
-        public override Task Initialize()
+        public async override void ViewAppeared()
         {
-            Devices = LoadDevices(0).Result;
-            return base.Initialize();
-        }
-        public async override void ViewAppearing()
-        {
-            //;
+            if (!_loaded)
+            {
+                Devices = await LoadDevices(0);
+                _loaded = true;
+            }
+            await RaisePropertyChanged(nameof(SelectedDevice));
+            base.ViewAppearing();
         }
         #endregion override
 
@@ -56,19 +71,19 @@ namespace CuttingSystem3mkMobile.PageModels
             }
         }
 
-        private void SelectDeviceClick(DeviceDetails deviceDetails)
+        private async void SelectDeviceClick(DeviceDetails deviceDetails)
         {
-
+            await _mvxNavigationService.Navigate<ModelsPageModel, DeviceDetails>(deviceDetails);
         }
         #endregion [Commands]
 
         #region api methods
         private async Task<DeviceDetails[]> LoadDevices(int customerId)
         {
-            //Busy = true;
+            Busy = true;
+            await Task.Delay(3000);
             var apiReturn = await _restAPI.LoadDevices(customerId);
-            //Busy = false;
-
+            Busy = false;
             if (apiReturn.DidSucceed)
             {
                 return apiReturn.Entity?.Devices;
