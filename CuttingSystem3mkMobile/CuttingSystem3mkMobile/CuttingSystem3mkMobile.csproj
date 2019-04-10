@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="3.6.0.264807" />
+    <PackageReference Include="Xamarin.Forms" Version="3.4.0.1029999" />
     <PackageReference Include="Xamarin.Essentials" Version="1.0.1" />
     <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
     <PackageReference Include="MvvmCross.Forms" Version="6.2.3" />
@@ -40,12 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="asus-zenfone-2-delux.plt" />
-    <None Remove="foilIcon.png" />
     <None Remove="deviceIcon.png" />
+    <None Remove="foilIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="asus-zenfone-2-delux.plt" />
     <EmbeddedResource Include="foilIcon.png" />
-    <EmbeddedResource Include="deviceIcon.png" />
   </ItemGroup>
 </Project>

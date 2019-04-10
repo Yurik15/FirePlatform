@@ -52,6 +52,20 @@
             name="windowActionModeOverlay">true</item>
         <item
             name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
+        
+        <!--  Used on ListView selected items  -->
+        <item
+            name="android:color">@color/colorAccent</item> 
+        <item
+            name="android:colorPressedHighlight">@color/colorAccent</item>
+        <item
+            name="android:colorLongPressedHighlight">@color/colorAccent</item>
+        <item
+            name="android:colorFocusedHighlight">@color/colorAccent</item>
+        <item
+            name="android:colorActivatedHighlight">@color/colorAccent</item>
+        <item
+            name="android:activatedBackgroundIndicator">@color/colorAccent</item>
     </style>
     <style
         name  ="AppCompatDialogStyle"

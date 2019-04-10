@@ -34,7 +34,7 @@ namespace CuttingSystem3mkMobile
         }
         private ContentPage GetCurrentPage()
         {
-            return new DevicesPage();
+            return new LoginPage();
         }
         public void InitializeNavigation()
         {

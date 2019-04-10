@@ -4,9 +4,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="CuttingSystem3mkMobile.Controls.DeviceControl">
     <StackLayout>
-        <Image
-            x:Name="DeviceImg" />
+        <Frame
+            Padding        ="0"
+            Margin         ="0"
+            HeightRequest  ="200"
+            WidthRequest   ="150"
+            BorderColor    ="White"
+            BackgroundColor="Transparent">
+            <Image
+                Margin           ="5"
+                HeightRequest    ="200"
+                WidthRequest     ="150"
+                HorizontalOptions="Center"
+                x:Name           ="DeviceImg"
+                Aspect           ="AspectFit" />
+        </Frame>
         <Label
-            x:Name="NameLbl" />
+            HorizontalTextAlignment="Center"
+            x:Name                 ="NameLbl"
+            TextColor              ="White"
+            FontSize               ="20" />
+        <StackLayout.GestureRecognizers>
+            <TapGestureRecognizer
+                x:Name="TapGestureCtrl" />
+        </StackLayout.GestureRecognizers>
     </StackLayout>
 </ContentView>

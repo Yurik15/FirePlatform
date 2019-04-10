@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<base:BaseContentPage
+    xmlns                         ="http://xamarin.com/schemas/2014/forms"
+    xmlns:x                        ="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class                        ="CuttingSystem3mkMobile.Pages.AboutPage"
+    xmlns:pageModels               ="clr-namespace:CuttingSystem3mkMobile.PageModels"
+    x:TypeArguments                ="pageModels:AboutPageModel"
+    xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
+    NavigationPage.HasNavigationBar="false"
+    BackgroundImage                ="background.jpg">
+    <StackLayout
+        HorizontalOptions="Center"
+        VerticalOptions  ="Center">
+        <Label
+            Text    ="3mk Cutting system"
+            FontSize="Large" />
+        <Button
+            Text   ="Demo"
+            Command="{Binding DemoCommand}"
+            Style  ="{StaticResource FillButtonStyle}" />
+        <Label
+            HorizontalTextAlignment="Center"
+            Text                   ="{Binding InfoMsg}"
+            TextColor              ="Teal"
+            HorizontalOptions      ="Center" />
+        <Button
+            Text   ="QR scanner"
+            Command="{Binding QRScannerCommand}"
+            Style  ="{StaticResource FillButtonStyle}" />
+    </StackLayout>
+</base:BaseContentPage>

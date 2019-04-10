@@ -88,6 +88,7 @@ namespace CuttingSystem3mkMobile.PageModels
         }
         protected async void ExecuteGoToSignUpCommand()
         {
+            await _mvxNavigationService.Navigate<AboutPageModel>();
         }
         #endregion commands
 

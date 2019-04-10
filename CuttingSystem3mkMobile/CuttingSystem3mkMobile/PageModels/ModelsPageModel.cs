@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CuttingSystem3mkMobile.Entities;
 using CuttingSystem3mkMobile.Services;
 using MvvmCross;
 using MvvmCross.Navigation;
@@ -10,83 +11,101 @@ using Xamarin.Forms;
 
 namespace CuttingSystem3mkMobile.PageModels
 {
-    public class ModelsPageModel : BasePageModel
+    public class ModelsPageModel : BasePageModel<DeviceDetails>
     {
         #region fields
-        private readonly IPrintManager _printManager;
-        private string _infoMsg;
+        private DeviceDetails _deviceDetails;
+        private ModelDetails[] _models;
+        bool _loaded;
         #endregion fields
 
-        #region ctors
-        public ModelsPageModel(IPrintManager printManager)
-        {
-            _printManager = printManager;
-        }
-        #endregion ctors
-
         #region bound props
-        public string InfoMsg
+
+        public ModelDetails SelectedModel
         {
-            get => _infoMsg;
+            get => null;
             set
             {
-                _infoMsg = value;
-                RaisePropertyChanged();
+                if (value != null)
+                {
+                    SelectModelCommand?.Execute(value);
+                }
+            }
+        }
+
+        public ModelDetails[] Models
+        {
+            get => _models;
+            set
+            {
+                _models = value;
+                RaisePropertyChanged(nameof(Models));
             }
         }
         #endregion bound props
 
-        #region commands
-        private ICommand _demoCommand;
-        public ICommand DemoCommand
+        #region CTOR
+        public ModelsPageModel()
+        {
+            IsBackArrowVisible = true;
+        }
+        #endregion CTOR
+
+        #region override
+        public override void Prepare(DeviceDetails parameter)
+        {
+            _deviceDetails = parameter;
+            base.Prepare(parameter);
+        }
+        public async override void ViewAppeared()
+        {
+            if (!_loaded)
+            {
+                Models = await LoadModels(0, 0);
+                _loaded = true;
+            }
+            await RaisePropertyChanged(nameof(SelectedModel));
+            base.ViewAppearing();
+        }
+        #endregion override
+
+        #region [Commands]
+        private ICommand _selectModelCommand;
+        public ICommand SelectModelCommand
         {
             get
             {
-                return _demoCommand ?? (_demoCommand = new Command(x => ExecuteDemoCommand()));
+                if (_selectModelCommand == null)
+                {
+                    _selectModelCommand = new Command<ModelDetails>((x) => SelectModelClick(x));
+                }
+                return _selectModelCommand;
             }
         }
 
-        private void ExecuteDemoCommand()
+        private async void SelectModelClick(ModelDetails modelDetails)
         {
-            var bytes = FakeDocument();
-            var devices = _printManager.Devices();
-            if (devices.Any())
+            await _mvxNavigationService.Navigate<ModelDetailsPageModel, ModelDetails>(modelDetails);
+        }
+        #endregion [Commands]
+
+        #region api methods
+        private async Task<ModelDetails[]> LoadModels(int customerId, int deviceId)
+        {
+            Busy = true;
+            await Task.Delay(3000);
+            var apiReturn = await _restAPI.LoadModels(customerId, deviceId);
+            Busy = false;
+
+            if (apiReturn.DidSucceed)
             {
-                var device = devices.First();
-                _printManager.ConnectAndSend(bytes, device.ProductId, device.VendorId);
+                return apiReturn.Entity?.Models;
             }
             else
             {
-                InfoMsg = "Not found devices.";
+                return null;
             }
         }
-        private ICommand _qRScannerCommand;
-        public ICommand QRScannerCommand
-        {
-            get
-            {
-                return _qRScannerCommand ?? (_qRScannerCommand = new Command(x => ExecuteQRScannerCommand()));
-            }
-        }
-
-        private async void ExecuteQRScannerCommand()
-        {
-            await _mvxNavigationService.Navigate<QrCodeScannerPageModel>();
-        }
-        #endregion commands
-
-        #region helper methods
-        private byte[] FakeDocument()
-        {
-            Assembly currentAssembly = typeof(ModelsPageModel).GetTypeInfo().Assembly;
-            byte[] buffer = null;
-            using (var resourceStream = currentAssembly.GetManifestResourceStream("CuttingSystem3mkMobile.asus-zenfone-2-delux.plt"))
-            {
-                buffer = new byte[resourceStream.Length];
-                resourceStream.Read(buffer, 0, buffer.Length);
-            }
-            return buffer;
-        }
-        #endregion helper methods
+        #endregion api methods
     }
 }
