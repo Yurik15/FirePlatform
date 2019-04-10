@@ -14,13 +14,6 @@
         <StackLayout
             BackgroundColor="Transparent"
             Padding        ="20,10,20,0">
-            <controls:CustomEntry
-                Placeholder     ="Search"
-                PressedColor    ="{StaticResource TextGrayColor}"
-                TextColor       ="{StaticResource TextGrayColor}"
-                InactiveColor   ="{StaticResource TextGrayColor}"
-                PlaceholderColor="{StaticResource TextGrayColor}"
-                BorderColor     ="{StaticResource TextGrayColor}" />
             <ListView
                 BackgroundColor    ="Transparent"
                 ItemsSource        ="{Binding Models}"

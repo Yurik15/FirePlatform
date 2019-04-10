@@ -177,6 +177,7 @@
     <Compile Include="Implementations\QrScanningService.cs" />
     <Compile Include="Renderers\CustomEntryRenderer.cs" />
     <Compile Include="MainApplication.cs" />
+    <Compile Include="MyUsbReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

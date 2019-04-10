@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CuttingSystem3mkMobile.Entities;
@@ -9,12 +10,22 @@ namespace CuttingSystem3mkMobile.PageModels
     public class DevicesPageModel : BasePageModel
     {
         #region fields
-        private DeviceDetails[] _devices;
-        bool _loaded;
+        private DeviceDetails[] _devicesInit;
+        private Func<DeviceDetails, bool> funcFilter;
+        private bool _loaded;
+        private string _search;
         #endregion fields
 
         #region bound props
-
+        public string SearchText
+        {
+            get => _search;
+            set
+            {
+                _search = value;
+                RaisePropertyChanged(nameof(Devices));
+            }
+        }
         public DeviceDetails SelectedDevice
         {
             get => null;
@@ -29,18 +40,17 @@ namespace CuttingSystem3mkMobile.PageModels
 
         public DeviceDetails[] Devices
         {
-            get => _devices;
-            set
-            {
-                _devices = value;
-                RaisePropertyChanged(nameof(Devices));
-            }
+            get => _devicesInit?.Where(funcFilter).ToArray();
         }
         #endregion bound props
 
         #region CTOR
         public DevicesPageModel()
         {
+            funcFilter = (item) =>
+            {
+                return string.IsNullOrEmpty((item?.Name ?? string.Empty)) ? true : item.Name.ToLower().Trim().Contains((SearchText ?? string.Empty).ToLower().Trim());
+            };
         }
         #endregion CTOR
 
@@ -49,9 +59,10 @@ namespace CuttingSystem3mkMobile.PageModels
         {
             if (!_loaded)
             {
-                Devices = await LoadDevices(0);
+                _devicesInit = await LoadDevices(0);
                 _loaded = true;
             }
+            await RaisePropertyChanged(nameof(Devices));
             await RaisePropertyChanged(nameof(SelectedDevice));
             base.ViewAppearing();
         }
