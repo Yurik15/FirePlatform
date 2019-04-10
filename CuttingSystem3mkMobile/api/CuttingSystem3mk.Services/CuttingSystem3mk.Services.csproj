@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CuttingSystem3mk.Models\CuttingSystem3mk.Models.csproj" />
+    <ProjectReference Include="..\CuttingSystem3mk.Repositories\CuttingSystem3mk.Repositories.csproj" />
+    <ProjectReference Include="..\CuttingSystem3mk.Utils\CuttingSystem3mk.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
