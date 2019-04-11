@@ -24,15 +24,15 @@
                 HorizontalOptions      ="Center"
                 HorizontalTextAlignment="Center" />
             <Frame
-                HorizontalOptions="Center"
-                VerticalOptions  ="Center"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions  ="FillAndExpand"
                 BackgroundColor  ="{StaticResource BlackColor}"
-                HeightRequest    ="300"
-                Padding          ="5"
-                WidthRequest     ="200">
+                Padding          ="0"
+                CornerRadius     ="10"
+                BorderColor      ="Black">
                 <controls:CustomImage
-                    BackgroundColor="Transparent"
-                    VerticalOptions="CenterAndExpand"
+                    HeightRequest  ="300"
+                    WidthRequest   ="200"
                     ImageArrayBytes="{Binding ImagePreview}" />
             </Frame>
             <Label
