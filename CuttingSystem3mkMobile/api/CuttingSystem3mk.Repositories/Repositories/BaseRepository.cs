@@ -32,7 +32,7 @@ namespace CuttingSystem3mkMobile.Repositories.Repositories
         }
 
         #region Methods
-        private readonly Context _context = new Context();
+        protected readonly Context _context = new Context();
         public async Task<TEntity> GetById(int id)
         {
             return await _context.Set<TEntity>()
@@ -71,6 +71,8 @@ namespace CuttingSystem3mkMobile.Repositories.Repositories
 
             await _context.Set<TEntity>()
                         .AddRangeAsync(entities);
+
+            await _context.SaveChangesAsync();
 
             return entities;
         }

@@ -12,7 +12,7 @@ namespace CuttingSystem3mkMobile.RestAPI
     {
 
         #region Members
-        private string _baseUrl = "";
+        private string _baseUrl = "http://yurik15-001-site1.atempurl.com/api";
         #endregion
 
         #region Constructors
@@ -52,6 +52,35 @@ namespace CuttingSystem3mkMobile.RestAPI
             catch (Exception ex)
             {
 
+                responseMessage.RaisedException = ex;
+                responseMessage.DidSucceed = false;
+            }
+            return responseMessage;
+        }
+
+        protected async Task<ServiceStatusMessage<bool>> MakeGetRequestReturnBool(string endpointRelativePath, bool authorise)
+        {
+            var responseMessage = new ServiceStatusMessage<bool>();
+            try
+            {
+                var url = await GetPathForServiceCall(endpointRelativePath);
+                using (var client = new HttpClient())
+                {
+                    await SetupHttpClient(client, url, authorise);
+                    var response = await client.GetAsync(url);
+
+                    responseMessage.StatusCode = response.StatusCode.ToString();
+                    responseMessage.DidSucceed = response.IsSuccessStatusCode;
+                    responseMessage.ResponseMessage = response.ReasonPhrase;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseMessage.Entity = bool.Parse(await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
                 responseMessage.RaisedException = ex;
                 responseMessage.DidSucceed = false;
             }

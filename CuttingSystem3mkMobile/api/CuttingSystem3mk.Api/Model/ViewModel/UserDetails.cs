@@ -1,4 +1,4 @@
-﻿namespace CuttingSystem3mkMobile.WebApi.Model.Responses
+﻿namespace CuttingSystem3mkMobile.WebApi.Model
 {
     public class UserResponse
     {

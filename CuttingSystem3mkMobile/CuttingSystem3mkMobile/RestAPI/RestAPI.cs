@@ -6,14 +6,19 @@ namespace CuttingSystem3mkMobile.RestAPI
 {
     public class RestAPI : BaseRestClient, IRemoteService
     {
-        public Task<ServiceStatusMessage<DevicesResponse>> LoadDevices(int customerId)
+        public async Task<ServiceStatusMessage<DevicesResponse>> LoadDevices()
         {
-            throw new NotImplementedException();
+            return await MakeGetRequestReturnObject<DevicesResponse>("Cut/Devices", false);
         }
 
-        public Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int customerId, int deviceId)
+        public async Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int idDevice, string token)
         {
-            throw new NotImplementedException();
+            return await MakeGetRequestReturnObject<ModelsResponse>("Cut/Models/" + idDevice + "/" + token, false);
+        }
+
+        public async Task<ServiceStatusMessage<bool>> ValidateCutCode(string code)
+        {
+            return await MakeGetRequestReturnBool("Cut/ValidateCode/" + code, false);
         }
     }
 }

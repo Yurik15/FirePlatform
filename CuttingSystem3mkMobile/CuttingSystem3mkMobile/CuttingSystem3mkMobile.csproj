@@ -41,10 +41,8 @@
   <ItemGroup>
     <None Remove="asus-zenfone-2-delux.plt" />
     <None Remove="deviceIcon.png" />
-    <None Remove="foilIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="asus-zenfone-2-delux.plt" />
-    <EmbeddedResource Include="foilIcon.png" />
   </ItemGroup>
 </Project>

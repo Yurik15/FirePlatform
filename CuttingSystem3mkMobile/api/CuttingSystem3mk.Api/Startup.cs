@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CuttingSystem3mk.Repositories.Repositories;
+using CuttingSystem3mk.Services.Services;
 using CuttingSystem3mkMobile.Models.Models;
 using CuttingSystem3mkMobile.Repositories;
 using CuttingSystem3mkMobile.Repositories.Repositories;
@@ -50,6 +52,9 @@ namespace CuttingSystem3mkMobile.Api
             services.AddScoped<DeviceModelRepository, DeviceModelRepository>();
             services.AddScoped<BaseRepository<DeviceModel, DeviceModelRepository>, BaseRepository<DeviceModel, DeviceModelRepository>>();
 
+            services.AddScoped<CutCodesRepository, CutCodesRepository>();
+            services.AddScoped<BaseRepository<CutCode, CutCodesRepository>, BaseRepository<CutCode, CutCodesRepository>>();
+
             //services
             services.AddScoped<Service, Service>();
 
@@ -61,6 +66,9 @@ namespace CuttingSystem3mkMobile.Api
 
             services.AddScoped<DeviceModelService, DeviceModelService>();
             services.AddScoped<BaseService<DeviceModelService, DeviceModelRepository, DeviceModel>, BaseService<DeviceModelService, DeviceModelRepository, DeviceModel>>();
+
+            services.AddScoped<CutCodeService, CutCodeService>();
+            services.AddScoped<BaseService<CutCodeService, CutCodesRepository, CutCode>, BaseService<CutCodeService, CutCodesRepository, CutCode>>();
 
             #endregion
         }

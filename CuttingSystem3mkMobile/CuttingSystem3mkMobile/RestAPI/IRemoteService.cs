@@ -6,7 +6,8 @@ namespace CuttingSystem3mkMobile.RestAPI
 {
     public interface IRemoteService
     {
-        Task<ServiceStatusMessage<DevicesResponse>> LoadDevices(int customerId);
-        Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int customerId, int deviceId);
+        Task<ServiceStatusMessage<DevicesResponse>> LoadDevices();
+        Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int idDevice, string token);
+        Task<ServiceStatusMessage<bool>> ValidateCutCode(string code);
     }
 }

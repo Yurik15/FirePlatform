@@ -81,8 +81,7 @@ namespace CuttingSystem3mkMobile.PageModels
         private async Task<DeviceDetails[]> LoadDevices(int customerId)
         {
             Busy = true;
-            await Task.Delay(3000);
-            var apiReturn = await _restAPI.LoadDevices(customerId);
+            var apiReturn = await _restAPI.LoadDevices();
             Busy = false;
             if (apiReturn.DidSucceed)
             {

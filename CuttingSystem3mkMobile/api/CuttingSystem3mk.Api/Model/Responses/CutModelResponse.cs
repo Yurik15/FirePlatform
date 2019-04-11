@@ -1,16 +1,9 @@
-﻿using CuttingSystem3mkMobile.Models.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace CuttingSystem3mkMobile.Api.Model.Responses
+namespace CuttingSystem3mk.Api.Model
 {
-    public class CutModelResponse
+    public class CutCodeResponse
     {
-        public string Name { get; set; }
-        public string QRCode { get; set; }
-        public int IdCutFile { get; set; }
-        public CutFile CutFile { get; set; }
-        public int IdDeviceModel { get; set; }
-        public DeviceModel DeviceModel { get; set; }
-        public List<CutCode> CutCodes { get; set; }
+        public IEnumerable<CutCodeDetails> CutCodes{ get; set; }
     }
 }

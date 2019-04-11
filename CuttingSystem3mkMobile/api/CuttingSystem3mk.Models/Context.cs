@@ -18,12 +18,9 @@ namespace CuttingSystem3mkMobile.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-#if DEBUG
-                    optionsBuilder.UseSqlServer(@"Server=DESKTOP-5V6A2V8;Database=CuttingSystem;Trusted_Connection=True;MultipleActiveResultSets=true;");
-                    //optionsBuilder.UseSqlServer(@"Server=sql6001.site4now.net;Database=DB_A43487_CuttingSystem3mkMobileDB;MultipleActiveResultSets=true;User Id=DB_A43487_CuttingSystem3mkMobileDB_admin;Password=V@sya123!;");
-#else
-                optionsBuilder.UseSqlServer(@"Server=sql6001.site4now.net;Database=DB_A43487_CuttingSystem3mkMobileDB;MultipleActiveResultSets=true;User Id=DB_A43487_CuttingSystem3mkMobileDB_admin;Password=V@sya123!;");
-#endif
+                   // optionsBuilder.UseSqlServer(@"Server=DESKTOP-5V6A2V8;Database=CuttingSystem;Trusted_Connection=True;MultipleActiveResultSets=true;");
+                    optionsBuilder.UseSqlServer(@"Server=sql6006.site4now.net;Database=DB_A47482_CuttingSystem;MultipleActiveResultSets=true;User Id=DB_A47482_CuttingSystem_admin;Password=V@sya123!;");
+
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using CuttingSystem3mkMobile.Repositories.Repositories;
+﻿using CuttingSystem3mk.Repositories.Repositories;
+using CuttingSystem3mkMobile.Repositories.Repositories;
 
 namespace CuttingSystem3mkMobile.Repositories
 {
@@ -8,13 +9,17 @@ namespace CuttingSystem3mkMobile.Repositories
         {
             return UserRepository.Instance;
         }
-        public static CutModelRepository CutModelRepository()
+        public static CutModelRepository GetCutModelRepository()
         {
             return Repositories.CutModelRepository.Instance;
         }
-        public static DeviceModelRepository DeviceModelRepository()
+        public static DeviceModelRepository GetDeviceModelRepository()
         {
             return Repositories.DeviceModelRepository.Instance;
+        }
+        public static CutCodesRepository GetCutCodesRepository()
+        {
+            return CutCodesRepository.Instance;
         }
     }
 }

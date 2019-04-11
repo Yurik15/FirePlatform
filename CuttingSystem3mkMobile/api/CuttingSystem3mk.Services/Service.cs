@@ -1,4 +1,5 @@
-﻿using CuttingSystem3mkMobile.Services.Services;
+﻿using CuttingSystem3mk.Services.Services;
+using CuttingSystem3mkMobile.Services.Services;
 
 namespace CuttingSystem3mkMobile.Services
 {
@@ -7,17 +8,20 @@ namespace CuttingSystem3mkMobile.Services
         private readonly UserService _userService;
         private readonly CutModelService _cutModelService;
         private readonly DeviceModelService _deviceModelService;
+        private readonly CutCodeService _cutCodeService;
 
         public Service
             (
                 UserService userService,
                 CutModelService cutModelService,
-                DeviceModelService deviceModelService
+                DeviceModelService deviceModelService,
+                CutCodeService cutCodeService
             )
         {
             _userService = userService;
             _cutModelService = cutModelService;
             _deviceModelService = deviceModelService;
+            _cutCodeService = cutCodeService;
         }
 
         #region Methods
@@ -34,6 +38,11 @@ namespace CuttingSystem3mkMobile.Services
         {
             return _deviceModelService;
         }
+        public CutCodeService GetCutCodeService()
+        {
+            return _cutCodeService;
+        }
+
         #endregion
     }
 }

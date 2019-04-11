@@ -1,6 +1,6 @@
-﻿namespace CuttingSystem3mkMobile.Api.Model.Responses
+﻿namespace CuttingSystem3mkMobile.Api.Model
 {
-    public class DeviceModelResponse
+    public class DeviceDetails
     {
         public int Id { get; set; }
         public string Name { get; set; }

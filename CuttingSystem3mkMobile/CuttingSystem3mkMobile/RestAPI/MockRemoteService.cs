@@ -20,7 +20,7 @@ namespace CuttingSystem3mkMobile.RestAPI
             return buffer;
         }
 
-        public Task<ServiceStatusMessage<DevicesResponse>> LoadDevices(int customerId)
+        public Task<ServiceStatusMessage<DevicesResponse>> LoadDevices()
         {
             var response = new DevicesResponse()
             {
@@ -28,32 +28,32 @@ namespace CuttingSystem3mkMobile.RestAPI
                 {
                     new DeviceDetails()
                     {
-                         Id = Guid.NewGuid(),
+                         Id = 1,
                          Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
-                         Id = Guid.NewGuid(),
+                         Id = 2,
                          Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
-                         Id = Guid.NewGuid(),
+                         Id = 3,
                          Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
-                         Id = Guid.NewGuid(),
+                         Id = 4,
                          Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
-                         Id = Guid.NewGuid(),
+                         Id = 5,
                          Name = "asus-zenfone-2-delux"
                     },
                     new DeviceDetails()
                     {
-                         Id = Guid.NewGuid(),
+                         Id = 6,
                          Name = "asus-zenfone-2-delux"
                     }
                 }
@@ -69,7 +69,7 @@ namespace CuttingSystem3mkMobile.RestAPI
             return tcs.Task;
         }
 
-        public Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int customerId, int deviceId)
+        public Task<ServiceStatusMessage<ModelsResponse>> LoadModels(int deviceId, string token)
         {
             byte[] fileData = FakeDocument("asus-zenfone-2-delux.plt");
             byte[] imageData = FakeDocument("foilIcon.png");
@@ -80,7 +80,7 @@ namespace CuttingSystem3mkMobile.RestAPI
                  {
                      new ModelDetails()
                      {
-                          Id = Guid.NewGuid(),
+                          Id = 1,
                           Name = "asus-zenfone-2-delux",
                           FileData = fileData,
                           ImageData = imageData,
@@ -88,7 +88,7 @@ namespace CuttingSystem3mkMobile.RestAPI
                      },
                      new ModelDetails()
                      {
-                          Id = Guid.NewGuid(),
+                          Id = 2,
                           Name = "asus-zenfone-2-delux",
                           FileData = fileData,
                           ImageData = imageData,
@@ -96,7 +96,7 @@ namespace CuttingSystem3mkMobile.RestAPI
                      },
                      new ModelDetails()
                      {
-                          Id = Guid.NewGuid(),
+                          Id = 3,
                           Name = "asus-zenfone-2-delux",
                           FileData = fileData,
                           ImageData = imageData,
@@ -113,6 +113,11 @@ namespace CuttingSystem3mkMobile.RestAPI
             var tcs = new TaskCompletionSource<ServiceStatusMessage<ModelsResponse>>();
             tcs.SetResult(serviceStatus);
             return tcs.Task;
+        }
+
+        Task<ServiceStatusMessage<bool>> IRemoteService.ValidateCutCode(string code)
+        {
+            throw new NotImplementedException();
         }
     }
 }

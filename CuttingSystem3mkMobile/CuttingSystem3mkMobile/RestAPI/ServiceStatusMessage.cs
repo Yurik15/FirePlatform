@@ -15,7 +15,7 @@ namespace CuttingSystem3mkMobile.RestAPI
         }
     }
 
-    public class ServiceStatusMessage<TEntity> : ServiceStatusMessage where TEntity : class
+    public class ServiceStatusMessage<TEntity> : ServiceStatusMessage //where TEntity : class
     {
         public TEntity Entity { get; set; }
 

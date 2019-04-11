@@ -1,8 +1,6 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using CuttingSystem3mkMobile.Entities;
 using CuttingSystem3mkMobile.Services;
-using MvvmCross;
 using Xamarin.Forms;
 
 namespace CuttingSystem3mkMobile.PageModels
@@ -74,6 +72,7 @@ namespace CuttingSystem3mkMobile.PageModels
                 ResultQR = await _qrScanningService.ScanAsync();
                 if (!string.IsNullOrEmpty(ResultQR))
                 {
+                    var apiReturn = await _restAPI.ValidateCutCode(ResultQR);
                     HasBeenScanned = true;
                 }
             }

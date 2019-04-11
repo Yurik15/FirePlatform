@@ -61,7 +61,7 @@ namespace CuttingSystem3mkMobile.PageModels
         {
             if (!_loaded)
             {
-                Models = await LoadModels(0, 0);
+                Models = await LoadModels(0, _deviceDetails.Id);
                 _loaded = true;
             }
             await RaisePropertyChanged(nameof(SelectedModel));
@@ -93,8 +93,8 @@ namespace CuttingSystem3mkMobile.PageModels
         private async Task<ModelDetails[]> LoadModels(int customerId, int deviceId)
         {
             Busy = true;
-            await Task.Delay(3000);
-            var apiReturn = await _restAPI.LoadModels(customerId, deviceId);
+            string token = "a8639ed3-3d5d-4482-86ab-fadec95728cc";
+            var apiReturn = await _restAPI.LoadModels(deviceId, token);
             Busy = false;
 
             if (apiReturn.DidSucceed)

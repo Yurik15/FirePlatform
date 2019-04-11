@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CuttingSystem3mkMobile.Api.Model.Responses;
+using CuttingSystem3mkMobile.Api.Model;
 using CuttingSystem3mkMobile.Models.Models;
 
 namespace CuttingSystem3mkMobile.Api.Controllers.Mappers.ResponseMappers
@@ -8,7 +8,7 @@ namespace CuttingSystem3mkMobile.Api.Controllers.Mappers.ResponseMappers
     {
         public DeviceModelMapper()
         {
-            CreateMap<DeviceModel, DeviceModelResponse>();
+            CreateMap<DeviceModel, ModelDetails>();
         }
     }
 }
