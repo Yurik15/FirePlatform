@@ -23,11 +23,18 @@
                 FontSize               ="15"
                 HorizontalOptions      ="Center"
                 HorizontalTextAlignment="Center" />
-            <controls:CustomImage
-                VerticalOptions="CenterAndExpand"
-                HeightRequest  ="300"
-                WidthRequest   ="200"
-                ImageArrayBytes="{Binding ImagePreview}" />
+            <Frame
+                HorizontalOptions="Center"
+                VerticalOptions  ="Center"
+                BackgroundColor  ="{StaticResource BlackColor}"
+                HeightRequest    ="300"
+                Padding          ="5"
+                WidthRequest     ="200">
+                <controls:CustomImage
+                    BackgroundColor="Transparent"
+                    VerticalOptions="CenterAndExpand"
+                    ImageArrayBytes="{Binding ImagePreview}" />
+            </Frame>
             <Label
                 HorizontalOptions      ="Center"
                 HorizontalTextAlignment="Center"
