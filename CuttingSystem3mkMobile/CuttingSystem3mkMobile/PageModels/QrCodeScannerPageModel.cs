@@ -65,15 +65,23 @@ namespace CuttingSystem3mkMobile.PageModels
         {
             if (HasBeenScanned)
             {
-                await _mvxNavigationService.Navigate<CuttingPageModel, ModelDetails>(_modelDetails);
+                await _mvxNavigationService.Navigate<CuttingPageModel, (string, ModelDetails)>((ResultQR, _modelDetails));
             }
             else
             {
                 ResultQR = await _qrScanningService.ScanAsync();
                 if (!string.IsNullOrEmpty(ResultQR))
                 {
-                    var apiReturn = await _restAPI.ValidateCutCode(ResultQR);
-                    HasBeenScanned = true;
+                    var response = await _restAPI.ValidateCutCode(ResultQR);
+                    if (!response.Entity)
+                    {
+                        await App.Current.MainPage.DisplayAlert("QR kod", "Kod nie istnieje lub nie jest aktywny", "Zeskanuj jeszcze raz");
+                        return;
+                    }
+                    else
+                    {
+                        HasBeenScanned = true;
+                    }
                 }
             }
         }

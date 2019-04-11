@@ -55,11 +55,6 @@ namespace CuttingSystem3mkMobile.RestAPI
                     {
                          Id = 6,
                          Name = "asus-zenfone-2-delux"
-                    },
-                    new DeviceDetails()
-                    {
-                         Id = Guid.NewGuid(),
-                         Name = "AAAAA"
                     }
                 }
             };
@@ -122,7 +117,28 @@ namespace CuttingSystem3mkMobile.RestAPI
 
         Task<ServiceStatusMessage<bool>> IRemoteService.ValidateCutCode(string code)
         {
-            throw new NotImplementedException();
+            var serviceStatus = new ServiceStatusMessage<bool>()
+            {
+                Entity = true,
+                DidSucceed = true
+            };
+
+            var tcs = new TaskCompletionSource<ServiceStatusMessage<bool>>();
+            tcs.SetResult(serviceStatus);
+            return tcs.Task;
+        }
+
+        public Task<ServiceStatusMessage<bool>> SetDisabledCode(string code)
+        {
+            var serviceStatus =  new ServiceStatusMessage<bool>()
+            {
+                Entity = true,
+                DidSucceed = true
+            };
+
+            var tcs = new TaskCompletionSource<ServiceStatusMessage<bool>>();
+            tcs.SetResult(serviceStatus);
+            return tcs.Task;
         }
     }
 }

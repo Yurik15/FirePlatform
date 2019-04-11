@@ -40,6 +40,7 @@ namespace CuttingSystem3mkMobile.Droid.Implementations
                     {
                         throw new Exception(ex.Message);
                     }
+                    return;
                 }
                 UsbDeviceConnection deviceConnection = null;
                 try
@@ -63,14 +64,14 @@ namespace CuttingSystem3mkMobile.Droid.Implementations
 
                         }
                     }
+                    ApplicationContext.ApplicationContext.PermissionUSB = true;
                 }
                 catch (Exception ex)
                 {
                     // log or handle TODO need to change
                 }
                 finally
-                {
-
+                { 
                     // Close the connection
                     if (deviceConnection != null)
                     {

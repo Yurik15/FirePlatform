@@ -43,22 +43,22 @@
                                 MinimumHeightRequest="35"
                                 HorizontalOptions   ="FillAndExpand"
                                 Style               ="{StaticResource TitleLabelStyle}"
-                                Text                ="Login">
+                                Text                ="Logowanie">
                             </Label>
                             <controls:InputControl
                                 EntryAutomationID="IdUsername"
-                                Placeholder      ="Username"
+                                Placeholder      ="Nazwa użytkownika"
                                 Text             ="{Binding UserName}" />
                             <controls:InputControl
                                 EntryAutomationID="IdPassword"
-                                Placeholder      ="Password"
+                                Placeholder      ="Hasło"
                                 IsPassword       ="True"
                                 Text             ="{Binding Password}" />
                             <Button
                                 AutomationId="IdLogin"
                                 IsEnabled   ="{Binding IsLoginButtonEnabled}"
                                 Command     ="{Binding LoginCommand}"
-                                Text        ="Login"
+                                Text        ="Zaloguj"
                                 Style       ="{StaticResource FillButtonStyle}" />
                             <Button
                                 IsVisible   ="false"

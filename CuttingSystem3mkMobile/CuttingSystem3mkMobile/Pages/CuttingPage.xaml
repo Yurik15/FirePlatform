@@ -7,14 +7,39 @@
     x:TypeArguments                ="pageModels:CuttingPageModel"
     xmlns:base                     ="clr-namespace:CuttingSystem3mkMobile.Pages;assembly=Precision.Mobile"
     xmlns:controls                 ="clr-namespace:CuttingSystem3mkMobile.Controls"
+     xmlns:ValueConverters          ="clr-namespace:CuttingSystem3mkMobile.Convertors;assembly=CuttingSystem3mkMobile"
     NavigationPage.HasNavigationBar="false">
     <ContentView
         ControlTemplate="{StaticResource ModalPage}"
-        BackgroundColor="#ededed">
+        BackgroundColor="#ededed" >
         <Grid>
             <StackLayout
                 BackgroundColor="Transparent"
                 Padding        ="20,10,20,0">
+                <Grid IsVisible="{Binding IsCut}" 
+                      Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                           VerticalTextAlignment="Center" 
+                           VerticalOptions="Center" 
+                           Text="Czy wycięcie zostało wykonane poprawnie?"/>
+                    <Switch Grid.Column="1"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center" 
+                            IsToggled="{Binding IsCorrect}"/>
+                </Grid>
+                <Label 
+                           IsVisible="{Binding IsCut}"
+                           VerticalTextAlignment="Center" 
+                           VerticalOptions="CenterAndExpand" 
+                           HorizontalOptions="CenterAndExpand"
+                           HorizontalTextAlignment="Center"
+                           Text="Proszę poczekać aż wycięcie zostanie skończone oraz zaznaczyć poprawność..."
+                           Font             ="Bold,20"
+                           TextColor        ="{StaticResource LightRedColor}"/>
                 <Label
                     HorizontalOptions="Center"
                     VerticalOptions  ="Center"
@@ -34,7 +59,19 @@
                     Margin         ="10"
                     VerticalOptions="EndAndExpand"
                     Style          ="{StaticResource FillButtonStyle}"
-                    IsEnabled      ="{Binding DeviceConnected}" />
+                    IsEnabled      ="{Binding DeviceConnected}">
+                    <Button.Text>
+                        <Binding
+                        Path="IsCut">
+                            <Binding.Converter>
+                                <ValueConverters:BoolToObjectConverter
+                                x:TypeArguments="x:String"
+                                TrueObject     ="Dalej"
+                                FalseObject    ="Wyciąć" />
+                            </Binding.Converter>
+                        </Binding>
+                    </Button.Text>
+                </Button>
             </StackLayout>
         </Grid>
     </ContentView>

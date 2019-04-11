@@ -35,6 +35,17 @@ namespace CuttingSystem3mk.Services.Services
                 return false;
 
             else
+            return true;
+        }
+
+        public async Task<bool> SetDisbaledCode(string code)
+        {
+            var codeFromDb = (await Repository.GetCutCodesRepository().Get(x => x.Barcode == code)).FirstOrDefault();
+
+            if (String.IsNullOrEmpty(codeFromDb.Barcode))
+                return false;
+
+            else
             {
                 codeFromDb.IsActive = false;
                 await Repository.GetCutCodesRepository().Update(codeFromDb);

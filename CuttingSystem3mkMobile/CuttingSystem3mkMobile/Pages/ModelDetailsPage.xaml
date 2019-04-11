@@ -27,7 +27,7 @@
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions  ="FillAndExpand"
                 BackgroundColor  ="{StaticResource BlackColor}"
-                Padding          ="0"
+                Padding          ="5"
                 CornerRadius     ="10"
                 BorderColor      ="Black">
                 <controls:CustomImage
@@ -38,7 +38,7 @@
             <Label
                 HorizontalOptions      ="Center"
                 HorizontalTextAlignment="Center"
-                Text                   ="Urządzenie nie zostało podłączone."
+                Text                   ="Urządzenie nie zostało podłączone"
                 IsVisible              ="{Binding DeviceConnected, Converter={StaticResource InvertedBooleanConvertor}}}"
                 TextColor              ="{StaticResource LightRedColor}"
                 FontSize               ="15" />

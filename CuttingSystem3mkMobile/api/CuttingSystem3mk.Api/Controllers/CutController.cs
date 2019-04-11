@@ -78,6 +78,19 @@ namespace CuttingSystem3mkMobile.Api.Controllers
             return Ok(isValidCode);
         }
 
+        [HttpGet("api/[controller]/SetDisabledCode/{code}")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<bool>> SetDisabledCode(string code)
+        {
+            var isValidCode = await Service.GetCutCodeService().SetDisbaledCode(code);
+            if (isValidCode == false)
+                return NotFound();
+
+            return Ok(isValidCode);
+        }
+
         [HttpGet("api/[controller]/GenerateCodes/{count}")]
         [ProducesResponseType(200, Type = typeof(CutCodeDetails))]
         [ProducesResponseType(404)]

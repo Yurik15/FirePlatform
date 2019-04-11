@@ -23,5 +23,9 @@ namespace CuttingSystem3mkMobile.ApplicationContext
                 OnDeviceAttach?.Invoke(null, value);
             }
         }
+        public static bool PermissionUSB
+        {
+            get; set;
+        }
     }
 }

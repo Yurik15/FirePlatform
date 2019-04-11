@@ -71,7 +71,7 @@ namespace CuttingSystem3mkMobile
                 case Xamarin.Essentials.BatteryState.NotCharging:
                     break;
                 case Xamarin.Essentials.BatteryState.Discharging:
-                    await App.Current.MainPage.DisplayAlert("Informacja", "Niski poziom baterii", "OK");
+                    //await App.Current.MainPage.DisplayAlert("Informacja", "Niski poziom baterii", "OK");
                     break;
                 case Xamarin.Essentials.BatteryState.NotPresent:
                 // Battery doesn't exist in device (desktop computer)

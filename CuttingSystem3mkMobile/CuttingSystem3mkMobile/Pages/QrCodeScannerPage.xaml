@@ -54,7 +54,7 @@
             <Label
                 HorizontalOptions      ="Center"
                 HorizontalTextAlignment="Center"
-                Text                   ="Urządzenie nie zostało podłączone."
+                Text                   ="Urządzenie nie zostało podłączone"
                 IsVisible              ="{Binding DeviceConnected, Converter={StaticResource InvertedBooleanConvertor}}}"
                 TextColor              ="{StaticResource LightRedColor}"
                 FontSize               ="15" />
