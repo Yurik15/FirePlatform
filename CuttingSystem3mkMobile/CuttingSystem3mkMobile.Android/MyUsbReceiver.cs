@@ -1,18 +1,19 @@
-﻿using System;
-using Android.Content;
+﻿using Android.Content;
 
 namespace CuttingSystem3mkMobile.Droid
 {
     [BroadcastReceiver(Enabled = true, Exported = false)]
     public class MyUsbReceiver : BroadcastReceiver
     {
+
         public MyUsbReceiver()
         {
-        }
 
+        }
         public override void OnReceive(Context context, Intent intent)
         {
-            App.Current.MainPage.DisplayAlert("Informacja", intent?.Action ?? string.Empty, "Ok");
+            bool isAttached = Android.Hardware.Usb.UsbManager.ActionUsbDeviceAttached == (intent?.Action ?? string.Empty);
+            ApplicationContext.ApplicationContext.DeviceConnected = isAttached;
         }
     }
 }

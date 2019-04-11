@@ -1,12 +1,9 @@
-﻿using System;
-using Android.Print;
+﻿using CuttingSystem3mkMobile.Droid.Implementations;
 using CuttingSystem3mkMobile.RestAPI;
 using CuttingSystem3mkMobile.Services;
-using Java.Util.Logging;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Presenters;
-using MvvmCross.Logging;
 using MvvmCross.ViewModels;
 
 namespace CuttingSystem3mkMobile.Droid

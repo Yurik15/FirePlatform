@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CuttingSystem3mkMobile.RestAPI;
+using CuttingSystem3mkMobile.Services;
 using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -34,6 +35,10 @@ namespace CuttingSystem3mkMobile.PageModels
                 RaisePropertyChanged(nameof(Busy));
             }
         }
+        public bool DeviceConnected
+        {
+            get => ApplicationContext.ApplicationContext.DeviceConnected;
+        }
         public bool IsBackArrowVisible
         {
             get; set;
@@ -44,8 +49,18 @@ namespace CuttingSystem3mkMobile.PageModels
             if (Mvx.IoCProvider.CanResolve<IMvxNavigationService>())
             {
                 _mvxNavigationService = Mvx.IoCProvider.Resolve<IMvxNavigationService>();
-                _restAPI = Mvx.IoCProvider.Resolve<IRemoteService>();
             }
+            _restAPI = Mvx.IoCProvider.Resolve<IRemoteService>();
+        }
+
+        public override Task Initialize()
+        {
+            ApplicationContext.ApplicationContext.OnDeviceAttach += UsbReceiverService_OnDeviceAttach;
+            return base.Initialize();
+        }
+        void UsbReceiverService_OnDeviceAttach(object sender, bool e)
+        {
+            RaisePropertyChanged(nameof(DeviceConnected));
         }
 
         #region commands

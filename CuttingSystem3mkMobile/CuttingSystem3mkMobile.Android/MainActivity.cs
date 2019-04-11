@@ -1,14 +1,9 @@
-﻿using System;
-
+﻿
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using MvvmCross.Forms.Platforms.Android.Views;
-using Android.Content;
-using Android.Print;
 
 namespace CuttingSystem3mkMobile.Droid
 {
@@ -26,15 +21,13 @@ namespace CuttingSystem3mkMobile.Droid
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             App.Current.InitializeNavigation();
-
+            RegisterUsbReceiver();
+        }
+        private void RegisterUsbReceiver()
+        {
             usbReceiver = new MyUsbReceiver();
-            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ActionUsbAccessoryAttached));
-            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ActionUsbAccessoryDetached));
             RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ActionUsbDeviceAttached));
             RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ActionUsbDeviceDetached));
-            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ExtraAccessory));
-            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ExtraDevice));
-            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ExtraPermissionGranted));
         }
     }
 }

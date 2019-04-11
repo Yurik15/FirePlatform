@@ -68,7 +68,7 @@
                             <VisualState.Setters>
                                 <Setter
                                     Property="BackgroundColor"
-                                    Value   ="{StaticResource LightBlackColor}" />
+                                    Value   ="{StaticResource TextGrayColor}" />
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState
