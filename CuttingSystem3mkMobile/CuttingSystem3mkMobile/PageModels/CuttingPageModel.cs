@@ -37,7 +37,7 @@ namespace CuttingSystem3mkMobile.PageModels
         #endregion ctors
 
         #region override
-        public async override void Prepare(ModelDetails parameter)
+        public override void Prepare(ModelDetails parameter)
         {
             _modelDetails = parameter;
             base.Prepare(parameter);
