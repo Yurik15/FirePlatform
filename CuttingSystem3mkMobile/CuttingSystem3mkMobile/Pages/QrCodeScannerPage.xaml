@@ -51,11 +51,19 @@
                     Font             ="Bold,20"
                     Text             ="{Binding ResultQR}" />
             </StackLayout>
+            <Label
+                HorizontalOptions      ="Center"
+                HorizontalTextAlignment="Center"
+                Text                   ="Urządzenie nie zostało podłączone."
+                IsVisible              ="{Binding DeviceConnected, Converter={StaticResource InvertedBooleanConvertor}}}"
+                TextColor              ="{StaticResource LightRedColor}"
+                FontSize               ="15" />
             <Button
                 Margin         ="10"
                 VerticalOptions="EndAndExpand"
                 Command        ="{Binding QRScannerCommand}"
-                Style          ="{StaticResource FillButtonStyle}">
+                Style          ="{StaticResource FillButtonStyle}"
+                IsEnabled      ="{Binding DeviceConnected}">
                 <Button.Text>
                     <Binding
                         Path="HasBeenScanned">

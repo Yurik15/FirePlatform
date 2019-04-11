@@ -1,10 +1,7 @@
-﻿using System;
-
+﻿
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using MvvmCross.Forms.Platforms.Android.Views;
 
@@ -14,6 +11,7 @@ namespace CuttingSystem3mkMobile.Droid
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     public class MainActivity : MvxFormsAppCompatActivity
     {
+        private MyUsbReceiver usbReceiver = null;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -23,6 +21,13 @@ namespace CuttingSystem3mkMobile.Droid
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             App.Current.InitializeNavigation();
+            RegisterUsbReceiver();
+        }
+        private void RegisterUsbReceiver()
+        {
+            usbReceiver = new MyUsbReceiver();
+            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ActionUsbDeviceAttached));
+            RegisterReceiver(usbReceiver, new IntentFilter(Android.Hardware.Usb.UsbManager.ActionUsbDeviceDetached));
         }
     }
 }
