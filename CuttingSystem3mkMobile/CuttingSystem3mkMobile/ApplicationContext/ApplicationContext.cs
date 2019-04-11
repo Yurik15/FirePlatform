@@ -11,5 +11,17 @@ namespace CuttingSystem3mkMobile.ApplicationContext
         {
             get; set;
         }
+
+        private static bool deviceConnected;
+        public static event EventHandler<bool> OnDeviceAttach;
+        public static bool DeviceConnected
+        {
+            get => deviceConnected;
+            set
+            {
+                deviceConnected = value;
+                OnDeviceAttach?.Invoke(null, value);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CuttingSystem3mkMobile.RestAPI;
+﻿using CuttingSystem3mkMobile.Droid.Implementations;
+using CuttingSystem3mkMobile.RestAPI;
 using CuttingSystem3mkMobile.Services;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
@@ -14,7 +15,6 @@ namespace CuttingSystem3mkMobile.Droid
             Mvx.IoCProvider.RegisterSingleton<IPrintManager>(new CuttingSystem3mkMobile.Droid.Implementations.PrintManager());
             Mvx.IoCProvider.RegisterSingleton<IQrScanningService>(new CuttingSystem3mkMobile.Droid.Implementations.QrScanningService());
             Mvx.IoCProvider.RegisterSingleton<IRemoteService>(new MockRemoteService());
-            Mvx.IoCProvider.RegisterSingleton<IUsbReceiverService>(new MyUsbReceiver());
 
             return new CuttingSystem3mkMobile.App();
         }

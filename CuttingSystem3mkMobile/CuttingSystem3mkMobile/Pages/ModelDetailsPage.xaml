@@ -28,12 +28,20 @@
                 HeightRequest  ="300"
                 WidthRequest   ="200"
                 ImageArrayBytes="{Binding ImagePreview}" />
+            <Label
+                HorizontalOptions      ="Center"
+                HorizontalTextAlignment="Center"
+                Text                   ="Urządzenie nie zostało podłączone."
+                IsVisible              ="{Binding DeviceConnected, Converter={StaticResource InvertedBooleanConvertor}}}"
+                TextColor              ="{StaticResource LightRedColor}"
+                FontSize               ="15" />
             <Button
-                Text           ="Start"
+                Text           ="Dalej"
                 VerticalOptions="EndAndExpand"
                 Command        ="{Binding StartCommand}"
                 Style          ="{StaticResource FillButtonStyle}"
-                Margin         ="10" />
+                Margin         ="10"
+                IsEnabled      ="{Binding DeviceConnected}" />
         </StackLayout>
     </ContentView>
 </base:BaseContentPage>

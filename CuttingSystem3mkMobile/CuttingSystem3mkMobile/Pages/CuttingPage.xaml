@@ -21,12 +21,20 @@
                     Font             ="Bold,20"
                     Text             ="{Binding InfoMsg}"
                     TextColor        ="{StaticResource LightRedColor}" />
+                <Label
+                    HorizontalOptions      ="Center"
+                    HorizontalTextAlignment="Center"
+                    Text                   ="Urządzenie nie zostało podłączone."
+                    IsVisible              ="{Binding DeviceConnected, Converter={StaticResource InvertedBooleanConvertor}}}"
+                    TextColor              ="{StaticResource LightRedColor}"
+                    FontSize               ="15" />
                 <Button
                     Text           ="Wyciąć"
                     Command        ="{Binding CutCommand}"
                     Margin         ="10"
                     VerticalOptions="EndAndExpand"
-                    Style          ="{StaticResource FillButtonStyle}" />
+                    Style          ="{StaticResource FillButtonStyle}"
+                    IsEnabled      ="{Binding DeviceConnected}" />
             </StackLayout>
         </Grid>
     </ContentView>

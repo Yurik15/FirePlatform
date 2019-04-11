@@ -68,8 +68,9 @@ namespace CuttingSystem3mkMobile
                 case Xamarin.Essentials.BatteryState.Full:
                     // Battery is full
                     break;
-                case Xamarin.Essentials.BatteryState.Discharging:
                 case Xamarin.Essentials.BatteryState.NotCharging:
+                    break;
+                case Xamarin.Essentials.BatteryState.Discharging:
                     await App.Current.MainPage.DisplayAlert("Informacja", "Niski poziom baterii", "OK");
                     break;
                 case Xamarin.Essentials.BatteryState.NotPresent:
