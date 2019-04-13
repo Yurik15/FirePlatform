@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CuttingSystem3mkMobile.Models.Models
 {
@@ -7,6 +8,7 @@ namespace CuttingSystem3mkMobile.Models.Models
     {
         public string Barcode { get; set; }
         public bool IsActive { get; set; }
+        public DateTime? ModificactionDate { get; set; }
         public int? IdCutModel { get; set; }
         [ForeignKey("IdCutModel")]
         public CutModel CutModel { get; set; }

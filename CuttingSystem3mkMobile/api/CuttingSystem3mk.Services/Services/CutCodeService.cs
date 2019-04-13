@@ -48,6 +48,7 @@ namespace CuttingSystem3mk.Services.Services
             else
             {
                 codeFromDb.IsActive = false;
+                codeFromDb.ModificactionDate = DateTime.Now;
                 await Repository.GetCutCodesRepository().Update(codeFromDb);
 
                 return true;
