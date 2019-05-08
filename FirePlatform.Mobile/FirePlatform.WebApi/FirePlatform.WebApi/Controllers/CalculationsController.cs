@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
 using FirePlatform.Services;
@@ -46,6 +47,7 @@ namespace FirePlatform.WebApi.Controllers
         [EnableCors("AllowAll")]
         public OkObjectResult Set(int groupId, int itemId, string value)
         {
+            var startDate = DateTime.Now;
             var group = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
             var item = group.Items.FirstOrDefault(x => x.NumID == itemId);
             dynamic newValue = null;
@@ -67,9 +69,12 @@ namespace FirePlatform.WebApi.Controllers
 
             var changedGroup = item.NeedNotifyGroups;
             var changedItems = item.NeedNotifyItems.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID)).ToList();
+            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev).ToList();
 
             (List<ItemGroup>, List<Item>) res = (groups: changedGroup, items: changedItems);
 
+            var result = DateTime.Now - startDate;
+            Debug.WriteLine($"[SET VALUE] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
             return Ok(res);
         }
 

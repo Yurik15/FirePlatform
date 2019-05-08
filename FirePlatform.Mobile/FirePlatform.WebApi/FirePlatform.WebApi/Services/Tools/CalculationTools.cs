@@ -41,6 +41,10 @@ namespace FirePlatform.WebApi.Services.Tools
         {
             try
             {
+                if("ns*k*(pow (p,0.5)) #2 dm³/min".Equals(formula))
+                {
+                    formula = "ns*k*(pow (p,0.5))";
+                }
                 Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase)
                 {
                     Parameters = parameters

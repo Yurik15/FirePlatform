@@ -17,13 +17,15 @@ namespace FirePlatform.WebApi.Services.Tools
             }
             foreach (var relatedItem in item.NeedNotifyItems)
             {
-                relatedItem.UpdateItem();
+                if (relatedItem.ParentGroup.IsVisible) // PERFORMANCE
+                    relatedItem.UpdateItem();
             }
         }
         public static void UpdateItem(this Item item)
         {
             if (item.ParentGroup.IsVisible)
             {
+                item.IsVisiblePrev = item.IsVisible;
                 var formula = item.Formula;
                 var visCondition = item.VisCondition;
                 if (!string.IsNullOrEmpty(visCondition))
@@ -210,7 +212,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     var value = CalculationTools.CalculateFormulas(ghostFormula.Conditions, paramsGhostFormula); //TODO need to check if element is visible but the return type is unknown and we need set the element any value (if not set then app throw exception)
                     paramsDic.Add(ghostFormula.Name, value);
                 }
-                else if(!paramsDic.ContainsKey(ghostFormula.Name))
+                else if (!paramsDic.ContainsKey(ghostFormula.Name))
                 {
                     paramsDic.Add(ghostFormula.Name, ghostFormula.Conditions);
                 }

@@ -315,17 +315,23 @@ namespace FirePlatform.WebApi.Services.Parser
                         item.DependToItemsForFormulas = relatedItems;
                         relatedItems.ForEach(x => x.ReferencedItem.NeedNotifyItems.Add(item));
 
-                        //--------//
-                        var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
-                        var res = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
-                        item.Value = res;
-                        //--------//
+                        if (item.ParentGroup.IsVisible) // PERFORMANCE
+                        {
+                            //--------//
+                            var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
+                            var res = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                            item.Value = res;
+                            //--------//
+                        }
                     }
                     if (isVisibleConditions)
                     {
-                        var paramsDic = ItemExtentions.GetParams(item.DependToItems);
-                        var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
-                        item.IsVisible = res.HasValue ? res.Value : false;
+                        if (item.ParentGroup.IsVisible) // PERFORMANCE
+                        {
+                            var paramsDic = ItemExtentions.GetParams(item.DependToItems);
+                            var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
+                            item.IsVisible = res.HasValue ? res.Value : false;
+                        }
                     }
                 }
             }

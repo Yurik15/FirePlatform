@@ -18,6 +18,8 @@ namespace FirePlatform.WebApi.Model
         private string _groupTitle;
         private string _title;
         private string _tooltipText;
+        private bool _isVisiblePrev;
+        private bool _isVisible = true;
 
         #endregion fields
 
@@ -50,13 +52,29 @@ namespace FirePlatform.WebApi.Model
         public double Max { get; set; }
         public double Inc { get; set; }
 
-        public bool IsVisible { get; set; } = true;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+            }
+        }
         public bool IsGroupVisible { get; set; } = true;
 
         public List<ComboItem> ComboItems { get; set; }
         #endregion properties
 
         #region ignore fields
+        //[JsonIgnore]
+        public bool IsVisiblePrev
+        {
+            get => _isVisiblePrev;
+            set
+            {
+                _isVisiblePrev = value;
+            }
+        }
         [JsonIgnore]
         public string TooltipText { get => _tooltipText; set => _tooltipText = value?.Trim().ToLower() ?? string.Empty; }
         [JsonIgnore]
