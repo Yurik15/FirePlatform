@@ -69,7 +69,6 @@ namespace FirePlatform.WebApi.Controllers
 
             var changedGroup = item.NeedNotifyGroups;
             var changedItems = item.NeedNotifyItems.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID)).ToList();
-            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev).ToList();
 
             foreach (var needNotifyItem in item.NeedNotifyItems)
             {
@@ -79,7 +78,7 @@ namespace FirePlatform.WebApi.Controllers
                     changedItems.AddRange(needNotifyItem.NeedNotifyItems);
                 }
             }
-
+            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev).ToList();
             (List<ItemGroup>, List<Item>) res = (groups: changedGroup, items: changedItems);
 
             var result = DateTime.Now - startDate;
