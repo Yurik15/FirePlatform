@@ -31,8 +31,8 @@ namespace FirePlatform.WebApi.Model
             VisConditionNameVaribles = new List<string>();
             FormulaNameVaribles = new List<string>();
 
-            DependToItems = new List<DataDependItem>();
-            DependToItemsForFormulas = new List<DataDependItem>();
+            DependToItems = new List<KeyValuePair<string, List<DataDependItem>>>();
+            DependToItemsForFormulas = new List<KeyValuePair<string, List<DataDependItem>>>();
             NeedNotifyItems = new List<Item>();
             NeedNotifyGroups = new List<ItemGroup>();
         }
@@ -136,9 +136,9 @@ namespace FirePlatform.WebApi.Model
         [JsonIgnore]
         public dynamic InitialValue { get; set; }
         [JsonIgnore]
-        public List<DataDependItem> DependToItems { get; set; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get; set; }
         [JsonIgnore]
-        public List<DataDependItem> DependToItemsForFormulas { get; set; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItemsForFormulas { get; set; }
         [JsonIgnore]
         public List<Item> NeedNotifyItems { get; set; }
         [JsonIgnore]

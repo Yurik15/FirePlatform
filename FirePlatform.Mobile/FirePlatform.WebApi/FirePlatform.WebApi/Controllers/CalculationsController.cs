@@ -68,7 +68,7 @@ namespace FirePlatform.WebApi.Controllers
             item.NotifyAboutChange();
 
             var changedGroup = item.NeedNotifyGroups;
-            var changedItems = item.NeedNotifyItems.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID)).ToList();
+            var changedItems = item.NeedNotifyItems/*.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID))*/.ToList();
 
             foreach (var needNotifyItem in item.NeedNotifyItems)
             {

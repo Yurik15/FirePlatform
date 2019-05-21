@@ -23,8 +23,10 @@ namespace FirePlatform.WebApi.Model
         public bool Expanded { get; set; }
         public int IndexGroup { get; set; }
         public string Title { get => _title; set => _title = value?.Trim().ToLower() ?? string.Empty; }
+        [JsonIgnore]
         public string Tag { get => _tag; set => _tag = value?.Trim().ToLower() ?? string.Empty; }
 
+        [JsonIgnore]
         public string VisCondition
         {
             get => _visCondition;
@@ -44,7 +46,7 @@ namespace FirePlatform.WebApi.Model
         public List<Item> Items { get; set; }
 
         [JsonIgnore]
-        public List<DataDependItem> DependToItems { get; set; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get; set; }
 
         [JsonIgnore]
         public bool InitialVisibility { get; set; }

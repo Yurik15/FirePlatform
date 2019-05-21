@@ -28,6 +28,7 @@ namespace FirePlatform.WebApi.Services.Tools
                 item.IsVisiblePrev = item.IsVisible;
                 var formula = item.Formula;
                 var visCondition = item.VisCondition;
+
                 if (!string.IsNullOrEmpty(visCondition))
                 {
                     var paramsDic = ItemExtentions.GetParams(item.DependToItems);
@@ -45,7 +46,6 @@ namespace FirePlatform.WebApi.Services.Tools
         }
         public static void UpdateGroup(this ItemGroup itemGroup)
         {
-
             if (!string.IsNullOrEmpty(itemGroup.VisCondition))
             {
                 var paramsDic = ItemExtentions.GetParams(itemGroup.DependToItems);
@@ -54,105 +54,173 @@ namespace FirePlatform.WebApi.Services.Tools
             }
         }
 
-        public static Dictionary<string, object> GetParams(List<DataDependItem> DependToItems)
+        public static Dictionary<string, object> GetParams(List<KeyValuePair<string, List<DataDependItem>>> dependToItems)
+        {
+
+            List<DataDependItem> depends = new List<DataDependItem>();
+            foreach (var item in dependToItems)
+            {
+                if (item.Value.Count == 1)
+                {
+                    depends.Add(item.Value.First());
+                }
+                else if (item.Value.Count > 1)
+                {
+                    var visibleItems = item.Value.Where(x => x.ReferencedItem.IsVisible).ToList();
+                    if (visibleItems.Any())
+                    {
+                        depends.Add(visibleItems.FirstOrDefault());
+                    }
+                    else
+                    {
+                        var firstElement = item.Value.FirstOrDefault();
+                        depends.Add(firstElement);
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            var paramsDic = GetParams(depends);
+            return paramsDic;
+        }
+        public static Dictionary<string, object> GetParams(List<DataDependItem> dependToItems)
         {
             var paramsDic = new Dictionary<string, object>();
-            foreach (var relatedItem in DependToItems)
+            foreach (var relatedItem in dependToItems)
             {
-                if (relatedItem.ReferencedItem.Type == ItemType.Combo.ToString())
+                var paramsFromItem = GetParam(relatedItem);
+                foreach (var param in paramsFromItem)
                 {
-                    var name = relatedItem.Name;
-                    var value = false;
-                    if (paramsDic.ContainsKey(name.Trim()))
+                    if (paramsDic.ContainsKey(param.Key))
                     {
 
                     }
                     else
                     {
-                        var nameVarible = relatedItem.ReferencedItem.NameVarible;
-                        if (name.Contains(","))
+                        paramsDic.Add(param.Key, param.Value);
+                    }
+                }
+            }
+            return paramsDic;
+        }
+
+        private static Dictionary<string, object> GetParam(DataDependItem relatedItem)
+        {
+            var paramsDic = new Dictionary<string, object>();
+
+            if (relatedItem.ReferencedItem.Type == ItemType.Combo.ToString())
+            {
+                var name = relatedItem.Name;
+                var value = false;
+                if (paramsDic.ContainsKey(name.Trim()))
+                {
+
+                }
+                else
+                {
+                    var nameVarible = relatedItem.ReferencedItem.NameVarible;
+                    if (name.Contains(","))
+                    {
+                        var names = name.Split(",");
+
+                        foreach (var nm in names)
                         {
-                            var names = name.Split(",");
-
-                            foreach (var nm in names)
+                            if (paramsDic.ContainsKey(nm.Trim()))
                             {
-                                if (paramsDic.ContainsKey(nm.Trim()))
-                                {
 
-                                }
-                                else
-                                {
-                                    value = nameVarible == nm;
-                                    paramsDic.Add(nm.Trim(), value);
-                                }
+                            }
+                            else
+                            {
+                                value = nameVarible == nm;
+                                paramsDic.Add(nm.Trim(), value);
                             }
                         }
-                        else
-                        {
-                            value = nameVarible == name;
-                        }
-                        if (!name.Contains(","))
-                            paramsDic.Add(name.Trim(), value);
                     }
+                    else
+                    {
+                        value = nameVarible == name;
+                    }
+                    if (!name.Contains(","))
+                        paramsDic.Add(name.Trim(), value);
                 }
-                else if (relatedItem.ReferencedItem.Type == ItemType.Text.ToString())
+            }
+            else if (relatedItem.ReferencedItem.Type == ItemType.Text.ToString())
+            {
+                if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
                 {
-                    if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
+
+                }
+                else
+                {
+                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? string.Empty);
+                }
+            }
+            else if (relatedItem.ReferencedItem.Type == ItemType.Num.ToString())
+            {
+                if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
+                {
+
+                }
+                else
+                {
+                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? -9999999);
+                }
+            }
+            else if (relatedItem.ReferencedItem.Type == ItemType.Check.ToString())
+            {
+                if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
+                {
+
+                }
+                else
+                {
+                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? false);
+                }
+            }
+            else if (relatedItem.ReferencedItem.Type == ItemType.Formula.ToString())
+            {
+                if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
+                {
+
+                }
+                else
+                {
+                    var param = GetParamsFromFormulasAfterCalculation(relatedItem);
+                    paramsDic.Add(param.name.Trim(), param.value ?? false);
+                }
+            }
+            else if(relatedItem.ReferencedItem.Type == ItemType.Hidden.ToString())
+            {
+                if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
+                {
+
+                }
+                else
+                {
+                    var param = GetParamsFromFormulasAfterCalculation(relatedItem);
+                    var name = param.name.Trim();
+                    var value = param.value;
+                    if (!relatedItem.ReferencedItem.IsVisible)
+                    {
+                        value = ValueIfGFormulaIsNotVisible(value);
+                    }
+                    paramsDic.Add(name, value);
+                }
+            }
+            if (relatedItem.ReferencedItem.GhostFormulas.Any())
+            {
+                var paramsDicFromGhostFormulas = GetParamsFromGhostFormulas(relatedItem.ReferencedItem.GhostFormulas, relatedItem.ReferencedItem.IsVisible && relatedItem.ReferencedItem.IsGroupVisible);
+                foreach (var element in paramsDicFromGhostFormulas)
+                {
+                    if (paramsDic.ContainsKey(element.Key.Trim()))
                     {
 
                     }
                     else
                     {
-                        paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? string.Empty);
-                    }
-                }
-                else if (relatedItem.ReferencedItem.Type == ItemType.Num.ToString())
-                {
-                    if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
-                    {
-
-                    }
-                    else
-                    {
-                        paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? -9999999);
-                    }
-                }
-                else if (relatedItem.ReferencedItem.Type == ItemType.Check.ToString())
-                {
-                    if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
-                    {
-
-                    }
-                    else
-                    {
-                        paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? false);
-                    }
-                }
-                else if (relatedItem.ReferencedItem.Type == ItemType.Formula.ToString() || relatedItem.ReferencedItem.Type == ItemType.Hidden.ToString())
-                {
-                    if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
-                    {
-
-                    }
-                    else
-                    {
-                        var param = GetParamsFromFormulasAfterCalculation(relatedItem);
-                        paramsDic.Add(param.name.Trim(), param.value ?? false);
-                    }
-                }
-                if (relatedItem.ReferencedItem.GhostFormulas.Any())
-                {
-                    var paramsDicFromGhostFormulas = GetParamsFromGhostFormulas(relatedItem.ReferencedItem.GhostFormulas, relatedItem.ReferencedItem.IsVisible && relatedItem.ReferencedItem.IsGroupVisible);
-                    foreach (var element in paramsDicFromGhostFormulas)
-                    {
-                        if (paramsDic.ContainsKey(element.Key.Trim()))
-                        {
-
-                        }
-                        else
-                        {
-                            paramsDic.Add(element.Key.Trim(), element.Value);
-                        }
+                        paramsDic.Add(element.Key.Trim(), element.Value);
                     }
                 }
             }
@@ -176,17 +244,27 @@ namespace FirePlatform.WebApi.Services.Tools
             {
                 foreach (var relatedItem in item.DependToItemsForFormulas)
                 {
-                    var nameVarible = relatedItem.Name;
+                    var nameVarible = relatedItem.Key;
                     if (!string.IsNullOrEmpty(nameVarible) && !paramsDic.ContainsKey(nameVarible))
                     {
-                        var value = relatedItem.ReferencedItem.Value;
+                        var visRelatedItem = relatedItem.Value.Where(x => x.ReferencedItem.IsVisible).ToArray();
+                        object value = null;
+                        if (visRelatedItem.Any())
+                        {
+                            value = visRelatedItem.First().ReferencedItem.Value;
+                        }
+                        else
+                        {
+                            value = relatedItem.Value.First().ReferencedItem.Value;
+                        }
+
                         if (string.IsNullOrEmpty(nameVarible))
                         {
-                            nameVarible = relatedItem.Name;
+                            nameVarible = relatedItem.Key;
                         }
                         if (value == null || string.IsNullOrEmpty(value as string))
                         {
-                            var type = relatedItem.ReferencedItem.Type;
+                            var type = relatedItem.Value.First().ReferencedItem.Type;
                             value = GetDefaultValueForElement(type);
                         }
                         paramsDic.Add(nameVarible, value);
@@ -207,19 +285,40 @@ namespace FirePlatform.WebApi.Services.Tools
             var paramsDic = new Dictionary<string, object>();
             foreach (var ghostFormula in ghostFormulas)
             {
+                var name = ghostFormula.Name;
+                object value = null;
                 if (ghostFormula.DependToItems.Any())
                 {
                     var paramsGhostFormula = ghostFormula.GetParams();
-                    var value = CalculationTools.CalculateFormulas(ghostFormula.Conditions, paramsGhostFormula); //TODO need to check if element is visible but the return type is unknown and we need set the element any value (if not set then app throw exception)
-                    paramsDic.Add(ghostFormula.Name, value);
+                    value = CalculationTools.CalculateFormulas(ghostFormula.Conditions, paramsGhostFormula); //TODO need to check if element is visible but the return type is unknown and we need set the element any value (if not set then app throw exception)
                 }
                 else if (!paramsDic.ContainsKey(ghostFormula.Name))
                 {
-                    paramsDic.Add(ghostFormula.Name, ghostFormula.Conditions);
+                    value = ghostFormula.Conditions;
                 }
+                if (!itemIsVisible)
+                {
+                    value = ValueIfGFormulaIsNotVisible(value);
+                }
+                paramsDic.Add(name, value);
             }
             return paramsDic;
         }
+
+        private static object ValueIfGFormulaIsNotVisible(object value)
+        {
+            string newValue = value?.ToString();
+            if (bool.TryParse(newValue, out bool resultBool))
+            {
+                return false;
+            }
+            if (double.TryParse(newValue, out double resultDouble))
+            {
+                return 0;
+            }
+            return value;
+        }
+
         public static Dictionary<string, object> GetParams(this GhostFormula ghostFormula)
         {
             var paramsDic = new Dictionary<string, object>();

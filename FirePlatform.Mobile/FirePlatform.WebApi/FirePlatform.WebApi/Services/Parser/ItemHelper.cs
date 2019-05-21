@@ -89,11 +89,11 @@ namespace FirePlatform.WebApi.Services.Parser
                             var numvar = numstrings[0].Trim().ToLowerInvariant();
                             var numvals = Parser.StringSplit(numstrings[1].Trim(), " ");
 
-                            item.Dec = "F" + Convert.ToInt32(numvals[0]);
-                            item.Min = Convert.ToDouble(numvals[1]);
-                            item.Value = Convert.ToDouble(numvals[2]);
-                            item.Max = Convert.ToDouble(numvals[3]);
-                            item.Inc = Convert.ToDouble(numvals[4]);
+                            item.Dec = "F" + Convert.ToInt32(numvals[0], System.Globalization.CultureInfo.InvariantCulture);
+                            item.Min = Convert.ToDouble(numvals[1], System.Globalization.CultureInfo.InvariantCulture);
+                            item.Value = Convert.ToDouble(numvals[2], System.Globalization.CultureInfo.InvariantCulture);
+                            item.Max = Convert.ToDouble(numvals[3], System.Globalization.CultureInfo.InvariantCulture);
+                            item.Inc = Convert.ToDouble(numvals[4], System.Globalization.CultureInfo.InvariantCulture);
                             item.NameVarible = numvar;
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "C:")))
