@@ -40,6 +40,51 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(res);
         }
 
+        [HttpGet("api/[controller]/test-calc")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        public OkObjectResult TestCalc()
+        {
+            var parameters = new Dictionary<string, object>()
+            {
+                { "a", null },
+                { "b", null },
+                { "c", true },
+                { "d", false },
+                { "e", 1 },
+                {"f", "sdasdasd" }
+            };
+            a("c || d", parameters);
+            a("a && b", parameters);
+            a("a || b", parameters);
+            a("a && c", parameters);
+            a("a || c", parameters);
+            a("a && e<=1", parameters);
+            a("a>=1 && e<=1", parameters);
+            a("a >= 0", parameters);
+            a("f == a", parameters);
+            a("'a' == a", parameters);
+            a("'a' == f", parameters);
+            void a(string formula, Dictionary<string, object> param)
+            {
+                try
+                {
+                    var expression = new Expression(formula, EvaluateOptions.IgnoreCase)
+                    {
+                        Parameters = parameters
+                    };
+                    expression.Evaluate();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{formula} - {ex.Message} \n");
+                }
+            }
+            return Ok(true);
+        }
+
         [HttpGet("api/[controller]/Set")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
