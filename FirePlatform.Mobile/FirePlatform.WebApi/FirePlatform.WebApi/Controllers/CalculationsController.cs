@@ -124,8 +124,16 @@ namespace FirePlatform.WebApi.Controllers
                     changedItems.AddRange(needNotifyItem.NeedNotifyItems);
                 }
             }
+
+            var resultGroups = new List<ItemGroup>();
+            changedGroup.ForEach(x => resultGroups.Add(new ItemGroup()
+            {
+                IndexGroup = x.IndexGroup,
+                IsVisible = x.IsVisible
+            }));
+
             changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev).ToList();
-            (List<ItemGroup>, List<Item>) res = (groups: changedGroup, items: changedItems);
+            (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
 
             var result = DateTime.Now - startDate;
             Debug.WriteLine($"[SET VALUE] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
