@@ -11,6 +11,7 @@ using FirePlatform.WebApi.Services.Parser;
 using FirePlatform.WebApi.Services.Tools;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using NCalc;
 
 namespace FirePlatform.WebApi.Controllers
 {

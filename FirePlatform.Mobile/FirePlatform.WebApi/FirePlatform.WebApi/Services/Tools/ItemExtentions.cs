@@ -113,7 +113,7 @@ namespace FirePlatform.WebApi.Services.Tools
             if (relatedItem.ReferencedItem.Type == ItemType.Combo.ToString())
             {
                 var name = relatedItem.Name;
-                var value = false;
+                bool? value = false;
                 if (paramsDic.ContainsKey(name.Trim()))
                 {
 
@@ -134,6 +134,7 @@ namespace FirePlatform.WebApi.Services.Tools
                             else
                             {
                                 value = nameVarible == nm;
+                                value = relatedItem.ReferencedItem.IsVisible ? value : null;
                                 paramsDic.Add(nm.Trim(), value);
                             }
                         }
@@ -143,7 +144,10 @@ namespace FirePlatform.WebApi.Services.Tools
                         value = nameVarible == name;
                     }
                     if (!name.Contains(","))
+                    {
+                        value = relatedItem.ReferencedItem.IsVisible ? value : null;
                         paramsDic.Add(name.Trim(), value);
+                    }
                 }
             }
             else if (relatedItem.ReferencedItem.Type == ItemType.Text.ToString())
@@ -154,7 +158,8 @@ namespace FirePlatform.WebApi.Services.Tools
                 }
                 else
                 {
-                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? string.Empty);
+                    var value = relatedItem.ReferencedItem.IsVisible ? relatedItem.ReferencedItem.Value ?? string.Empty : null;
+                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), value);
                 }
             }
             else if (relatedItem.ReferencedItem.Type == ItemType.Num.ToString())
@@ -165,7 +170,8 @@ namespace FirePlatform.WebApi.Services.Tools
                 }
                 else
                 {
-                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? -9999999);
+                    var value = relatedItem.ReferencedItem.IsVisible ? (relatedItem.ReferencedItem.Value ?? -9999999) : null;
+                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), value);
                 }
             }
             else if (relatedItem.ReferencedItem.Type == ItemType.Check.ToString())
@@ -176,7 +182,8 @@ namespace FirePlatform.WebApi.Services.Tools
                 }
                 else
                 {
-                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), relatedItem.ReferencedItem.Value ?? false);
+                    var value = relatedItem.ReferencedItem.IsVisible ? (relatedItem.ReferencedItem.Value ?? false) : null;
+                    paramsDic.Add(relatedItem.ReferencedItem.NameVarible.Trim(), value);
                 }
             }
             else if (relatedItem.ReferencedItem.Type == ItemType.Formula.ToString())
@@ -188,10 +195,11 @@ namespace FirePlatform.WebApi.Services.Tools
                 else
                 {
                     var param = GetParamsFromFormulasAfterCalculation(relatedItem);
-                    paramsDic.Add(param.name.Trim(), param.value ?? false);
+                    var value = relatedItem.ReferencedItem.IsVisible ? (param.value ?? false) : null;
+                    paramsDic.Add(param.name.Trim(), value);
                 }
             }
-            else if(relatedItem.ReferencedItem.Type == ItemType.Hidden.ToString())
+            else if (relatedItem.ReferencedItem.Type == ItemType.Hidden.ToString())
             {
                 if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
                 {
@@ -206,6 +214,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     {
                         value = ValueIfGFormulaIsNotVisible(value);
                     }
+                    value = relatedItem.ReferencedItem.IsVisible ? value : null;
                     paramsDic.Add(name, value);
                 }
             }
@@ -220,7 +229,8 @@ namespace FirePlatform.WebApi.Services.Tools
                     }
                     else
                     {
-                        paramsDic.Add(element.Key.Trim(), element.Value);
+                        var value = relatedItem.ReferencedItem.IsVisible ? element.Value : null; 
+                        paramsDic.Add(element.Key.Trim(), value);
                     }
                 }
             }

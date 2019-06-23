@@ -9,10 +9,10 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-    <PackageReference Include="CoreCLR-NCalc" Version="2.2.51" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\NCalc\NCalc.csproj" />
     <ProjectReference Include="..\FirePlatform.Models\FirePlatform.Models.csproj" />
     <ProjectReference Include="..\FirePlatform.Repositories\FirePlatform.Repositories.csproj" />
     <ProjectReference Include="..\FirePlatform.Services\FirePlatform.Services.csproj" />

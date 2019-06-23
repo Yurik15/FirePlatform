@@ -23,6 +23,7 @@ namespace FirePlatform.WebApi.Services.Tools
             }
             catch (Exception ex)
             {
+                //System.Diagnostics.Debug.WriteLine($"VISIBILITY: {formula}; PARAMS - {string.Join('|', parameters.Select(x=> $"key - {x.Key}, value - {x.Value}").ToList())}; exception:{ex.Message} \n");
                 if (!NotFoundName_Visibility.ContainsKey(ex.Message))
                 {
                     NotFoundName_Visibility.Add(ex.Message, 1);
