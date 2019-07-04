@@ -13,10 +13,18 @@ namespace FirePlatform.WebApi.Services.Tools
         {
             foreach (var relatedGroup in item.NeedNotifyGroups)
             {
+                if (relatedGroup.Title.ToLower().Equals("spacing requirements"))
+                {
+
+                }
                 relatedGroup.UpdateGroup();
             }
             foreach (var relatedItem in item.NeedNotifyItems)
             {
+                if(relatedItem.Title.Trim().ToLower().Contains("ceiling slope"))
+                {
+
+                }
                 if (relatedItem.ParentGroup.IsVisible) // PERFORMANCE
                     relatedItem.UpdateItem();
             }
@@ -56,15 +64,11 @@ namespace FirePlatform.WebApi.Services.Tools
 
         public static Dictionary<string, object> GetParams(List<KeyValuePair<string, List<DataDependItem>>> dependToItems)
         {
-
+            Dictionary<string, object> paramsDic = new Dictionary<string, object>();
             List<DataDependItem> depends = new List<DataDependItem>();
             foreach (var item in dependToItems)
             {
-                if (item.Value.Count == 1)
-                {
-                    depends.Add(item.Value.First());
-                }
-                else if (item.Value.Count > 1)
+                try
                 {
                     var visibleItems = item.Value.Where(x => x.ReferencedItem.IsVisible).ToList();
                     if (visibleItems.Any())
@@ -73,16 +77,44 @@ namespace FirePlatform.WebApi.Services.Tools
                     }
                     else
                     {
-                        var firstElement = item.Value.FirstOrDefault();
-                        depends.Add(firstElement);
+                        if (item.Key.Contains(","))
+                        {
+                            var parts = item.Key.Split(",");
+                            foreach (var part in parts)
+                            {
+                                if (!paramsDic.ContainsKey(part))
+                                {
+                                    paramsDic.Add(part, null);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!paramsDic.ContainsKey(item.Key))
+                            {
+                                paramsDic.Add(item.Key, null);
+                            }
+
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
 
                 }
             }
-            var paramsDic = GetParams(depends);
+            var param = GetParams(depends);
+            foreach (var pr in param)
+            {
+                if (!paramsDic.ContainsKey(pr.Key))
+                {
+                    paramsDic.Add(pr.Key, pr.Value);
+                }
+                else
+                {
+                    paramsDic[pr.Key] = pr.Value;
+                }
+            }
             return paramsDic;
         }
         public static Dictionary<string, object> GetParams(List<DataDependItem> dependToItems)
@@ -229,7 +261,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     }
                     else
                     {
-                        var value = relatedItem.ReferencedItem.IsVisible ? element.Value : null; 
+                        var value = relatedItem.ReferencedItem.IsVisible ? element.Value : null;
                         paramsDic.Add(element.Key.Trim(), value);
                     }
                 }
