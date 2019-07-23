@@ -37,7 +37,7 @@ namespace NCalc.Domain
 
         private static Type[] CommonTypes = new[] { typeof(Int64), typeof(Double), typeof(Boolean), typeof(String), typeof(Decimal) };
 
-    /// <summary>
+        /// <summary>
         /// Gets the the most precise type.
         /// </summary>
         /// <param name="a">Type a.</param>
@@ -56,9 +56,9 @@ namespace NCalc.Domain
             return a;
         }
 
-        public int CompareUsingMostPreciseType(object a, object b)
+        public int? CompareUsingMostPreciseType(object a, object b)
         {
-            if (a == null || b == null) return -1;
+            if (a == null || b == null) return null;
             Type mpt = GetMostPreciseType(a.GetType(), b.GetType());
             a = Convert.ChangeType(a, mpt);
             b = Convert.ChangeType(b, mpt);
@@ -104,6 +104,7 @@ namespace NCalc.Domain
 
         public override void Visit(BinaryExpression expression)
         {
+            int? result = null;
             // simulate Lazy<Func<>> behavior for late evaluation
             object leftValue = null;
             Func<object> left = () =>
@@ -149,27 +150,32 @@ namespace NCalc.Domain
 
                 case BinaryExpressionType.Equal:
                     // Use the type of the left operand to make the comparison
-                    Result = CompareUsingMostPreciseType(left(), right()) == 0;
+                    result = CompareUsingMostPreciseType(left(), right());
+                    Result = result.HasValue && result.Value == 0;
                     break;
 
                 case BinaryExpressionType.Greater:
                     // Use the type of the left operand to make the comparison
-                    Result = CompareUsingMostPreciseType(left(), right()) > 0;
+                    result = CompareUsingMostPreciseType(left(), right());
+                    Result = result.HasValue && result.Value > 0;
                     break;
 
                 case BinaryExpressionType.GreaterOrEqual:
                     // Use the type of the left operand to make the comparison
-                    Result = CompareUsingMostPreciseType(left(), right()) >= 0;
+                    result = CompareUsingMostPreciseType(left(), right());
+                    Result = result.HasValue && result.Value >= 0;
                     break;
 
                 case BinaryExpressionType.Lesser:
                     // Use the type of the left operand to make the comparison
-                    Result = CompareUsingMostPreciseType(left(), right()) < 0;
+                    result = CompareUsingMostPreciseType(left(), right());
+                    Result = result.HasValue && result.Value < 0;
                     break;
 
                 case BinaryExpressionType.LesserOrEqual:
                     // Use the type of the left operand to make the comparison
-                    Result = CompareUsingMostPreciseType(left(), right()) <= 0;
+                    result = CompareUsingMostPreciseType(left(), right());
+                    Result = result.HasValue && result.Value <= 0;
                     break;
 
                 case BinaryExpressionType.Minus:
@@ -183,7 +189,8 @@ namespace NCalc.Domain
 
                 case BinaryExpressionType.NotEqual:
                     // Use the type of the left operand to make the comparison
-                    Result = CompareUsingMostPreciseType(left(), right()) != 0;
+                    result = CompareUsingMostPreciseType(left(), right());
+                    Result = result.HasValue && result.Value != 0;
                     break;
 
                 case BinaryExpressionType.Plus:
@@ -257,22 +264,22 @@ namespace NCalc.Domain
         public override void Visit(Function function)
         {
             var args = new FunctionArgs
-                           {
-                               Parameters = new Expression[function.Expressions.Length]
-                           };
+            {
+                Parameters = new Expression[function.Expressions.Length]
+            };
 
             // Don't call parameters right now, instead let the function do it as needed.
             // Some parameters shouldn't be called, for instance, in a if(), the "not" value might be a division by zero
             // Evaluating every value could produce unexpected behaviour
-            for (int i = 0; i < function.Expressions.Length; i++ )
+            for (int i = 0; i < function.Expressions.Length; i++)
             {
-                args.Parameters[i] =  new Expression(function.Expressions[i], _options);
+                args.Parameters[i] = new Expression(function.Expressions[i], _options);
                 args.Parameters[i].EvaluateFunction += EvaluateFunction;
                 args.Parameters[i].EvaluateParameter += EvaluateParameter;
 
                 // Assign the parameters of the Expression to the arguments so that custom Functions and Parameters can use them
                 args.Parameters[i].Parameters = Parameters;
-            }            
+            }
 
             // Calls external implementation
             OnEvaluateFunction(IgnoreCase ? function.Identifier.Name.ToLower() : function.Identifier.Name, args);
@@ -542,7 +549,7 @@ namespace NCalc.Domain
                     break;
 
                 #endregion
-                
+
                 #region Max
                 case "max":
 
@@ -606,7 +613,8 @@ namespace NCalc.Domain
                     for (int i = 1; i < function.Expressions.Length; i++)
                     {
                         object argument = Evaluate(function.Expressions[i]);
-                        if (CompareUsingMostPreciseType(parameter, argument) == 0)
+                        var result = CompareUsingMostPreciseType(parameter, argument);
+                        if (result.HasValue && result.Value == 0)
                         {
                             evaluation = true;
                             break;
@@ -619,7 +627,7 @@ namespace NCalc.Domain
                 #endregion
 
                 default:
-                    throw new ArgumentException("Function not found", 
+                    throw new ArgumentException("Function not found",
                         function.Identifier.Name);
             }
         }

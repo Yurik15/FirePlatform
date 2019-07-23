@@ -33,7 +33,7 @@ namespace FirePlatform.WebApi.Services.Tools
         {
             if (item.ParentGroup.IsVisible)
             {
-                item.IsVisiblePrev = item.IsVisible;
+                //item.IsVisiblePrev = item.IsVisible;
                 var formula = item.Formula;
                 var visCondition = item.VisCondition;
 
@@ -43,12 +43,16 @@ namespace FirePlatform.WebApi.Services.Tools
                     var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
                     item.IsVisible = res.HasValue ? res.Value : false;
                 }
+                else
+                {
+                    item.IsVisible = true;
+                }
                 if (!string.IsNullOrEmpty(formula) && item.IsVisible)
                 {
                     var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
                     var res = CalculationTools.CalculateFormulas(formula, paramsDic);
                     item.Value = res;
-                    item?.NotifyAboutChange();
+                    //item?.NotifyAboutChange();
                 }
             }
         }
@@ -152,7 +156,7 @@ namespace FirePlatform.WebApi.Services.Tools
                 }
                 else
                 {
-                    var nameVarible = relatedItem.ReferencedItem.NameVarible;
+                    var selectedValue = relatedItem.ReferencedItem.NameVarible;
                     if (name.Contains(","))
                     {
                         var names = name.Split(",");
@@ -165,7 +169,7 @@ namespace FirePlatform.WebApi.Services.Tools
                             }
                             else
                             {
-                                value = nameVarible == nm;
+                                value = selectedValue.Contains(",") ? selectedValue.Split(",").Select(x=>x.Trim()).ToList().Contains(nm) : selectedValue == nm;
                                 value = relatedItem.ReferencedItem.IsVisible ? value : null;
                                 paramsDic.Add(nm.Trim(), value);
                             }
@@ -173,7 +177,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     }
                     else
                     {
-                        value = nameVarible == name;
+                        value = selectedValue == name;
                     }
                     if (!name.Contains(","))
                     {

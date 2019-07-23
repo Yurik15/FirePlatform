@@ -94,46 +94,79 @@ namespace FirePlatform.WebApi.Controllers
         public OkObjectResult Set(int groupId, int itemId, string value)
         {
             var startDate = DateTime.Now;
-            var group = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
-            var item = group.Items.FirstOrDefault(x => x.NumID == itemId);
+            var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
+            var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == itemId);
             dynamic newValue = null;
-            if (item.Type == ItemType.Num.ToString())
+            if (selectedItem.Type == ItemType.Num.ToString())
             {
                 newValue = double.Parse(value);
             }
-            else if (item.Type == ItemType.Check.ToString())
+            else if (selectedItem.Type == ItemType.Check.ToString())
             {
                 newValue = bool.Parse(value);
             }
-            else if (item.Type == ItemType.Combo.ToString())
+            else if (selectedItem.Type == ItemType.Combo.ToString())
             {
-                item.NameVarible = value;
+                selectedItem.NameVarible = value;
                 newValue = true;
             }
-            item.Value = newValue;
-            item.NotifyAboutChange();
+            selectedItem.Value = newValue;
 
-            var changedGroup = item.NeedNotifyGroups;
-            var changedItems = item.NeedNotifyItems/*.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID))*/.ToList();
+            foreach (var group in UsersTmp)
+            {
+                if ("construction details".Equals(group.Title))
+                {
 
-            foreach (var needNotifyItem in item.NeedNotifyItems)
+                }
+                group.UpdateGroup();
+                foreach (var item in group.Items)
+                {
+                    if(item.NumID == 42 && item.GroupID == 17)
+                    {
+
+                    }
+
+                    if(group.IsVisible && item.Title.ToLower().Contains("clear space below ceiling sprinklers"))
+                    {
+
+                    }
+                    
+                    if (group.IsVisible)
+                        item.UpdateItem();
+                    else
+                        item.IsVisible = false;
+                }
+            }
+
+            #region
+            //item.NotifyAboutChange();
+
+            //var changedGroup = item.NeedNotifyGroups;
+            //var changedItems = item.NeedNotifyItems/*.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID))*/.ToList();
+
+            /*foreach (var needNotifyItem in item.NeedNotifyItems)
             {
                 if (needNotifyItem.Type == ItemType.Formula.ToString() || needNotifyItem.Type == ItemType.Hidden.ToString())
                 {
                     changedGroup.AddRange(needNotifyItem.NeedNotifyGroups);
                     changedItems.AddRange(needNotifyItem.NeedNotifyItems);
                 }
-            }
+            }*/
+            #endregion
 
             var resultGroups = new List<ItemGroup>();
-            changedGroup.ForEach(x => resultGroups.Add(new ItemGroup()
+            UsersTmp.ForEach(x => resultGroups.Add(new ItemGroup()
             {
                 IndexGroup = x.IndexGroup,
                 IsVisible = x.IsVisible
             }));
 
+            var changedItems = new List<Item>();
+            UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
+
             changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev).ToList();
             (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
+
 
             var result = DateTime.Now - startDate;
             Debug.WriteLine($"[SET VALUE] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");

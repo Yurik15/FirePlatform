@@ -57,6 +57,7 @@ namespace FirePlatform.WebApi.Model
             get => _isVisible;
             set
             {
+                IsVisiblePrev = _isVisible;
                 _isVisible = value;
             }
         }

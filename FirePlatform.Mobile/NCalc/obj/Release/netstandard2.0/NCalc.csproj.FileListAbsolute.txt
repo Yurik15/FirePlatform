@@ -1,0 +1,9 @@
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\netstandard2.0\NCalc.deps.json
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\netstandard2.0\NCalc.dll
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\netstandard2.0\NCalc.pdb
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.csprojAssemblyReference.cache
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.csproj.CoreCompileInputs.cache
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.AssemblyInfoInputs.cache
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.AssemblyInfo.cs
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.dll
+D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.pdb

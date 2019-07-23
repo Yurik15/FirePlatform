@@ -30,7 +30,7 @@ namespace FirePlatform.WebApi.Services.Parser
             item.GroupID = groupNum;
             item.GroupTitle = groupTitle;
             item.NumID = numID;
-
+            
             var bracket = Text_line.IndexOf("[", StringComparison.Ordinal);
             if (bracket > -1)
             {
