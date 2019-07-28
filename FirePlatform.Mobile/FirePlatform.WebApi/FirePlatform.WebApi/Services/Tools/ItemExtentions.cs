@@ -21,7 +21,7 @@ namespace FirePlatform.WebApi.Services.Tools
             }
             foreach (var relatedItem in item.NeedNotifyItems)
             {
-                if(relatedItem.Title.Trim().ToLower().Contains("ceiling slope"))
+                if (relatedItem.Title.Trim().ToLower().Contains("ceiling slope"))
                 {
 
                 }
@@ -46,6 +46,10 @@ namespace FirePlatform.WebApi.Services.Tools
                 else
                 {
                     item.IsVisible = true;
+                }
+                if (item.IsVisible && item.NumID == 125 && item.GroupID == 0)
+                {
+
                 }
                 if (!string.IsNullOrEmpty(formula) && item.IsVisible)
                 {
@@ -169,7 +173,7 @@ namespace FirePlatform.WebApi.Services.Tools
                             }
                             else
                             {
-                                value = selectedValue.Contains(",") ? selectedValue.Split(",").Select(x=>x.Trim()).ToList().Contains(nm) : selectedValue == nm;
+                                value = selectedValue.Contains(",") ? selectedValue.Split(",").Select(x => x.Trim()).ToList().Contains(nm) : selectedValue == nm;
                                 value = relatedItem.ReferencedItem.IsVisible ? value : null;
                                 paramsDic.Add(nm.Trim(), value);
                             }
@@ -230,9 +234,11 @@ namespace FirePlatform.WebApi.Services.Tools
                 }
                 else
                 {
-                    var param = GetParamsFromFormulasAfterCalculation(relatedItem);
-                    var value = relatedItem.ReferencedItem.IsVisible ? (param.value ?? false) : null;
-                    paramsDic.Add(param.name.Trim(), value);
+                    //var param = GetParamsFromFormulasAfterCalculation(relatedItem);
+                    //var value = relatedItem.ReferencedItem.IsVisible ? (param.value ?? false) : null;
+                    var name = relatedItem.ReferencedItem.NameVarible;
+                    var value = relatedItem.ReferencedItem.IsVisible ? relatedItem.ReferencedItem.Value : null;
+                    paramsDic.Add(name, value);
                 }
             }
             else if (relatedItem.ReferencedItem.Type == ItemType.Hidden.ToString())
@@ -243,14 +249,27 @@ namespace FirePlatform.WebApi.Services.Tools
                 }
                 else
                 {
-                    var param = GetParamsFromFormulasAfterCalculation(relatedItem);
-                    var name = param.name.Trim();
-                    var value = param.value;
-                    if (!relatedItem.ReferencedItem.IsVisible)
-                    {
-                        value = ValueIfGFormulaIsNotVisible(value);
-                    }
+                    //var param = GetParamsFromFormulasAfterCalculation(relatedItem);
+                    var name = relatedItem.ReferencedItem.NameVarible;//param.name.Trim();
+                    var value = relatedItem.ReferencedItem.IsVisible ? relatedItem.ReferencedItem.Value : null;//param.value;
+                    //if (!relatedItem.ReferencedItem.IsVisible)
+                    //{
+                    //    value = ValueIfGFormulaIsNotVisible(value);
+                    //}
                     value = relatedItem.ReferencedItem.IsVisible ? value : null;
+                    paramsDic.Add(name, value);
+                }
+            }
+            if (relatedItem.ReferencedItem.Type == ItemType.BackCalc.ToString())
+            {
+                if (paramsDic.ContainsKey(relatedItem.ReferencedItem.NameVarible.Trim()))
+                {
+
+                }
+                else
+                {
+                    var name = relatedItem.ReferencedItem.NameVarible;
+                    var value = relatedItem.ReferencedItem.IsVisible ? relatedItem.ReferencedItem.Value : null;
                     paramsDic.Add(name, value);
                 }
             }

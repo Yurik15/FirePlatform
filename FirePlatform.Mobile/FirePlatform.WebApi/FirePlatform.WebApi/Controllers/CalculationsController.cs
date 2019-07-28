@@ -121,16 +121,16 @@ namespace FirePlatform.WebApi.Controllers
                 group.UpdateGroup();
                 foreach (var item in group.Items)
                 {
-                    if(item.NumID == 42 && item.GroupID == 17)
+                    if (item.NumID == 125 && item.GroupID == 0)
                     {
 
                     }
 
-                    if(group.IsVisible && item.Title.ToLower().Contains("clear space below ceiling sprinklers"))
+                    if (group.IsVisible && item.Title.ToLower().Trim().Equals("hazard class") && !string.IsNullOrWhiteSpace(item.Formula))
                     {
 
                     }
-                    
+
                     if (group.IsVisible)
                         item.UpdateItem();
                     else
@@ -164,7 +164,7 @@ namespace FirePlatform.WebApi.Controllers
             var changedItems = new List<Item>();
             UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
 
-            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev).ToList();
+            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev || !string.IsNullOrWhiteSpace(x.Formula)).ToList();
             (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
 
 
