@@ -114,19 +114,20 @@ namespace FirePlatform.WebApi.Controllers
 
             foreach (var group in UsersTmp)
             {
-                if ("construction details".Equals(group.Title))
+                if ("storage configuration".Equals(group.Title))
                 {
 
                 }
                 group.UpdateGroup();
+
                 foreach (var item in group.Items)
                 {
-                    if (item.NumID == 125 && item.GroupID == 0)
+                    if (group.IsVisible && (item.NumID == 157 || item.NumID == 2))
                     {
 
                     }
 
-                    if (group.IsVisible && item.Title.ToLower().Trim().Equals("hazard class") && !string.IsNullOrWhiteSpace(item.Formula))
+                    if (group.IsVisible && item.Title.ToLower().Trim().Equals("storage configuration"))
                     {
 
                     }

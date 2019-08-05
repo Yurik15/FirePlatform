@@ -25,3 +25,12 @@ D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.AssemblyInfo.cs
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.dll
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.pdb
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Debug\netstandard1.3\NCalc.deps.json
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Debug\netstandard1.3\NCalc.dll
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Debug\netstandard1.3\NCalc.pdb
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.csprojAssemblyReference.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.csproj.CoreCompileInputs.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.AssemblyInfoInputs.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.AssemblyInfo.cs
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.dll
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Debug\netstandard1.3\NCalc.pdb

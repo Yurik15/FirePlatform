@@ -5,8 +5,10 @@ using FirePlatform.Services;
 using FirePlatform.Utils.Enums;
 using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Responses;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FirePlatform.WebApi.Controllers
@@ -95,6 +97,44 @@ namespace FirePlatform.WebApi.Controllers
 
                 return BadRequest(container);
             }
+        }
+
+        [HttpPost("api/[controller]/LoginTest")]
+        [ProducesResponseType(201, Type = typeof(UserResponse))]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        public bool LoginTest([FromBody] UserRequest request)
+        {
+            var fakeCredentials = new List<UserRequest>()
+            {
+                new UserRequest()
+                {
+                    Login = "admin",
+                    Password = "!@Admin"
+                },
+                new UserRequest()
+                {
+                    Login = "user141",
+                    Password = "Pass123"
+                },
+                new UserRequest()
+                {
+                    Login = "user897",
+                    Password = "Pass123"
+                },
+                new UserRequest()
+                {
+                    Login = "user425",
+                    Password = "Pass123"
+                },
+                new UserRequest()
+                {
+                    Login = "user944",
+                    Password = "Pass123"
+                }
+            };
+
+            return fakeCredentials.Any(x => x.Login == request.Login && x.Password == request.Password);
         }
 
         [HttpPost("api/[controller]/Users")]

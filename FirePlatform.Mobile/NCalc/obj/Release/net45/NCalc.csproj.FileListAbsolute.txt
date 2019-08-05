@@ -6,3 +6,11 @@ D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.Assembl
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.AssemblyInfo.cs
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.dll
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.pdb
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\net45\NCalc.dll
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\net45\NCalc.pdb
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.csprojAssemblyReference.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.csproj.CoreCompileInputs.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.AssemblyInfoInputs.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.AssemblyInfo.cs
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.dll
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\net45\NCalc.pdb
