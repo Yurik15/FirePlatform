@@ -144,6 +144,12 @@ namespace FirePlatform.WebApi.Model
         public List<Item> NeedNotifyItems { get; set; }
         [JsonIgnore]
         public List<ItemGroup> NeedNotifyGroups { get; set; }
+
+        [JsonIgnore]
+        public string[,] Matrix { get; set; }
+
+        [JsonIgnore]
+        public string NameVaribleMatrix { get; set; } //TODO NEED TO BE REFACTOR
         #endregion ignore fields
     }
     public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture };

@@ -54,8 +54,16 @@ namespace FirePlatform.WebApi.Services.Tools
                 if (!string.IsNullOrEmpty(formula) && item.IsVisible)
                 {
                     var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
-                    var res = CalculationTools.CalculateFormulas(formula, paramsDic);
-                    item.Value = res;
+                    object result = null;
+                    if (item.Matrix != null)
+                    {
+                        result = CalculationTools.CalculateFormulasMatrix(item.Matrix, paramsDic);
+                    }
+                    else
+                    {
+                        result = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                    }
+                    item.Value = result;
                     //item?.NotifyAboutChange();
                 }
             }
@@ -153,7 +161,7 @@ namespace FirePlatform.WebApi.Services.Tools
             if (relatedItem.ReferencedItem.Type == ItemType.Combo.ToString())
             {
                 var name = relatedItem.Name;
-                bool? value = false;
+                object value = false;
                 if (paramsDic.ContainsKey(name.Trim()))
                 {
 
@@ -181,7 +189,14 @@ namespace FirePlatform.WebApi.Services.Tools
                     }
                     else
                     {
-                        value = selectedValue == name;
+                        if (!string.IsNullOrWhiteSpace(relatedItem.ReferencedItem.NameVaribleMatrix))
+                        {
+                            value = selectedValue;
+                        }
+                        else
+                        {
+                            value = selectedValue == name;
+                        }
                     }
                     if (!name.Contains(","))
                     {
@@ -280,7 +295,7 @@ namespace FirePlatform.WebApi.Services.Tools
                 {
                     if (paramsDic.ContainsKey(element.Key.Trim()))
                     {
-
+                        paramsDic[element.Key.Trim()] = relatedItem.ReferencedItem.IsVisible ? element.Value : null;
                     }
                     else
                     {

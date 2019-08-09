@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using FirePlatform.WebApi.Model;
 using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services.Tools;
@@ -20,7 +21,7 @@ namespace FirePlatform.WebApi.Services.Parser
             item.Type = ItemType.Picture.ToString();
             return item;
         }
-        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases)
+        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases, Dictionary<string, string[,]> Matrixes)
         {
             Item item = new Item();
 
@@ -30,7 +31,7 @@ namespace FirePlatform.WebApi.Services.Parser
             item.GroupID = groupNum;
             item.GroupTitle = groupTitle;
             item.NumID = numID;
-            
+
             var bracket = Text_line.IndexOf("[", StringComparison.Ordinal);
             if (bracket > -1)
             {
@@ -70,7 +71,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             var regex = nt.Replace("H:", "");
                             var indexOfEquals = regex.IndexOf("=", StringComparison.Ordinal);
                             var name = regex.Substring(0, indexOfEquals);
-                            var condition = regex.Substring(indexOfEquals+1);
+                            var condition = regex.Substring(indexOfEquals + 1);
                             /*var ghostFormula = new GhostFormula()
                             {
                                 Name = name,
@@ -105,8 +106,20 @@ namespace FirePlatform.WebApi.Services.Parser
                         else if (nt.Length > 2 && nt.Substring(0, 2) == "F:")
                         {
                             item.Type = ItemType.Formula.ToString();
-                            item.NameVarible = nt.Replace("F:", "").Split('=')[0].Trim().ToLower();
-                            item.Formula = nt.Replace("F:", "").Substring(item.NameVarible.Length + 2).Trim().ToLowerInvariant();
+                            var firstPart = nt.Substring(0, nt.IndexOf('=') + 1);
+                            item.NameVarible = firstPart.Replace("F:", "").Replace("=", "").Trim().ToLower();
+                            item.Formula = nt.Replace(firstPart, "").Trim().ToLowerInvariant();
+
+                            var regex = new Regex(@"(\w*mx\w*)|'(\w+)+'");
+                            var matches = regex.Matches(item.Formula);
+                            if (matches != null && matches.Count == 2)
+                            {
+                                var matrixName = matches[1].Value.Trim('\'');
+                                if(!string.IsNullOrWhiteSpace(matrixName) && Matrixes != null && Matrixes.ContainsKey(matrixName))
+                                {
+                                    item.Matrix = Matrixes[matrixName];
+                                }
+                            }
                         }
                         else if (nt.Length > 2 && nt.Substring(0, 2) == "B:")
                         {
@@ -132,11 +145,19 @@ namespace FirePlatform.WebApi.Services.Parser
 
                             var tag = nodetags[0];
                             var listitems = Parser.StringSplit(tag.Substring(2), ",");
-
+                            if (listitems.Length % 2 != 0)
+                            {
+                                item.NameVaribleMatrix = listitems[0];
+                                var list = listitems.ToList();
+                                list.RemoveAt(0);
+                                listitems = list.ToArray();
+                            }
 
                             for (int index = 0; index < listitems.Length - 1; index += 2)
                             {
                                 var displayName = listitems[index].Trim();
+                                if (item.Title.ToLower().Trim() == displayName.Trim().ToLower()) continue;
+
                                 var groupKey = listitems[index + 1].Trim().ToLowerInvariant();
                                 var comboItem = new ComboItem()
                                 {

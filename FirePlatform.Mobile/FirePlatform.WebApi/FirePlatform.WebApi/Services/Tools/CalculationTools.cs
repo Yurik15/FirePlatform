@@ -38,11 +38,48 @@ namespace FirePlatform.WebApi.Services.Tools
             return default(bool);
         }
 
+        public static object CalculateFormulasMatrix(string[,] matrix, Dictionary<string, object> parameters)
+        {
+            try
+            {
+                if(parameters.Count == 1)
+                {
+                    var value = parameters.First().Value;
+                    for (int i = 0; i < matrix.Length -1; i++)
+                    {
+                        if(i % 2 == 0)
+                        {
+
+                        }
+                    }
+                }
+                
+                /* Expression expression = new Expression("", EvaluateOptions.IgnoreCase)
+                 {
+                     Parameters = parameters
+                 };
+                 var resultEvaluate = expression.Evaluate();
+                 return resultEvaluate;*/
+                return null;
+            }
+            catch (Exception ex)
+            {
+                if (!NotFoundName_Formula.ContainsKey(ex.Message))
+                {
+                    NotFoundName_Formula.Add(ex.Message, 1);
+                }
+                else
+                {
+                    NotFoundName_Formula[ex.Message] += 1;
+                }
+                return null;
+            }
+        }
         public static object CalculateFormulas(string formula, Dictionary<string, object> parameters)
         {
             try
             {
-                if("ns*k*(pow (p,0.5)) #2 dm³/min".Equals(formula))
+                if ("ns*k*(pow (p,0.5)) #2 dm³/min".Equals(formula))
                 {
                     formula = "ns*k*(pow (p,0.5))";
                 }

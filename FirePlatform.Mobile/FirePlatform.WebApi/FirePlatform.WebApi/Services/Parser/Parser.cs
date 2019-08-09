@@ -39,6 +39,7 @@ namespace FirePlatform.WebApi.Services.Parser
             try
             {
                 string DATABASE = "Database";
+                string MATRIX = "Matrix";
                 string SPACE = " ";
                 string COMMENT_LINE = "---";
                 string END = "END";
@@ -48,6 +49,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
                 var result = new List<ItemGroup>();
                 Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
+                Dictionary<string, string[,]> Matrixes = new Dictionary<string, string[,]>();
                 List<(string title, string part1, string part2, string full)> ComposeComboItem = new List<(string title, string part1, string part2, string full)>();
 
                 string[] initLines = fileContent.Split(NEW_LINE);
@@ -109,6 +111,32 @@ namespace FirePlatform.WebApi.Services.Parser
                         }
                         Databases.Add(dbTitle, tempDB);
                     }
+                    else if (title.StartsWith(MATRIX, StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            var dbTitle = title.Substring(MATRIX.Length).Trim().TrimStart(T).ToLowerInvariant();
+
+                            var columnCount = StringSplit(itemsFromGroup[0], "\t").Length;
+                            var rowCount = itemsFromGroup.Count;
+                            string[,] matrix = new string[rowCount, columnCount];
+
+                            for (int row = 0; row < rowCount; row++)
+                            {
+                                var itemText = itemsFromGroup[row];
+                                var dbItems = StringSplit(itemText, "\t");
+                                for (var column = 0; column < dbItems.Length; column++)
+                                {
+                                    matrix[row, column] = dbItems[column];
+                                }
+                            }
+                            Matrixes.Add(dbTitle, matrix);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
                 }
 
                 int indexGroup = 0;
@@ -118,7 +146,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     var tag = group.Key.Item2;
                     var itemsFromGroup = group.Value;
 
-                    if (title.StartsWith(DATABASE, StringComparison.Ordinal)) continue;
+                    if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal)) continue;
 
                     var items = new List<Item>();
 
@@ -144,7 +172,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
                             else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
 
-                            var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases);
+                            var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes);
                             item.ParentGroup = groupItems;
                             //if (!string.IsNullOrEmpty(item.Type))
                             items.Add(item);
@@ -193,7 +221,6 @@ namespace FirePlatform.WebApi.Services.Parser
             {
                 foreach (var item in group.Items)
                 {
-                    bool isVisibleConditions = false;
                     string condition = item.VisCondition ?? string.Empty;
                     if (item.Type == ItemType.Formula.ToString())
                     {
@@ -206,7 +233,6 @@ namespace FirePlatform.WebApi.Services.Parser
                     }
                     if (!string.IsNullOrEmpty(condition))
                     {
-                        isVisibleConditions = true;
                         var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
                         foreach (var varibleName in item.VisConditionNameVaribles)
                         {
@@ -247,6 +273,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
 
                     }
+
                     if (!string.IsNullOrEmpty(item.Formula))
                     {
                         var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
@@ -290,14 +317,20 @@ namespace FirePlatform.WebApi.Services.Parser
 
                         if (item.ParentGroup.IsVisible) // PERFORMANCE
                         {
-                            //--------//
                             var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
-                            var res = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
-                            item.Value = res;
-                            //--------//
+                            object result = null;
+                            if (item.Matrix != null)
+                            {
+                                result = CalculationTools.CalculateFormulasMatrix(item.Matrix, paramsDic);
+                            }
+                            else
+                            {
+                                result = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                            }
+                            item.Value = result;
                         }
                     }
-                    if (isVisibleConditions)
+                    if (!string.IsNullOrEmpty(item.VisCondition))
                     {
                         if (item.ParentGroup.IsVisible) // PERFORMANCE
                         {
@@ -355,6 +388,15 @@ namespace FirePlatform.WebApi.Services.Parser
                     if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(item.Varibles))
                     {
 
+                    }
+                    if (!string.IsNullOrWhiteSpace(item.NameVaribleMatrix))
+                    {
+                        var dependItem = new DataDependItem()
+                        {
+                            Name = item.NameVaribleMatrix,
+                            ReferencedItem = item
+                        };
+                        dataDependItem.Add(dependItem);
                     }
                     if (item.GhostFormulas.Any())
                     {

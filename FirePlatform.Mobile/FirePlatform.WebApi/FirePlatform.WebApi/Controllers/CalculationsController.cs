@@ -114,14 +114,14 @@ namespace FirePlatform.WebApi.Controllers
 
             foreach (var group in UsersTmp)
             {
-                if ("construction details".Equals(group.Title))
+                if ("type of installation".Equals(group.Title.ToLower().Trim()))
                 {
 
                 }
                 group.UpdateGroup();
                 foreach (var item in group.Items)
                 {
-                    if (item.NumID == 125 && item.GroupID == 0)
+                    if (item.NumID == 157 && item.GroupID == 0)
                     {
 
                     }
@@ -178,20 +178,106 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        public OkObjectResult LoadTemplatesTest(int countTemplates = 9)
+        public OkObjectResult LoadTemplatesTest()
         {
-            var templates = new List<Template>();
-            for (int i = 1; i <= countTemplates; i++)
+            var templates = new List<Template>()
             {
-                templates.Add(
-                    new Template
-                    {
-                        Id = i,
-                        Name = "Template " + i
-                    }
-                );
-            }
-
+                new Template()
+                {
+                    Id = 1,
+                    Name = "General 1"
+                },
+                new Template()
+                {
+                    Id = 2,
+                    Name = "General 2"
+                },
+                new Template()
+                {
+                    Id = 3,
+                    Name = "General 3"
+                },
+                new Template()
+                {
+                    Id = 4,
+                    Name = "Piotrek 1"
+                },
+                new Template()
+                {
+                    Id = 5,
+                    Name = "Piotrek 2"
+                },
+                new Template()
+                {
+                    Id = 6,
+                    Name = "Tomek 1"
+                },
+                new Template()
+                {
+                    Id = 7,
+                    Name = "Tomek 2"
+                },
+                new Template()
+                {
+                    Id = 8,
+                    Name = "Bartek 1"
+                },
+                new Template()
+                {
+                    Id = 9,
+                    Name = "Bartek 2"
+                },
+                new Template()
+                {
+                    Id = 10,
+                    Name = "Tryskacze EN"
+                },
+                new Template()
+                {
+                    Id = 11,
+                    Name = "Wybuchy EN"
+                },
+                new Template()
+                {
+                    Id = 12,
+                    Name = "Wybuchy PN"
+                },
+                new Template()
+                {
+                    Id = 13,
+                    Name = "Warunki tech"
+                },
+                new Template()
+                {
+                    Id = 14,
+                    Name = "Oddymianie NFPA 204"
+                },
+                new Template()
+                {
+                    Id = 15,
+                    Name = "Oddymianie PN"
+                },
+                new Template()
+                {
+                    Id = 16,
+                    Name = "Obciążenie PN"
+                },
+                new Template()
+                {
+                    Id = 17,
+                    Name = "Obciążenie Eurokod"
+                },
+                new Template()
+                {
+                    Id = 18,
+                    Name = "Wycena tryskaczy"
+                },
+                new Template()
+                {
+                    Id = 19,
+                    Name = "Tryskacze NFPA 13"
+                },
+            };
             return Ok(templates);
         }
 
@@ -211,6 +297,18 @@ namespace FirePlatform.WebApi.Controllers
                 if (numberTmpl == 7) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/18P5QrPytLq3c7q8epN-spVxmxDcfx-UEPIxqX7kXdqo/export?format=tsv&id=18P5QrPytLq3c7q8epN-spVxmxDcfx-UEPIxqX7kXdqo&gid=0");
                 if (numberTmpl == 8) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/1eP5Q_S5mYm-JBOIiFqTtnQlAm9yidRJjFQNmCP99XFc/export?format=tsv&id=1eP5Q_S5mYm-JBOIiFqTtnQlAm9yidRJjFQNmCP99XFc&gid=0");
                 if (numberTmpl == 9) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/125E669P25ayUVZb5AWmo6_pqriPICyOOpzg_po-yBno/export?format=tsv&id=125E669P25ayUVZb5AWmo6_pqriPICyOOpzg_po-yBno&gid=0");
+
+                if (numberTmpl == 10) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1r2-_StOCfyIhlop2kh8vzJ1DkC8TSbuQauojJ3YNTto/export?format=tsv&id=1r2-_StOCfyIhlop2kh8vzJ1DkC8TSbuQauojJ3YNTto&gid=0");
+                if (numberTmpl == 11) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1EUzWym7X68nqdNmDu4KMYpFzGed31XE_JRKXJr6cmB0/export?format=tsv&id=1EUzWym7X68nqdNmDu4KMYpFzGed31XE_JRKXJr6cmB0&gid=0");
+                if (numberTmpl == 12) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/17gi9G5T9ogcPxVm5rbpJ4RjPHZ7MUeFv0N4bvu9ej9k/export?format=tsv&id=17gi9G5T9ogcPxVm5rbpJ4RjPHZ7MUeFv0N4bvu9ej9k&gid=0");
+                if (numberTmpl == 13) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1FMQB2a9hMIXXkeaEq_I_A0UfDVa-xF042yF9fOuVTeQ/export?format=tsv&id=1FMQB2a9hMIXXkeaEq_I_A0UfDVa-xF042yF9fOuVTeQ&gid=0");
+                if (numberTmpl == 14) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1dbGYaP9goc6dC4r02aX8tCfkhq-VnULmjannN2I0E3A/export?format=tsv&id=1dbGYaP9goc6dC4r02aX8tCfkhq-VnULmjannN2I0E3A&gid=0");
+                if (numberTmpl == 15) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1jz8zEvtq4RW2vxv0brj9CSFeR3_Mo7-jrUUP35C4pr8/export?format=tsv&id=1jz8zEvtq4RW2vxv0brj9CSFeR3_Mo7-jrUUP35C4pr8&gid=0");
+                if (numberTmpl == 16) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1Lv_oVECzgj-QZrDmM3AlN_eoSTglT8aS7LwYmwJbloQ/export?format=tsv&id=1Lv_oVECzgj-QZrDmM3AlN_eoSTglT8aS7LwYmwJbloQ&gid=0");
+                if (numberTmpl == 17) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1MYvl9Ybzh3BQ1snIk6PdgKb7PIozMuhOSg_nE9MUBKo/export?format=tsv&id=1MYvl9Ybzh3BQ1snIk6PdgKb7PIozMuhOSg_nE9MUBKo&gid=0");
+                if (numberTmpl == 18) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1v6ekGRrzEZjOVc4FJG97nUuGHnVaVMWtuleJOC0zSfo/export?format=tsv&id=1v6ekGRrzEZjOVc4FJG97nUuGHnVaVMWtuleJOC0zSfo&gid=0");
+                if (numberTmpl == 19) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1aOMzcXAl8kSuVJST-_GbEIx2lQ7tWOpcto8AGzg_vm8/export?format=tsv&id=1aOMzcXAl8kSuVJST-_GbEIx2lQ7tWOpcto8AGzg_vm8&gid=0");
+
             }
             return file_contents;
         }
