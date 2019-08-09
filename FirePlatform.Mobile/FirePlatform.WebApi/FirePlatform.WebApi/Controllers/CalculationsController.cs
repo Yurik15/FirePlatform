@@ -18,9 +18,13 @@ namespace FirePlatform.WebApi.Controllers
     [ApiController]
     public class CalculationsController : BaseController
     {
-        public static List<ItemGroup> UsersTmp { get; set; }
+        public static List<ItemDataPerUser> ItemDataPerUsers { get; set; }
 
         readonly ICalculationService _calculationService;
+        static CalculationsController()
+        {
+            ItemDataPerUsers = new List<ItemDataPerUser>();
+        }
         public CalculationsController(Service service, IMapper mapper, ICalculationService calculationService)
                               : base(service, mapper)
         {
@@ -31,13 +35,35 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        public OkObjectResult Load(int numberTmpl = 1)
+        public OkObjectResult Load(int numberTmpl = 1, int userId = 0)
         {
             var content = Download(numberTmpl);
 
             var res = Parser.PrepareControls(content);
 
-            UsersTmp = res;
+            var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == userId);
+            if (isExistsUser)
+            {
+                foreach (var data in ItemDataPerUsers)
+                {
+                    if (data.UserId == userId)
+                    {
+                        data.UsersTmp = res;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                ItemDataPerUsers.Add
+                    (
+                        new ItemDataPerUser
+                        {
+                            UserId = userId,
+                            UsersTmp = res
+                        }
+                    );
+            }
             return Ok(res);
         }
 
@@ -91,8 +117,9 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        public OkObjectResult Set(int groupId, int itemId, string value)
+        public OkObjectResult Set(int groupId, int itemId, string value, int userId)
         {
+            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId).UsersTmp;
             var startDate = DateTime.Now;
             var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
             var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == itemId);
