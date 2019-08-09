@@ -5,8 +5,10 @@ using FirePlatform.Services;
 using FirePlatform.Utils.Enums;
 using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Responses;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FirePlatform.WebApi.Controllers
