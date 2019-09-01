@@ -119,7 +119,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
                             var columnCount = StringSplit(itemsFromGroup[0], "\t").Length;
                             var rowCount = itemsFromGroup.Count;
-                            string[,] matrix = new string[rowCount, columnCount];
+                            string[,] matrix = new string[columnCount, rowCount];
 
                             for (int row = 0; row < rowCount; row++)
                             {
@@ -127,7 +127,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                 var dbItems = StringSplit(itemText, "\t");
                                 for (var column = 0; column < dbItems.Length; column++)
                                 {
-                                    matrix[row, column] = dbItems[column];
+                                    matrix[column, row] = dbItems[column];
                                 }
                             }
                             Matrixes.Add(dbTitle, matrix);
@@ -321,7 +321,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             object result = null;
                             if (item.Matrix != null)
                             {
-                                result = CalculationTools.CalculateFormulasMatrix(item.Matrix, paramsDic);
+                                result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
                             }
                             else
                             {

@@ -57,7 +57,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     object result = null;
                     if (item.Matrix != null)
                     {
-                        result = CalculationTools.CalculateFormulasMatrix(item.Matrix, paramsDic);
+                        result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
                     }
                     else
                     {

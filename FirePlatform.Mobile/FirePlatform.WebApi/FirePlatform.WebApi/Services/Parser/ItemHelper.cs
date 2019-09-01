@@ -181,6 +181,13 @@ namespace FirePlatform.WebApi.Services.Parser
                             item.Type = ItemType.Text.ToString();
                             item.Value = nt.Substring(2);
                         }
+                        else if (((nt.Length > 2) && (nt.Substring(0, 2) == "M:")))
+                        {
+                            if (nt.Contains("="))
+                                item.NameVarible = nt.Replace("M:", "").Split('=')[0].Trim().ToLower();
+                            item.Type = ItemType.Text.ToString();
+                            item.Value = nt.Substring(2);
+                        }
                         item.InitialValue = item.Value;
                         item.NameVarible = item.NameVarible.Trim();
                         item.IsVisible = string.IsNullOrEmpty(item.VisCondition);
