@@ -3729,24 +3729,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Andrii\\.nuget\\packages\\": {},
+    "C:\\Users\\ymaznyk\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "2.2.0",
     "restore": {
-      "projectUniqueName": "D:\\GitHub\\FirePlatform\\FirePlatform.Mobile\\NCalc\\NCalc.csproj",
+      "projectUniqueName": "C:\\Users\\ymaznyk\\FirePlatform\\FirePlatform.Mobile\\NCalc\\NCalc.csproj",
       "projectName": "CoreCLR-NCalc",
-      "projectPath": "D:\\GitHub\\FirePlatform\\FirePlatform.Mobile\\NCalc\\NCalc.csproj",
-      "packagesPath": "C:\\Users\\Andrii\\.nuget\\packages\\",
-      "outputPath": "D:\\GitHub\\FirePlatform\\FirePlatform.Mobile\\NCalc\\obj\\",
+      "projectPath": "C:\\Users\\ymaznyk\\FirePlatform\\FirePlatform.Mobile\\NCalc\\NCalc.csproj",
+      "packagesPath": "C:\\Users\\ymaznyk\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ymaznyk\\FirePlatform\\FirePlatform.Mobile\\NCalc\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Andrii\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ymaznyk\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

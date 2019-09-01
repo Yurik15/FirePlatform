@@ -7,3 +7,12 @@ D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCal
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.AssemblyInfo.cs
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.dll
 D:\GitHub\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.pdb
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\netstandard2.0\NCalc.deps.json
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\netstandard2.0\NCalc.dll
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\bin\Release\netstandard2.0\NCalc.pdb
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.csprojAssemblyReference.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.csproj.CoreCompileInputs.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.AssemblyInfoInputs.cache
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.AssemblyInfo.cs
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.dll
+C:\Users\ymaznyk\FirePlatform\FirePlatform.Mobile\NCalc\obj\Release\netstandard2.0\NCalc.pdb
