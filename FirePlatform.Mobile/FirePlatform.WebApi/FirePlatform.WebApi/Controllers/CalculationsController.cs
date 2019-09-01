@@ -141,23 +141,9 @@ namespace FirePlatform.WebApi.Controllers
 
             foreach (var group in UsersTmp)
             {
-                if ("type of installation".Equals(group.Title.ToLower().Trim()))
-                {
-
-                }
                 group.UpdateGroup();
                 foreach (var item in group.Items)
                 {
-                    if (item.NumID == 157 && item.GroupID == 0)
-                    {
-
-                    }
-
-                    if (group.IsVisible && item.Title.ToLower().Trim().Equals("hazard class") && !string.IsNullOrWhiteSpace(item.Formula))
-                    {
-
-                    }
-
                     if (group.IsVisible)
                         item.UpdateItem();
                     else

@@ -40,6 +40,7 @@ namespace FirePlatform.WebApi.Services.Parser
             {
                 string DATABASE = "Database";
                 string MATRIX = "Matrix";
+                string MEMOS = "Memos";
                 string SPACE = " ";
                 string COMMENT_LINE = "---";
                 string END = "END";
@@ -50,6 +51,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 var result = new List<ItemGroup>();
                 Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
                 Dictionary<string, string[,]> Matrixes = new Dictionary<string, string[,]>();
+                Dictionary<string, string> Memoses = new Dictionary<string, string>();
                 List<(string title, string part1, string part2, string full)> ComposeComboItem = new List<(string title, string part1, string part2, string full)>();
 
                 string[] initLines = fileContent.Split(NEW_LINE);
@@ -119,7 +121,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
                             var columnCount = StringSplit(itemsFromGroup[0], "\t").Length;
                             var rowCount = itemsFromGroup.Count;
-                            string[,] matrix = new string[rowCount, columnCount];
+                            string[,] matrix = new string[columnCount, rowCount];
 
                             for (int row = 0; row < rowCount; row++)
                             {
@@ -127,10 +129,27 @@ namespace FirePlatform.WebApi.Services.Parser
                                 var dbItems = StringSplit(itemText, "\t");
                                 for (var column = 0; column < dbItems.Length; column++)
                                 {
-                                    matrix[row, column] = dbItems[column];
+                                    matrix[column, row] = dbItems[column];
                                 }
                             }
                             Matrixes.Add(dbTitle, matrix);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                    else if (title.StartsWith(MEMOS, StringComparison.Ordinal))
+                    {
+                        try
+                        {
+                            foreach(var memos in itemsFromGroup)
+                            {
+                                var parts = memos.Split(",");
+                                var key = parts[0].Replace("\t", "").Trim();
+                                var value = parts[1].Replace("\t", "").Trim();
+                                Memoses[key] = value; 
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -146,7 +165,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     var tag = group.Key.Item2;
                     var itemsFromGroup = group.Value;
 
-                    if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal)) continue;
+                    if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal) || title.StartsWith(MEMOS, StringComparison.Ordinal)) continue;
 
                     var items = new List<Item>();
 
@@ -172,7 +191,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
                             else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
 
-                            var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes);
+                            var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes, Memoses);
                             item.ParentGroup = groupItems;
                             //if (!string.IsNullOrEmpty(item.Type))
                             items.Add(item);
@@ -321,7 +340,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             object result = null;
                             if (item.Matrix != null)
                             {
-                                result = CalculationTools.CalculateFormulasMatrix(item.Matrix, paramsDic);
+                                result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
                             }
                             else
                             {
