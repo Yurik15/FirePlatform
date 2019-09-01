@@ -2,13 +2,18 @@
 using FirePlatform.Models.Containers;
 using FirePlatform.Models.Models;
 using FirePlatform.Services;
-using FirePlatform.Utils.Enums;
 using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FirePlatform.WebApi.Controllers
@@ -20,11 +25,58 @@ namespace FirePlatform.WebApi.Controllers
         public AccountController
             (
                 Service service,
-                IMapper mapper
+                IMapper mapper,
+                IConfiguration config
             )
-            : base(service, mapper) { }
+            : base(service, mapper)
+        {
+            _config = config;
+        }
 
         #region Authorization
+
+        private IConfiguration _config;
+
+        [HttpPost("api/[controller]/Login")]
+        [Authorize]
+        [EnableCors("AllowAll")]
+        [AllowAnonymous]
+        public IActionResult Login([FromBody] UserRequest request)
+        {
+            IActionResult response;
+            var userId = LoginTest(request);
+
+            if (userId != null)
+            {
+                var tokenString = GenerateJSONWebToken();
+                return Ok(new { token = tokenString, userId });
+            }
+
+            return Ok();
+        }
+
+        private string GenerateJSONWebToken()
+        {
+            string tokenToReturn = string.Empty;
+            try
+            {
+                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                  _config["Jwt:Issuer"],
+                  null,
+                  expires: DateTime.Now.AddMinutes(120),
+                  signingCredentials: credentials);
+
+                tokenToReturn = new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                return tokenToReturn;
+            }
+            return tokenToReturn;
+        }
 
         [HttpPost("api/[controller]/Register")]
         [ProducesResponseType(201, Type = typeof(UserResponse))]
@@ -63,6 +115,8 @@ namespace FirePlatform.WebApi.Controllers
             }
         }
 
+        /* TODO 
+         * Merge this with existing method with same name after db server deploying
         [HttpPost("api/[controller]/Login")]
         [ProducesResponseType(201, Type = typeof(UserResponse))]
         [ProducesResponseType(400)]
@@ -98,12 +152,9 @@ namespace FirePlatform.WebApi.Controllers
                 return BadRequest(container);
             }
         }
+        */
 
-        [HttpPost("api/[controller]/LoginTest")]
-        [ProducesResponseType(201, Type = typeof(UserResponse))]
-        [ProducesResponseType(400)]
-        [EnableCors("AllowAll")]
-        public int? LoginTest([FromBody] UserRequest request)
+        private int? LoginTest([FromBody] UserRequest request)
         {
             var fakeCredentials = new List<UserRequest>()
             {
