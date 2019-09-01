@@ -21,7 +21,7 @@ namespace FirePlatform.WebApi.Services.Parser
             item.Type = ItemType.Picture.ToString();
             return item;
         }
-        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases, Dictionary<string, string[,]> Matrixes)
+        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases, Dictionary<string, string[,]> Matrixes, Dictionary<string, string> Memoses)
         {
             Item item = new Item();
 
@@ -115,7 +115,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             if (matches != null && matches.Count == 2)
                             {
                                 var matrixName = matches[1].Value.Trim('\'');
-                                if(!string.IsNullOrWhiteSpace(matrixName) && Matrixes != null && Matrixes.ContainsKey(matrixName))
+                                if (!string.IsNullOrWhiteSpace(matrixName) && Matrixes != null && Matrixes.ContainsKey(matrixName))
                                 {
                                     item.Matrix = Matrixes[matrixName];
                                 }
@@ -186,7 +186,11 @@ namespace FirePlatform.WebApi.Services.Parser
                             if (nt.Contains("="))
                                 item.NameVarible = nt.Replace("M:", "").Split('=')[0].Trim().ToLower();
                             item.Type = ItemType.Text.ToString();
-                            item.Value = nt.Substring(2);
+                            var name = nt.Substring(2).Trim();
+                            if (Memoses.ContainsKey(name))
+                                item.Value = Memoses[name];
+                            else
+                                item.Value = "MEMOS NOT FOUND";
                         }
                         item.InitialValue = item.Value;
                         item.NameVarible = item.NameVarible.Trim();
