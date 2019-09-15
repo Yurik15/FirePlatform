@@ -5,10 +5,12 @@ using System.Linq;
 using AutoMapper;
 using FirePlatform.Services;
 using FirePlatform.WebApi.Model;
+using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services;
 using FirePlatform.WebApi.Services.Parser;
 using FirePlatform.WebApi.Services.Tools;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NCalc;
@@ -35,6 +37,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
+        [Authorize]
         public OkObjectResult Load(int numberTmpl = 1, int userId = 0)
         {
             var content = Download(numberTmpl);
@@ -72,6 +75,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
+        [Authorize]
         public OkObjectResult TestCalc()
         {
             var parameters = new Dictionary<string, object>()
@@ -112,29 +116,30 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(true);
         }
 
-        [HttpGet("api/[controller]/Set")]
+        [HttpPost("api/[controller]/Set")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        public OkObjectResult Set(int groupId, int itemId, string value, int userId)
+        [Authorize]
+        public OkObjectResult Set([FromBody] ItemsRequest request)
         {
-            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId).UsersTmp;
+            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmp;
             var startDate = DateTime.Now;
-            var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
-            var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == itemId);
+            var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == request.GroupId);
+            var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == request.ItemId);
             dynamic newValue = null;
             if (selectedItem.Type == ItemType.Num.ToString())
             {
-                newValue = double.Parse(value);
+                newValue = double.Parse(request.Value);
             }
             else if (selectedItem.Type == ItemType.Check.ToString())
             {
-                newValue = bool.Parse(value);
+                newValue = bool.Parse(request.Value);
             }
             else if (selectedItem.Type == ItemType.Combo.ToString())
             {
-                selectedItem.NameVarible = value;
+                selectedItem.NameVarible = request.Value;
                 newValue = true;
             }
             selectedItem.Value = newValue;
@@ -191,6 +196,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
+        [Authorize]
         public OkObjectResult LoadTemplatesTest()
         {
             var templates = new List<Template>()
