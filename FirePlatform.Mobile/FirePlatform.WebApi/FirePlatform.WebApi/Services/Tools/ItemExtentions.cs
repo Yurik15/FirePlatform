@@ -36,10 +36,6 @@ namespace FirePlatform.WebApi.Services.Tools
                 //item.IsVisiblePrev = item.IsVisible;
                 var formula = item.Formula;
                 var visCondition = item.VisCondition;
-                if (item.Title.ToLower().Trim().Equals("Przyrost ciśnienia (kPa)".ToLower().Trim()))
-                {
-
-                }
                 if (!string.IsNullOrEmpty(visCondition))
                 {
                     var paramsDic = ItemExtentions.GetParams(item.DependToItems);
