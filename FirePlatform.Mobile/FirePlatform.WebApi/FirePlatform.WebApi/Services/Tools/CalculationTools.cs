@@ -42,7 +42,7 @@ namespace FirePlatform.WebApi.Services.Tools
         {
             try
             {
-                object result = null;
+                object result = "ERROR";
                 NCalc.Expression expr1 = new NCalc.Expression(expr, EvaluateOptions.IgnoreCase);
                 string param1 = null;
                 string param2 = null;

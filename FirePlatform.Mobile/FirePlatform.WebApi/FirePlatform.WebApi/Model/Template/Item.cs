@@ -64,10 +64,11 @@ namespace FirePlatform.WebApi.Model
         public bool IsGroupVisible { get; set; } = true;
 
         public List<ComboItem> ComboItems { get; set; }
+        public Picture Picture { get; set; }
         #endregion properties
 
         #region ignore fields
-        //[JsonIgnore]
+        [JsonIgnore]
         public bool IsVisiblePrev
         {
             get => _isVisiblePrev;

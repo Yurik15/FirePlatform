@@ -41,6 +41,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 string DATABASE = "Database";
                 string MATRIX = "Matrix";
                 string MEMOS = "Memos";
+                string PICTURE = "Picture";
                 string SPACE = " ";
                 string COMMENT_LINE = "---";
                 string END = "END";
@@ -52,6 +53,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
                 Dictionary<string, string[,]> Matrixes = new Dictionary<string, string[,]>();
                 Dictionary<string, string> Memoses = new Dictionary<string, string>();
+                Dictionary<String, string> Pictures = new Dictionary<string, string>();
                 List<(string title, string part1, string part2, string full)> ComposeComboItem = new List<(string title, string part1, string part2, string full)>();
 
                 string[] initLines = fileContent.Split(NEW_LINE);
@@ -91,7 +93,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     {
                         var tempDB = new List<ComboItem>();
                         var dbTitle = title.Substring(DATABASE.Length).Trim().TrimStart(T).ToLowerInvariant();
-
+                        dbTitle = dbTitle.Split(" ")[0];
                         foreach (var itemText in itemsFromGroup)
                         {
                             var line = itemText.Trim().TrimStart(T);
@@ -112,6 +114,12 @@ namespace FirePlatform.WebApi.Services.Parser
                             tempDB.Add(comboItem);
                         }
                         Databases.Add(dbTitle, tempDB);
+                    }
+                    if (title.StartsWith(PICTURE, StringComparison.Ordinal))
+                    {
+                        var dbTitle = title.Substring(PICTURE.Length).Trim().TrimStart(T).ToLowerInvariant();
+                        var dataOfImage = string.Join(' ', group.Value);
+                        Pictures.Add(dbTitle, dataOfImage);
                     }
                     else if (title.StartsWith(MATRIX, StringComparison.Ordinal))
                     {
@@ -143,12 +151,12 @@ namespace FirePlatform.WebApi.Services.Parser
                     {
                         try
                         {
-                            foreach(var memos in itemsFromGroup)
+                            foreach (var memos in itemsFromGroup)
                             {
                                 var parts = memos.Split(",");
                                 var key = parts[0].Replace("\t", "").Trim();
                                 var value = parts[1].Replace("\t", "").Trim();
-                                Memoses[key] = value; 
+                                Memoses[key] = value;
                             }
                         }
                         catch (Exception ex)
@@ -168,50 +176,42 @@ namespace FirePlatform.WebApi.Services.Parser
                     if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal) || title.StartsWith(MEMOS, StringComparison.Ordinal)) continue;
 
                     var items = new List<Item>();
-
-                    if ("picture".Equals(group.Key.Item1.Split(' ')[0].ToLower()))
+                    var groupItems = new ItemGroup
                     {
-                        var item = ItemHelper.PreparePicture(group.Key.Item1, itemsFromGroup);
-                        //result.Add(new ItemGroup(indexGroup, title, tag, item));
-                    }
-                    else
+                        IndexGroup = indexGroup,
+                        Title = title,
+                        Tag = tag,
+                        IsVisible = true,
+                        InitialVisibility = true
+                    };
+
+                    for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
                     {
-                        var groupItems = new ItemGroup
-                        {
-                            IndexGroup = indexGroup,
-                            Title = title,
-                            Tag = tag,
-                            IsVisible = true,
-                            InitialVisibility = true
-                        };
+                        var itemText = itemsFromGroup[indexItems];
+                        if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
+                        else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
 
-                        for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
-                        {
-                            var itemText = itemsFromGroup[indexItems];
-                            if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
-                            else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
-
-                            var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes, Memoses);
-                            item.ParentGroup = groupItems;
-                            //if (!string.IsNullOrEmpty(item.Type))
-                            items.Add(item);
-                        }
-
-                        groupItems.Items = items;
-
-                        if (!string.IsNullOrEmpty(tag))
-                        {
-                            groupItems.VisCondition = tag.Split(':')[1].Trim();
-                            //groupItems.VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(groupItems.VisCondition));
-                            groupItems.IsVisible = false;
-                            groupItems.InitialVisibility = false;
-                        }
-
-
-                        result.Add(groupItems);
-                        indexGroup++;
+                        var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes, Memoses, Pictures);
+                        item.ParentGroup = groupItems;
+                        //if (!string.IsNullOrEmpty(item.Type))
+                        items.Add(item);
                     }
+
+                    groupItems.Items = items;
+
+                    if (!string.IsNullOrEmpty(tag))
+                    {
+                        groupItems.VisCondition = tag.Split(':')[1].Trim();
+                        //groupItems.VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(groupItems.VisCondition));
+                        groupItems.IsVisible = false;
+                        groupItems.InitialVisibility = false;
+                    }
+
+
+                    result.Add(groupItems);
+                    indexGroup++;
                 }
+
                 return result;
             }
             catch (Exception ex)

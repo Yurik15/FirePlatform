@@ -13,15 +13,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
     public static class ItemHelper
     {
-        public static Item PreparePicture(string Text_line, List<string> dataPictures)
-        {
-            Item item = new Item();
-            item.Title = Text_line.Split(' ')[1];
-            item.Value = string.Join(" ", dataPictures);
-            item.Type = ItemType.Picture.ToString();
-            return item;
-        }
-        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases, Dictionary<string, string[,]> Matrixes, Dictionary<string, string> Memoses)
+        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases, Dictionary<string, string[,]> Matrixes, Dictionary<string, string> Memoses, Dictionary<string, string> Pictures)
         {
             Item item = new Item();
 
@@ -191,6 +183,18 @@ namespace FirePlatform.WebApi.Services.Parser
                                 item.Value = Memoses[name];
                             else
                                 item.Value = "MEMOS NOT FOUND";
+                        }
+                        else if (((nt.Length > 2) && (nt.Substring(0, 2) == "P:")))
+                        {
+                            var pictureName = nt.Replace("P:", "").Split('=')[0].Trim().ToLower();
+                            if (Pictures.ContainsKey(pictureName))
+                            {
+                                item.Picture = new Picture()
+                                {
+                                    Name = pictureName,
+                                    Data = Pictures[pictureName]
+                                };
+                            }
                         }
                         item.InitialValue = item.Value;
                         item.NameVarible = item.NameVarible.Trim();
