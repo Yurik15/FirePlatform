@@ -94,10 +94,16 @@ namespace FirePlatform.WebApi.Services.Parser
                         var tempDB = new List<ComboItem>();
                         var dbTitle = title.Substring(DATABASE.Length).Trim().TrimStart(T).ToLowerInvariant();
                         dbTitle = dbTitle.Split(" ")[0];
+
                         foreach (var itemText in itemsFromGroup)
                         {
                             var line = itemText.Trim().TrimStart(T);
-                            var dbItems = StringSplit(line, line.IndexOf(",\t") == -1 ? ", \t" : ",\t"); //COMMA_SEPARATOR);
+                            string separator = "\t";
+                            if (line.Contains(", \t")) line = line.Replace(", \t", separator);
+                            else if (line.Contains(",\t")) line = line.Replace(",\t", separator);
+                            else if (line.Contains("\t,")) line = line.Replace("\t,", separator);
+
+                            var dbItems = StringSplit(line, separator); //COMMA_SEPARATOR);
 
                             var displayName = dbItems[0];
                             var groupKey = String.Join(",", dbItems.Skip(1)).Trim(',');
@@ -496,7 +502,6 @@ namespace FirePlatform.WebApi.Services.Parser
                             dataDependItem.Add(dependItem);
                         }
                     }
-
                 }
             }
             return dataDependItem;
