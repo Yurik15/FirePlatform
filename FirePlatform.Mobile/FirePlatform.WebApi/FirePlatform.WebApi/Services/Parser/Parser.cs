@@ -179,7 +179,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     var tag = group.Key.Item2;
                     var itemsFromGroup = group.Value;
 
-                    if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal) || title.StartsWith(MEMOS, StringComparison.Ordinal)) continue;
+                    if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal) || title.StartsWith(MEMOS, StringComparison.Ordinal) || title.StartsWith(PICTURE, StringComparison.Ordinal)) continue;
 
                     var items = new List<Item>();
                     var groupItems = new ItemGroup
