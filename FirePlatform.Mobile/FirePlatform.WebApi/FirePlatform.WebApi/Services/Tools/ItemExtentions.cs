@@ -91,7 +91,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     {
                         if (item.Key.Contains(","))
                         {
-                            var parts = item.Key.Split(",");
+                            var parts = item.Key.Split(",").Select(x=>x.ToLower().Trim()).ToArray();
                             foreach (var part in parts)
                             {
                                 if (!paramsDic.ContainsKey(part))

@@ -117,7 +117,11 @@ namespace FirePlatform.WebApi.Services.Parser
                         {
                             item.Type = ItemType.BackCalc.ToString();
                             item.NameVarible = nt.Replace("B:", "").Split('=')[0].Trim().ToLower();
-                            item.Formula = nt.Replace("B:", "").Substring(item.NameVarible.Length + 2).Trim().ToLowerInvariant();
+                            item.Formula = nt.Replace("B:", "").Trim().Substring(item.NameVarible.Length + 1).Trim().ToLowerInvariant();
+                            if (item.Formula.Contains("#"))
+                            {
+                                item.Formula = item.Formula.Split('#')[0];
+                            }
                         }
                         else if (((nt.Length > 2) && (nt.Substring(0, 2) == "D:")))
                         {

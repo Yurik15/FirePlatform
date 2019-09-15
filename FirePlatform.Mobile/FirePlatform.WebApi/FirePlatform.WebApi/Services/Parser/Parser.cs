@@ -282,7 +282,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                 var nameDependElement = dependElement.Key;
                                 if (nameDependElement.Contains(","))
                                 {
-                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
+                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
                                     needToAdd = parts.Contains(varibleName.Trim().ToLower());
                                 }
                                 else
@@ -325,7 +325,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                 var nameDependElement = dependElement.Key;
                                 if (nameDependElement.Contains(","))
                                 {
-                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
+                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
                                     needToAdd = parts.Contains(varibleName.Trim().ToLower());
                                 }
                                 else
@@ -495,7 +495,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         {
                             var dependItem = new DataDependItem()
                             {
-                                Name = it,
+                                Name = it.Trim(),
                                 IsVisibile = false,
                                 ReferencedItem = item
                             };
