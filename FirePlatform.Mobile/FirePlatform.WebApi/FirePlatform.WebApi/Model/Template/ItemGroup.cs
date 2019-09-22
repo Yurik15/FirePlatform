@@ -18,6 +18,7 @@ namespace FirePlatform.WebApi.Model
         public ItemGroup()
         {
             VisConditionNameVaribles = new List<string>();
+            Expanded = true;
         }
 
         public bool Expanded { get; set; }
