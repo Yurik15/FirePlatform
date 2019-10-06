@@ -38,7 +38,11 @@ namespace FirePlatform.WebApi.Services.Tools
                 var visCondition = item.VisCondition;
                 if (!string.IsNullOrEmpty(visCondition))
                 {
-                    var paramsDic = ItemExtentions.GetParams(item.DependToItems);
+                    if (item.Title.Trim().ToLower() == "dilution:")
+                    {
+
+                    }
+                    var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
                     var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
                     item.IsVisible = res.HasValue ? res.Value : false;
                 }
@@ -46,10 +50,10 @@ namespace FirePlatform.WebApi.Services.Tools
                 {
                     item.IsVisible = true;
                 }
-                
+
                 if (!string.IsNullOrEmpty(formula) && item.IsVisible)
                 {
-                    var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
+                    var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);
                     object result = null;
                     if (item.Matrix != null)
                     {
@@ -74,7 +78,7 @@ namespace FirePlatform.WebApi.Services.Tools
             }
         }
 
-        public static Dictionary<string, object> GetParams(List<KeyValuePair<string, List<DataDependItem>>> dependToItems)
+        public static Dictionary<string, object> GetParams(List<KeyValuePair<string, List<DataDependItem>>> dependToItems, int? itemId = null, int? groupId = null)
         {
             Dictionary<string, object> paramsDic = new Dictionary<string, object>();
             List<DataDependItem> depends = new List<DataDependItem>();
@@ -82,7 +86,22 @@ namespace FirePlatform.WebApi.Services.Tools
             {
                 try
                 {
-                    var visibleItems = item.Value.Where(x => x.ReferencedItem.IsVisible).ToList();
+                    Func<int?, int?, Item, bool> func = (mainItemId, mainGroupId, child) =>
+                    {
+                        if (mainGroupId.HasValue && mainItemId.HasValue)
+                        {
+                            if (mainGroupId.Value == child.GroupID)
+                            {
+                                return mainItemId.Value > child.NumID;
+                            }
+                            else if (mainGroupId.Value < child.GroupID)
+                            {
+                                return false;
+                            }
+                        }
+                        return true;
+                    };
+                    var visibleItems = item.Value.Where(x => x.ReferencedItem.IsVisible && func(itemId, groupId, x.ReferencedItem)).ToList();
                     if (visibleItems.Any())
                     {
                         depends.Add(visibleItems.FirstOrDefault());
@@ -91,7 +110,7 @@ namespace FirePlatform.WebApi.Services.Tools
                     {
                         if (item.Key.Contains(","))
                         {
-                            var parts = item.Key.Split(",").Select(x=>x.ToLower().Trim()).ToArray();
+                            var parts = item.Key.Split(",").Select(x => x.ToLower().Trim()).ToArray();
                             foreach (var part in parts)
                             {
                                 if (!paramsDic.ContainsKey(part))
@@ -308,7 +327,7 @@ namespace FirePlatform.WebApi.Services.Tools
         private static (string name, object value) GetParamsFromFormulasAfterCalculation(DataDependItem dataDependItem)
         {
             var item = dataDependItem.ReferencedItem;
-            var param = GetParams(item.DependToItemsForFormulas);//var param = GetParamsFromFormulas(item);
+            var param = GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);//var param = GetParamsFromFormulas(item);
             var value = CalculationTools.CalculateFormulas(item.Formula, param);
             return (dataDependItem.Name, value);
         }

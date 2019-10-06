@@ -98,9 +98,13 @@ namespace FirePlatform.WebApi.Services.Parser
                         else if (nt.Length > 2 && nt.Substring(0, 2) == "F:")
                         {
                             item.Type = ItemType.Formula.ToString();
-                            var firstPart = nt.Substring(0, nt.IndexOf('=') + 1);
-                            item.NameVarible = firstPart.Replace("F:", "").Replace("=", "").Trim().ToLower();
-                            item.Formula = nt.Replace(firstPart, "").Trim().ToLowerInvariant();
+
+                            if (nt.IndexOf("=") != -1)
+                            {
+                                var firstPart = nt.Substring(0, nt.IndexOf('=') + 1);
+                                item.NameVarible = firstPart.Replace("F:", "").Replace("=", "").Trim().ToLower();
+                                item.Formula = nt.Replace(firstPart, "").Trim().ToLowerInvariant();
+                            }
 
                             var regex = new Regex(@"(\w*mx\w*)|'(\w+)+'");
                             var matches = regex.Matches(item.Formula);

@@ -116,6 +116,63 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(true);
         }
 
+        [HttpPost("api/[controller]/Preselection")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        [Authorize]
+        public OkObjectResult Preselection([FromBody] PreselectionRequest request)
+        {
+            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmp;
+
+            foreach(var group in UsersTmp)
+            {
+                foreach(var item in group.Items)
+                {
+                    if(item.Type == ItemType.Combo.ToString())
+                    {
+                        if (request.PreselectionEnabled)
+                        {
+                            if (string.IsNullOrWhiteSpace(item.Value as string))
+                            {
+                                item.Value = item.ComboItems?.FirstOrDefault().GroupKey;
+                            }
+                        }
+                        else
+                        {
+                            item.Value = null;
+                        }
+                    }
+                }
+            }
+
+            foreach (var group in UsersTmp)
+            {
+                group.UpdateGroup();
+                foreach (var item in group.Items)
+                {
+                    if (group.IsVisible)
+                        item.UpdateItem();
+                    else
+                        item.IsVisible = false;
+                }
+            }
+            var resultGroups = new List<ItemGroup>();
+            UsersTmp.ForEach(x => resultGroups.Add(new ItemGroup()
+            {
+                IndexGroup = x.IndexGroup,
+                IsVisible = x.IsVisible
+            }));
+
+            var changedItems = new List<Item>();
+            UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
+
+            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev || !string.IsNullOrWhiteSpace(x.Formula)).ToList();
+            (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
+            return Ok(res);
+        }
+
         [HttpPost("api/[controller]/Set")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

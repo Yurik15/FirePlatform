@@ -119,6 +119,10 @@ namespace FirePlatform.WebApi.Services.Parser
                             };
                             tempDB.Add(comboItem);
                         }
+                        if(dbTitle.Trim().ToLower() == "sources")
+                        {
+
+                        }
                         Databases.Add(dbTitle, tempDB);
                     }
                     if (title.StartsWith(PICTURE, StringComparison.Ordinal))
@@ -342,7 +346,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
                         if (item.ParentGroup.IsVisible) // PERFORMANCE
                         {
-                            var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas);
+                            var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);
                             object result = null;
                             if (item.Matrix != null)
                             {
@@ -359,7 +363,7 @@ namespace FirePlatform.WebApi.Services.Parser
                     {
                         if (item.ParentGroup.IsVisible) // PERFORMANCE
                         {
-                            var paramsDic = ItemExtentions.GetParams(item.DependToItems);
+                            var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
                             var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
                             item.IsVisible = res.HasValue ? res.Value : false;
                         }
