@@ -9,5 +9,6 @@ namespace FirePlatform.WebApi.Model.Requests
     {
         public int UserId { get; set; }
         public bool PreselectionEnabled { get; set; }
+        public bool IsRightTemplate { get; set; }
     }
 }

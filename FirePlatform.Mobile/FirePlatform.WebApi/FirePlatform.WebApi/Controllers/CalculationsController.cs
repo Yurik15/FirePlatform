@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using FirePlatform.Services;
 using FirePlatform.WebApi.Model;
+using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Responses;
 using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services;
@@ -211,9 +212,11 @@ namespace FirePlatform.WebApi.Controllers
         [Authorize]
         public OkObjectResult Preselection([FromBody] PreselectionRequest request)
         {
-            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmp;
+            var UsersTmp = request.IsRightTemplate ?
+                                   ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmpRight :
+                                   ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmpLeft;
 
-            foreach(var group in UsersTmp)
+            foreach (var group in UsersTmp)
             {
                 foreach(var item in group.Items)
                 {
