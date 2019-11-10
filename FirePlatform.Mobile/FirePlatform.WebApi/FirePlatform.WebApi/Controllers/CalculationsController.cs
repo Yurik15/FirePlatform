@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using AutoMapper;
 using FirePlatform.Services;
 using FirePlatform.WebApi.Model;
-using FirePlatform.WebApi.Model.Requests;
+using FirePlatform.WebApi.Model.Responses;
 using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services;
 using FirePlatform.WebApi.Services.Parser;
@@ -20,29 +19,49 @@ namespace FirePlatform.WebApi.Controllers
     [ApiController]
     public class CalculationsController : BaseController
     {
-        public static List<ItemDataPerUser> ItemDataPerUsers { get; set; }
-
         readonly ICalculationService _calculationService;
-        static CalculationsController()
-        {
-            ItemDataPerUsers = new List<ItemDataPerUser>();
-        }
-        public CalculationsController(Service service, IMapper mapper, ICalculationService calculationService)
+        public static List<ItemDataPerUser> ItemDataPerUsers { get; set; }
+        public static List<PictureResponse> Pictures { get; set; }
+
+        public CalculationsController
+            (
+                Service service,
+                IMapper mapper,
+                ICalculationService calculationService
+            )
                               : base(service, mapper)
         {
             _calculationService = calculationService;
         }
+        static CalculationsController()
+        {
+            ItemDataPerUsers = new List<ItemDataPerUser>();
+            Pictures = new List<PictureResponse>();
+        }
+
+        [HttpGet("api")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        [AllowAnonymous]
+        public OkObjectResult Init()
+        {
+            return Ok("It works");
+        }
+
         [HttpGet("api/[controller]/LoadTmp")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-        public OkObjectResult Load(int numberTmpl = 1, int userId = 0)
+        public OkObjectResult Load(int numberTmpl = 1, int userId = 0, bool isRightTemplate = false)
         {
+            List<ItemGroup> res;
             var content = Download(numberTmpl);
 
-            var res = Parser.PrepareControls(content);
+            res = Parser.PrepareControls(content);
 
             var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == userId);
             if (isExistsUser)
@@ -51,23 +70,91 @@ namespace FirePlatform.WebApi.Controllers
                 {
                     if (data.UserId == userId)
                     {
-                        data.UsersTmp = res;
+                        if (isRightTemplate)
+                        {
+                            data.UsersTmpRight = res;
+                        }
+                        else
+                        {
+                            data.UsersTmpLeft = res;  
+                        }
                         break;
                     }
                 }
             }
             else
             {
-                ItemDataPerUsers.Add
-                    (
-                        new ItemDataPerUser
-                        {
-                            UserId = userId,
-                            UsersTmp = res
-                        }
-                    );
+                var itemDataPerUser = isRightTemplate ? new ItemDataPerUser
+                {
+                    UserId = userId,
+                    UsersTmpRight = res
+                } :
+                new ItemDataPerUser
+                {
+                    UserId = userId,
+                    UsersTmpLeft = res
+                };
+
+                ItemDataPerUsers.Add(itemDataPerUser);
             }
+            List<Item> ite = new List<Item>();
+            foreach (var i in res)
+            {
+                ite.AddRange(i.Items.Where(x => x.IsVisible).ToList());
+            }
+
+            foreach (var group in res)
+            {
+                foreach (var item in group?.Items)
+                    if (item != null && item.Picture?.Data != null)
+                    {
+                        Pictures.Add(new PictureResponse()
+                        {
+                            NumID = item.NumID,
+                            Picture = new Picture()
+                            {
+                                Data = item.Picture.Data,
+                                Name = item.Picture.Name,
+                                Id = item.Picture.Id
+                            },
+                            GroupID = item.GroupID,
+                        });
+                        item.Picture.Data = null;
+                        item.Picture.ToFetch = true;
+                    }
+            }
+            res.ForEach(x =>
+                x.IsRightTemplate = isRightTemplate
+            );
+
             return Ok(res);
+        }
+
+        [HttpGet("api/[controller]/ClearTemplates")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        [Authorize]
+        public ActionResult ClearTemplateDataPerUser(int userId)
+        {
+            //var existingDataperUser = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId);
+            //if (existingDataperUser != null)
+            //    existingDataperUser.UsersTmp = new List<ItemGroup>();
+
+            return Ok();
+        }
+
+        [HttpGet("api/[controller]/FetchPicture")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        [EnableCors("AllowAll")]
+        [Authorize]
+        public ActionResult FetchPictureForItem(int numberId, int groupId)
+        {
+            var response = Pictures.FirstOrDefault(x => x.NumID == numberId && x.GroupID == groupId);
+            return Ok(response);
         }
 
         [HttpGet("api/[controller]/test-calc")]
@@ -116,78 +203,99 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(true);
         }
 
-        [HttpPost("api/[controller]/Set")]
+        [HttpGet("api/[controller]/Set")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-        public OkObjectResult Set([FromBody] ItemsRequest request)
+        public OkObjectResult Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, bool isRightTemplate = false)
         {
-            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmp;
-            var startDate = DateTime.Now;
-            var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == request.GroupId);
-            var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == request.ItemId);
-            dynamic newValue = null;
-            if (selectedItem.Type == ItemType.Num.ToString())
+            var res = Tuple.Create<List<ItemGroup>, List<Item>>(null, null);
+            try
             {
-                newValue = double.Parse(request.Value);
-            }
-            else if (selectedItem.Type == ItemType.Check.ToString())
-            {
-                newValue = bool.Parse(request.Value);
-            }
-            else if (selectedItem.Type == ItemType.Combo.ToString())
-            {
-                selectedItem.NameVarible = request.Value;
-                newValue = true;
-            }
-            selectedItem.Value = newValue;
-
-            foreach (var group in UsersTmp)
-            {
-                group.UpdateGroup();
-                foreach (var item in group.Items)
+                var startDate = DateTime.Now;
+                var UsersTmp = isRightTemplate ? ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId).UsersTmpRight :
+                                                 ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId).UsersTmpLeft;
+                var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
+                var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == itemId);
+                object newValue = null;
+                if (selectedItem.Type == ItemType.Num.ToString())
                 {
-                    if (group.IsVisible)
-                        item.UpdateItem();
-                    else
-                        item.IsVisible = false;
+                    newValue = double.Parse(value);
                 }
+                else if (selectedItem.Type == ItemType.Check.ToString())
+                {
+                    newValue = bool.Parse(value);
+                }
+                else if (selectedItem.Type == ItemType.Combo.ToString())
+                {
+                    selectedItem.NameVarible = value;
+                    newValue = true;
+                }
+                selectedItem.Value = newValue;
+
+                foreach (var group in UsersTmp)
+                {
+                    group.UpdateGroup();
+                    foreach (var item in group.Items)
+                    {
+                        if (group.IsVisible)
+                            item.UpdateItem();
+                        else
+                            item.IsVisible = false;
+                    }
+                }
+
+                var resultGroups = new List<ItemGroup>();
+                UsersTmp.ForEach(x => resultGroups.Add(new ItemGroup()
+                {
+                    IndexGroup = x.IndexGroup,
+                    IsVisible = x.IsVisible
+                }));
+
+                var changedItems = new List<Item>();
+                UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
+
+                changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev || !string.IsNullOrWhiteSpace(x.Formula)).ToList();
+                res = Tuple.Create<List<ItemGroup>, List<Item>>(resultGroups, changedItems); ;
+
+
+                // var result = DateTime.Now - startDate;
+                // Debug.WriteLine($"[SET VALUE] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+                foreach (var item in res.Item2)
+                {
+                    if (item.Picture?.Data != null)
+                    {
+                        Pictures.Add(new PictureResponse()
+                        {
+                            NumID = item.NumID,
+                            Picture = new Picture()
+                            {
+                                Data = item.Picture.Data,
+                                Name = item.Picture.Name,
+                                Id = item.Picture.Id
+                            },
+                            GroupID = item.GroupID,
+                        });
+                    }
+                }
+
+                //foreach (var item in res.Item2)
+                //{
+                //    if (item.Picture != null && item.Picture.Data != null)
+                //    {
+                //        item.Picture.Data = null;
+                //        item.Picture.ToFetch = true;
+                //    }
+                //}
+                //var itemss = res.Item2.Where(x => x.Picture != null && x.Picture.Data != null);
+            }
+            catch (Exception ex)
+            {
+
             }
 
-            #region
-            //item.NotifyAboutChange();
-
-            //var changedGroup = item.NeedNotifyGroups;
-            //var changedItems = item.NeedNotifyItems/*.Where(x => !changedGroup.Any(y => y.IndexGroup == x.GroupID))*/.ToList();
-
-            /*foreach (var needNotifyItem in item.NeedNotifyItems)
-            {
-                if (needNotifyItem.Type == ItemType.Formula.ToString() || needNotifyItem.Type == ItemType.Hidden.ToString())
-                {
-                    changedGroup.AddRange(needNotifyItem.NeedNotifyGroups);
-                    changedItems.AddRange(needNotifyItem.NeedNotifyItems);
-                }
-            }*/
-            #endregion
-
-            var resultGroups = new List<ItemGroup>();
-            UsersTmp.ForEach(x => resultGroups.Add(new ItemGroup()
-            {
-                IndexGroup = x.IndexGroup,
-                IsVisible = x.IsVisible
-            }));
-
-            var changedItems = new List<Item>();
-            UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
-
-            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev || !string.IsNullOrWhiteSpace(x.Formula)).ToList();
-            (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
-
-
-            var result = DateTime.Now - startDate;
-            Debug.WriteLine($"[SET VALUE] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
             return Ok(res);
         }
 

@@ -8,10 +8,14 @@ using FirePlatform.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FirePlatform.WebApi
@@ -43,13 +47,24 @@ namespace FirePlatform.WebApi
         };
     });
 
+
             services.AddSingleton<ICalculationService, CalculationService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper();
 
-            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p
+                                                                    .AllowAnyOrigin()
                                                                     .AllowAnyMethod()
-                                                                     .AllowAnyHeader()));
+                                                                     .AllowAnyHeader()
+                                                                     .AllowCredentials()
+                                                                     .WithOrigins("http://localhost:8081", "http://localhost:8080",
+                                                                      "http://localhost:8082", "http://fireplatform.herokuapp.com")
+                                                                     ));
+
+
+            services.AddSession();
+
             //.AllowCredentials()));
 
             // Inject an implementation of ISwaggerProvider with defaulted settings applied
@@ -82,17 +97,31 @@ namespace FirePlatform.WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+
+            app.UseHsts();
+
+            var defaultDateCulture = "en-US";
+            var ci = new CultureInfo(defaultDateCulture);
+            ci.NumberFormat.NumberDecimalSeparator = ".";
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+            // Configure the Localization middleware
+            app.UseRequestLocalization(new RequestLocalizationOptions
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
+                DefaultRequestCulture = new RequestCulture(ci),
+                SupportedCultures = new List<CultureInfo>
+    {
+        ci,
+    },
+                SupportedUICultures = new List<CultureInfo>
+    {
+        ci,
+    }
+            });
 
             //app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseSession();
             app.UseMvc();
 
             app.UseCors("AllowAll");
@@ -101,6 +130,9 @@ namespace FirePlatform.WebApi
 
             // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
             //app.UseSwaggerUi();
+
+            //set culture
+
 
         }
     }

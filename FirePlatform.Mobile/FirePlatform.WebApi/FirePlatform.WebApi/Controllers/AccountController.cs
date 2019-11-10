@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 
 namespace FirePlatform.WebApi.Controllers
 {
-    //[Route("api/[controller]")]
     [ApiController]
     public class AccountController : BaseController
     {
@@ -38,12 +37,10 @@ namespace FirePlatform.WebApi.Controllers
         private IConfiguration _config;
 
         [HttpPost("api/[controller]/Login")]
-        [Authorize]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
         public IActionResult Login([FromBody] UserRequest request)
         {
-            IActionResult response;
             var userId = LoginTest(request);
 
             if (userId != null)
@@ -66,7 +63,7 @@ namespace FirePlatform.WebApi.Controllers
                 var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                   _config["Jwt:Issuer"],
                   null,
-                  expires: DateTime.Now.AddMinutes(120),
+                  expires: DateTime.Now.AddHours(24),
                   signingCredentials: credentials);
 
                 tokenToReturn = new JwtSecurityTokenHandler().WriteToken(token);
