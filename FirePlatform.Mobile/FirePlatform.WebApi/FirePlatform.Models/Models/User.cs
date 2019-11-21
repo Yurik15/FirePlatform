@@ -12,6 +12,7 @@ namespace FirePlatform.Models.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public IEnumerable<UserForm> UserForms { get; set; }
+        public IEnumerable<UserTemplates> UserTemplates { get; set; }
         //public IEnumerable<UserRole> UserRoles{ get; set; }
 
     }

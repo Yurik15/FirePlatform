@@ -9,6 +9,7 @@ namespace FirePlatform.Models
         public DbSet<User> Users { get; set; }
         public DbSet<TemplateModel> Forms { get; set; }
         public DbSet<UserForm> UserForms { get; set; }
+        public DbSet<UserTemplates> UserTemplates { get; set; }
         //public DbSet<UserRole> UserRoles { get; set; }
         //public DbSet<Role> Roles { get; set; }
 
@@ -18,8 +19,8 @@ namespace FirePlatform.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
 #if DEBUG
-                    //optionsBuilder.UseSqlServer(@"Server=DESKTOP-5V6A2V8;Database=FirePlatformDB;Trusted_Connection=True;MultipleActiveResultSets=true;");
-                    optionsBuilder.UseSqlServer(@"Server=sql6001.site4now.net;Database=DB_A43487_FirePlatformDB;MultipleActiveResultSets=true;User Id=DB_A43487_FirePlatformDB_admin;Password=V@sya123!;");
+                //optionsBuilder.UseSqlServer(@"Server=DESKTOP-5V6A2V8;Database=FirePlatformDB;Trusted_Connection=True;MultipleActiveResultSets=true;");
+                optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\GitHub\FirePlatform\FirePlatform.Mobile\FirePlatform.WebApi\FirePlatform.Models\FireplatformDB.mdf;Integrated Security=True");
 #else
                 optionsBuilder.UseSqlServer(@"Server=sql6001.site4now.net;Database=DB_A43487_FirePlatformDB;MultipleActiveResultSets=true;User Id=DB_A43487_FirePlatformDB_admin;Password=V@sya123!;");
 #endif
@@ -50,6 +51,15 @@ namespace FirePlatform.Models
                 .HasOne(us => us.Form)
                 .WithMany(f => f.UserForms)
                 .HasForeignKey(us => us.FormId);
+
+            modelBuilder.Entity<UserTemplates>()
+               .HasKey(u => u.Id);
+            modelBuilder.Entity<UserTemplates>()
+              .HasKey(u => new { u.UserId });
+            modelBuilder.Entity<UserTemplates>()
+              .HasOne(us => us.User)
+               .WithMany(f => f.UserTemplates)
+               .HasForeignKey(us => us.UserId);
         }
     }
 }

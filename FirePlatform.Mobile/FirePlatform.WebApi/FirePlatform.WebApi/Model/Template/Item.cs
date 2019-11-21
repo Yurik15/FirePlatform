@@ -136,7 +136,7 @@ namespace FirePlatform.WebApi.Model
         [JsonIgnore]
         public ModifiedFlag State { get; set; }
         [JsonIgnore]
-        public dynamic InitialValue { get; set; }
+        public object InitialValue { get; set; }
         [JsonIgnore]
         public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get; set; }
         [JsonIgnore]

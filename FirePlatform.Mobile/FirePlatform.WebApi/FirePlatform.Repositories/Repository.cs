@@ -16,5 +16,10 @@ namespace FirePlatform.Repositories
         {
             return UserFormRepository.Instance;
         }
+
+        public static UserTemplatesRepository GetUserTemplatesRepository()
+        {
+            return UserTemplatesRepository.Instance;
+        }
     }
 }
