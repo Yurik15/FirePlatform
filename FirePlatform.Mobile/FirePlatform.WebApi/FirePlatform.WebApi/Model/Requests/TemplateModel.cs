@@ -17,5 +17,7 @@ namespace FirePlatform.WebApi.Model.Requests
         public string Topic { get; set; }
         [JsonIgnore]
         public string Link { get; set; }
+        public int UserId { get; set; }
+        public bool IsRightTemplate { get; set; }
     }
 }

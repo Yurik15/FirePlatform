@@ -58,28 +58,24 @@ namespace FirePlatform.WebApi.Controllers
             return Ok("It works");
         }
 
-        [HttpGet("api/[controller]/LoadTmp")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
+        [HttpPost("api/[controller]/LoadTmp")]
         [EnableCors("AllowAll")]
-        [Authorize]
-        public OkObjectResult Load(int numberTmpl = 1, int userId = 0, bool isRightTemplate = false)
+        [AllowAnonymous]
+        public OkObjectResult Load([FromBody] TemplateModel request)
         {
             List<ItemGroup> res;
-            var template = new TemplateModel();
-            var content = Download(template);
+            var content = Download(request);
 
             res = Parser.PrepareControls(content);
 
-            var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == userId);
+            var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == request.UserId);
             if (isExistsUser)
             {
                 foreach (var data in ItemDataPerUsers)
                 {
-                    if (data.UserId == userId)
+                    if (data.UserId == request.UserId)
                     {
-                        if (isRightTemplate)
+                        if (request.IsRightTemplate)
                         {
                             data.UsersTmpRight = res;
                         }
@@ -93,14 +89,14 @@ namespace FirePlatform.WebApi.Controllers
             }
             else
             {
-                var itemDataPerUser = isRightTemplate ? new ItemDataPerUser
+                var itemDataPerUser = request.IsRightTemplate ? new ItemDataPerUser
                 {
-                    UserId = userId,
+                    UserId = request.UserId,
                     UsersTmpRight = res
                 } :
                 new ItemDataPerUser
                 {
-                    UserId = userId,
+                    UserId = request.UserId,
                     UsersTmpLeft = res
                 };
 
@@ -133,7 +129,7 @@ namespace FirePlatform.WebApi.Controllers
                     }
             }
             res.ForEach(x =>
-                x.IsRightTemplate = isRightTemplate
+                x.IsRightTemplate = request.IsRightTemplate
             );
 
             return Ok(res);
