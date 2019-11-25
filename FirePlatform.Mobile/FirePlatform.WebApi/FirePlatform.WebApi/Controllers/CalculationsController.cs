@@ -67,7 +67,8 @@ namespace FirePlatform.WebApi.Controllers
         public OkObjectResult Load(int numberTmpl = 1, int userId = 0, bool isRightTemplate = false)
         {
             List<ItemGroup> res;
-            var content = Download(numberTmpl);
+            var template = new TemplateModel();
+            var content = Download(template);
 
             res = Parser.PrepareControls(content);
 

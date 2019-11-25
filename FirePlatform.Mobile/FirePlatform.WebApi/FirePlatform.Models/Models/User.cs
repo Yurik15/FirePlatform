@@ -6,7 +6,7 @@ using System.Text;
 
 namespace FirePlatform.Models.Models
 {
-    [Table("User")]
+    [Table("Users")]
     public class User : IDomain
     { 
         public string Login { get; set; }
