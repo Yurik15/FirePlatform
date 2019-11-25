@@ -77,20 +77,27 @@ namespace FirePlatform.WebApi
 
             services.AddScoped<FormRepository, FormRepository>();
             services.AddScoped<BaseRepository<TemplateModel, FormRepository>, BaseRepository<TemplateModel, FormRepository>>();
+
             services.AddScoped<UserFormRepository, UserFormRepository>();
             services.AddScoped<BaseRepository<UserForm, UserFormRepository>, BaseRepository<UserForm, UserFormRepository>>();
+
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<BaseRepository<User, UserRepository>, BaseRepository<User, UserRepository>>();
+
+            services.AddScoped<UserTemplatesRepository, UserTemplatesRepository>();
+            services.AddScoped<BaseRepository<UserTemplates, UserTemplatesRepository>, BaseRepository<UserTemplates, UserTemplatesRepository>>();
 
             //services
             services.AddScoped<Service, Service>();
 
             services.AddScoped<UserService, UserService>();
             services.AddScoped<BaseService<UserService, UserRepository, User>, BaseService<UserService, UserRepository, User>>();
+
             services.AddScoped<FormService, FormService>();
             services.AddScoped<BaseService<FormService, FormRepository, TemplateModel>, BaseService<FormService, FormRepository, TemplateModel>>();
 
-
+            services.AddScoped<UserTemplatesService, UserTemplatesService>();
+            services.AddScoped<BaseService<UserTemplatesService, UserTemplatesRepository, UserTemplates>, BaseService<UserTemplatesService, UserTemplatesRepository, UserTemplates>>();
             #endregion
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using System.Threading.Tasks;
 using AutoMapper;
 using FirePlatform.Services;
 using FirePlatform.Utils.AlgorithmHelpers;
@@ -82,7 +83,7 @@ namespace FirePlatform.WebApi.Controllers
                         }
                         else
                         {
-                            data.UsersTmpLeft = res;  
+                            data.UsersTmpLeft = res;
                         }
                         break;
                     }
@@ -223,9 +224,9 @@ namespace FirePlatform.WebApi.Controllers
 
             foreach (var group in UsersTmp)
             {
-                foreach(var item in group.Items)
+                foreach (var item in group.Items)
                 {
-                    if(item.Type == ItemType.Combo.ToString())
+                    if (item.Type == ItemType.Combo.ToString())
                     {
                         if (request.PreselectionEnabled)
                         {
@@ -273,7 +274,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-        public OkObjectResult Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, bool isRightTemplate = false)
+        public async Task<OkObjectResult> Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, bool isRightTemplate = false)
         {
             var res = Tuple.Create<List<ItemGroup>, List<Item>>(null, null);
             try
@@ -360,6 +361,7 @@ namespace FirePlatform.WebApi.Controllers
 
             }
 
+            await SaveCustomTemplate(new CustomTamplate() { MainName = "A", Name = "B" });
             return Ok(res);
         }
 
@@ -470,6 +472,16 @@ namespace FirePlatform.WebApi.Controllers
                 },
             };
             return Ok(templates);
+        }
+
+        public async Task<OkObjectResult> SaveCustomTemplate([FromBody] CustomTamplate template)
+        {
+            var tmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == 1).UsersTmpLeft;
+            var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
+            var bytes = (byte[])((object)modified);
+            var service = Service.GetUserTemplatesService();
+            await service.Save(new Models.Models.User() { Id = 1 }, template.MainName, template.Name, bytes);
+            return Ok(true);
         }
 
         private string Download(int numberTmpl = 1)
