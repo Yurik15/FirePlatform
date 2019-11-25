@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using AutoMapper;
 using FirePlatform.Services;
+using FirePlatform.Utils.AlgorithmHelpers;
 using FirePlatform.WebApi.Model;
 using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Responses;
@@ -10,10 +13,12 @@ using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services;
 using FirePlatform.WebApi.Services.Parser;
 using FirePlatform.WebApi.Services.Tools;
+using LZString;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NCalc;
+using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Controllers
 {
@@ -312,7 +317,7 @@ namespace FirePlatform.WebApi.Controllers
                     IndexGroup = x.IndexGroup,
                     IsVisible = x.IsVisible
                 }));
-
+                
                 var changedItems = new List<Item>();
                 UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
 
