@@ -29,12 +29,12 @@ namespace FirePlatform.Services.Services
         #region Methods
         public async Task<TEntity> GetById(int id)
         {
-            return await _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
         public async Task<IEnumerable<TEntity>> Get(Expression<Func<TEntity, bool>> expression = null)
         {
-            return await _repository.Get(expression);
+            return await _repository.GetAsync(expression);
         }
 
         public async Task<IEnumerable<TEntity>> CreateRange(IEnumerable<TEntity> entities)
@@ -44,7 +44,7 @@ namespace FirePlatform.Services.Services
         
         public async Task<TEntity> Create(TEntity entity)
         {
-            return await _repository.Create(entity);
+            return await _repository.CreateAsync(entity);
         }
         public async Task<TEntity> Update(TEntity entity)
         {
@@ -52,7 +52,7 @@ namespace FirePlatform.Services.Services
         }
         public async Task Delete(int id)
         {
-            await _repository.Delete(id);
+            await _repository.DeleteAsync(id);
         }
         #endregion
 

@@ -41,7 +41,7 @@ namespace FirePlatform.Services.Services
             if (!userFromDb.Any())
             {
                 user.Password = EncodeAlgorithms.ComputeSha256Hash(user.Password);
-                var result = await Repository.GetUserRepository().Create(user);
+                var result = await Repository.GetUserRepository().CreateAsync(user);
                 container.DataObject = result;
 
                 return container;

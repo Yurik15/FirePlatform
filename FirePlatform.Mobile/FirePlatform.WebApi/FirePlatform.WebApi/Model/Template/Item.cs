@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Model
 {
+    [Serializable]
     public class Item
     {
         #region fields

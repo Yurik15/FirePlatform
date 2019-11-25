@@ -18,7 +18,7 @@ namespace FirePlatform.Services.Services
             ) : base(baseRepository, repository)
         {
         }
-        public async Task<(bool success, string error)> Save(User user, string mainTmp, string nameTmp, byte[] data)
+        public (bool success, string error) Save(User user, string mainTmp, string nameTmp, byte[] data)
         {
             try
             {
@@ -26,13 +26,14 @@ namespace FirePlatform.Services.Services
                 var context = Repository.GetUserTemplatesRepository();
                 var newTemplate = new UserTemplates()
                 {
+                    Id = 5,
                     Name = nameTmp,
                     MainName = mainTmp,
                     User = user,
                     UserId = user.Id,
                     Data = data
                 };
-                await context.Create(newTemplate);
+                 context.Create(newTemplate);
                 return (true, null);
             }
             catch(Exception ex)
@@ -40,13 +41,13 @@ namespace FirePlatform.Services.Services
                 return (false, ex.Message);
             }
         }
-        public async Task<IList<(int id, string name)>> GetNameTemplates(User user)
+        public IList<(int id, string name)> GetNameTemplates(User user)
         {
             try
             {
                 if (user == null) return null;
                 var context = Repository.GetUserTemplatesRepository();
-                var templates = await context.Get(x => x.UserId == user.Id);
+                var templates = context.Get(x => x.UserId == user.Id);
                 var result = templates.Select(x => (x.Id, x.Name)).ToList();
                 return result;
             }
@@ -56,13 +57,13 @@ namespace FirePlatform.Services.Services
             }
         }
 
-        public async Task<(bool success, string error)> Delete(User user, int templateId)
+        public (bool success, string error) Delete(User user, int templateId)
         {
             try
             {
                 if (user == null) return (false, "User is null");
                 var context = Repository.GetUserTemplatesRepository();
-                await context.Delete(templateId);
+                context.Delete(templateId);
                 return (true, null);
             }
             catch(Exception ex)

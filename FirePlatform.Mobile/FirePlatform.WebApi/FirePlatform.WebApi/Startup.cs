@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FirePlatform.Models;
 using FirePlatform.Models.Models;
 using FirePlatform.Repositories;
 using FirePlatform.Repositories.Repositories;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;

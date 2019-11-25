@@ -28,7 +28,7 @@ namespace FirePlatform.Services.Services
             };
 
             var container = new ServiceContainer<UserForm>();
-            container.DataObject = await Repository.GetUserFormRepository().Create(UserForm);
+            container.DataObject = await Repository.GetUserFormRepository().CreateAsync(UserForm);
 
             return container;
         }

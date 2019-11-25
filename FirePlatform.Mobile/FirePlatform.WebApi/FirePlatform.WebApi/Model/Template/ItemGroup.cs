@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Model
 {
+    [Serializable]
     public class ItemGroup
     {
         private string _visCondition = String.Empty;

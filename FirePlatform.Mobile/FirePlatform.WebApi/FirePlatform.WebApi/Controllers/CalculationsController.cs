@@ -212,7 +212,7 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(true);
         }
 
-        [HttpPost("api/[controller]/Preselection")]       
+        [HttpPost("api/[controller]/Preselection")]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
         public OkObjectResult Preselection([FromBody] PreselectionRequest request)
@@ -370,9 +370,18 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-        public OkObjectResult LoadTemplatesTest()
+        public OkObjectResult LoadTemplatesTest(int userid = 1)
         {
             var templates = LoadTemplates();
+            var user = new Models.Models.User()
+            {
+                Id = userid
+            };
+            var templatesCustom = Service.GetUserTemplatesService().GetNameTemplates(user);
+            foreach(var item in templatesCustom)
+            {
+                templates.Add(new TemplateModel() { ShortName = item.name });
+            }
             return Ok(templates);
         }
 
@@ -380,14 +389,15 @@ namespace FirePlatform.WebApi.Controllers
         [HttpPost("api/[controller]/SaveTemplate")]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
-        public async Task<OkObjectResult> SaveCustomTemplate([FromBody] CustomTamplate template)
+        public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
-            var tmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == 1).UsersTmpLeft;
-            var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
-            var bytes = modified.Serialize();
+            //var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();
+            //var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
+            //var bytes = modified.Serialize();
+            var bytes = new List<ItemGroup>().Serialize();
             var service = Service.GetUserTemplatesService();
-            await service.Save(new Models.Models.User() { Id = 1 }, template.MainName, template.Name, bytes);
-            return Ok(true);
+            var result = service.Save(new Models.Models.User() { Id = template.UserId }, template.MainName, template.Name, bytes);
+            return Ok(result.success);
         }
 
         private string Download(TemplateModel templateModel)

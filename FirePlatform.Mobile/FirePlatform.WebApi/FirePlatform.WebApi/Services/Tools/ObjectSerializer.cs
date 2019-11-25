@@ -17,14 +17,21 @@ namespace FirePlatform.WebApi.Services.Tools
                 return null;
             }
 
-            using (var memoryStream = new MemoryStream())
+            try
             {
-                var binaryFormatter = new BinaryFormatter();
+                using (var memoryStream = new MemoryStream())
+                {
+                    var binaryFormatter = new BinaryFormatter();
 
-                binaryFormatter.Serialize(memoryStream, obj);
+                    binaryFormatter.Serialize(memoryStream, obj);
 
-                var compressed = Compress(memoryStream.ToArray());
-                return compressed;
+                    var compressed = Compress(memoryStream.ToArray());
+                    return compressed;
+                }
+            }
+            catch(Exception ex)
+            {
+                return null;
             }
         }
 
