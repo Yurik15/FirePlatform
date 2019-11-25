@@ -7,6 +7,7 @@ namespace FirePlatform.WebApi.Model.Requests
 {
     public class CustomTamplate
     {
+        public int UserId { get; set; }
         public string MainName { get; set; }
         public string Name { get; set; }
     }

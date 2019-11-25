@@ -212,12 +212,9 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(true);
         }
 
-        [HttpPost("api/[controller]/Preselection")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
+        [HttpPost("api/[controller]/Preselection")]       
         [EnableCors("AllowAll")]
-        [Authorize]
+        [AllowAnonymous]
         public OkObjectResult Preselection([FromBody] PreselectionRequest request)
         {
             var UsersTmp = request.IsRightTemplate ?
@@ -363,7 +360,7 @@ namespace FirePlatform.WebApi.Controllers
 
             }
 
-            await SaveCustomTemplate(new CustomTamplate() { MainName = "A", Name = "B" });
+            //await SaveCustomTemplate(new CustomTamplate() { MainName = "A", Name = "B" });
             return Ok(res);
         }
 
@@ -379,7 +376,8 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(templates);
         }
 
-        [HttpPost("api/[controller]/save")]
+
+        [HttpPost("api/[controller]/SaveTemplate")]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
         public async Task<OkObjectResult> SaveCustomTemplate([FromBody] CustomTamplate template)
