@@ -15,6 +15,7 @@ namespace FirePlatform.WebApi.Model.Requests
         public string Stage { get; set; }
         public string Type { get; set; }
         public string Topic { get; set; }
+        [JsonIgnore]
         public string Link { get; set; }
     }
 }

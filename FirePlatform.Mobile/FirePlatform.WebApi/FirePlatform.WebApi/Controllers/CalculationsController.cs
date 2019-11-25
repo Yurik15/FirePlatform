@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NCalc;
 using Newtonsoft.Json;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace FirePlatform.WebApi.Controllers
 {
@@ -384,40 +385,22 @@ namespace FirePlatform.WebApi.Controllers
         {
             var tmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == 1).UsersTmpLeft;
             var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
-            var bytes = (byte[])((object)modified);
+            var bytes = modified.Serialize();
             var service = Service.GetUserTemplatesService();
             await service.Save(new Models.Models.User() { Id = 1 }, template.MainName, template.Name, bytes);
             return Ok(true);
         }
 
-        private string Download(int numberTmpl = 1)
+        private string Download(TemplateModel templateModel)
         {
+            var templates = LoadTemplates();
+
+            var selectedTmp = templates?.FirstOrDefault(x => x.Lng == templateModel.Lng && x.ShortName == templateModel.ShortName && x.Stage == templateModel.Stage);
             string file_contents = string.Empty;
             using (var wc = new System.Net.WebClient())
             {
                 wc.Encoding = System.Text.Encoding.UTF8;// GetEncoding("Windows-1250"); 
-
-                if (numberTmpl == 1) file_contents = wc.DownloadString("https://onedrive.live.com/download.aspx?cid=9214918BD14C3E0C&resid=9214918BD14C3E0C%21771&authkey=ANErohHGOIz32s0");
-                if (numberTmpl == 2) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/1sPt8y5Qi8DyD2kcwr2hi7HdcmYGd0j41wzXSGPgOw-A/export?format=tsv&id=1sPt8y5Qi8DyD2kcwr2hi7HdcmYGd0j41wzXSGPgOw-A&gid=1727084202");
-                if (numberTmpl == 3) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/11ysWSQWAW8KrCJMSDyXXu0dpNxWiDPqMzH8Tk0MJ1aE/export?format=tsv&id=11ysWSQWAW8KrCJMSDyXXu0dpNxWiDPqMzH8Tk0MJ1aE&gid=0");
-                if (numberTmpl == 4) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/1lJ2jBcTE8hKF4zyKYzAXIjPFwf1sJkBWFw2Je_5PD7I/export?format=tsv&id=1lJ2jBcTE8hKF4zyKYzAXIjPFwf1sJkBWFw2Je_5PD7I&gid=0");
-                if (numberTmpl == 5) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/1NEy0c9-fLpjxOeAsFIqM9LlmAYBb9b3hL29-NLke2Cs/export?format=tsv&id=1NEy0c9-fLpjxOeAsFIqM9LlmAYBb9b3hL29-NLke2Cs&gid=0");
-                if (numberTmpl == 6) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/1WXWSW37aglC0O2YDI-ZyADuIrhBusOMPWw8752Rjs_M/export?format=tsv&id=1WXWSW37aglC0O2YDI-ZyADuIrhBusOMPWw8752Rjs_M&gid=0");
-                if (numberTmpl == 7) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/18P5QrPytLq3c7q8epN-spVxmxDcfx-UEPIxqX7kXdqo/export?format=tsv&id=18P5QrPytLq3c7q8epN-spVxmxDcfx-UEPIxqX7kXdqo&gid=0");
-                if (numberTmpl == 8) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/1eP5Q_S5mYm-JBOIiFqTtnQlAm9yidRJjFQNmCP99XFc/export?format=tsv&id=1eP5Q_S5mYm-JBOIiFqTtnQlAm9yidRJjFQNmCP99XFc&gid=0");
-                if (numberTmpl == 9) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/1/d/125E669P25ayUVZb5AWmo6_pqriPICyOOpzg_po-yBno/export?format=tsv&id=125E669P25ayUVZb5AWmo6_pqriPICyOOpzg_po-yBno&gid=0");
-
-                if (numberTmpl == 10) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1r2-_StOCfyIhlop2kh8vzJ1DkC8TSbuQauojJ3YNTto/export?format=tsv&id=1r2-_StOCfyIhlop2kh8vzJ1DkC8TSbuQauojJ3YNTto&gid=0");
-                if (numberTmpl == 11) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1EUzWym7X68nqdNmDu4KMYpFzGed31XE_JRKXJr6cmB0/export?format=tsv&id=1EUzWym7X68nqdNmDu4KMYpFzGed31XE_JRKXJr6cmB0&gid=0");
-                if (numberTmpl == 12) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/17gi9G5T9ogcPxVm5rbpJ4RjPHZ7MUeFv0N4bvu9ej9k/export?format=tsv&id=17gi9G5T9ogcPxVm5rbpJ4RjPHZ7MUeFv0N4bvu9ej9k&gid=0");
-                if (numberTmpl == 13) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1FMQB2a9hMIXXkeaEq_I_A0UfDVa-xF042yF9fOuVTeQ/export?format=tsv&id=1FMQB2a9hMIXXkeaEq_I_A0UfDVa-xF042yF9fOuVTeQ&gid=0");
-                if (numberTmpl == 14) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1dbGYaP9goc6dC4r02aX8tCfkhq-VnULmjannN2I0E3A/export?format=tsv&id=1dbGYaP9goc6dC4r02aX8tCfkhq-VnULmjannN2I0E3A&gid=0");
-                if (numberTmpl == 15) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1jz8zEvtq4RW2vxv0brj9CSFeR3_Mo7-jrUUP35C4pr8/export?format=tsv&id=1jz8zEvtq4RW2vxv0brj9CSFeR3_Mo7-jrUUP35C4pr8&gid=0");
-                if (numberTmpl == 16) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1Lv_oVECzgj-QZrDmM3AlN_eoSTglT8aS7LwYmwJbloQ/export?format=tsv&id=1Lv_oVECzgj-QZrDmM3AlN_eoSTglT8aS7LwYmwJbloQ&gid=0");
-                if (numberTmpl == 17) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1MYvl9Ybzh3BQ1snIk6PdgKb7PIozMuhOSg_nE9MUBKo/export?format=tsv&id=1MYvl9Ybzh3BQ1snIk6PdgKb7PIozMuhOSg_nE9MUBKo&gid=0");
-                if (numberTmpl == 18) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1v6ekGRrzEZjOVc4FJG97nUuGHnVaVMWtuleJOC0zSfo/export?format=tsv&id=1v6ekGRrzEZjOVc4FJG97nUuGHnVaVMWtuleJOC0zSfo&gid=0");
-                if (numberTmpl == 19) file_contents = wc.DownloadString("https://docs.google.com/spreadsheets/u/0/d/1aOMzcXAl8kSuVJST-_GbEIx2lQ7tWOpcto8AGzg_vm8/export?format=tsv&id=1aOMzcXAl8kSuVJST-_GbEIx2lQ7tWOpcto8AGzg_vm8&gid=0");
-
+                file_contents = wc.DownloadString(selectedTmp.Link);
             }
             return file_contents;
         }
