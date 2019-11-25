@@ -318,7 +318,7 @@ namespace FirePlatform.WebApi.Controllers
                     IndexGroup = x.IndexGroup,
                     IsVisible = x.IsVisible
                 }));
-                
+
                 var changedItems = new List<Item>();
                 UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
 
@@ -373,107 +373,13 @@ namespace FirePlatform.WebApi.Controllers
         [Authorize]
         public OkObjectResult LoadTemplatesTest()
         {
-            var templates = new List<Template>()
-            {
-                new Template()
-                {
-                    Id = 1,
-                    Name = "General 1"
-                },
-                new Template()
-                {
-                    Id = 2,
-                    Name = "General 2"
-                },
-                new Template()
-                {
-                    Id = 3,
-                    Name = "General 3"
-                },
-                new Template()
-                {
-                    Id = 4,
-                    Name = "Piotrek 1"
-                },
-                new Template()
-                {
-                    Id = 5,
-                    Name = "Piotrek 2"
-                },
-                new Template()
-                {
-                    Id = 6,
-                    Name = "Tomek 1"
-                },
-                new Template()
-                {
-                    Id = 7,
-                    Name = "Tomek 2"
-                },
-                new Template()
-                {
-                    Id = 8,
-                    Name = "Bartek 1"
-                },
-                new Template()
-                {
-                    Id = 9,
-                    Name = "Bartek 2"
-                },
-                new Template()
-                {
-                    Id = 10,
-                    Name = "Tryskacze EN"
-                },
-                new Template()
-                {
-                    Id = 11,
-                    Name = "Wybuchy EN"
-                },
-                new Template()
-                {
-                    Id = 12,
-                    Name = "Wybuchy PN"
-                },
-                new Template()
-                {
-                    Id = 13,
-                    Name = "Warunki tech"
-                },
-                new Template()
-                {
-                    Id = 14,
-                    Name = "Oddymianie NFPA 204"
-                },
-                new Template()
-                {
-                    Id = 15,
-                    Name = "Oddymianie PN"
-                },
-                new Template()
-                {
-                    Id = 16,
-                    Name = "Obciążenie PN"
-                },
-                new Template()
-                {
-                    Id = 17,
-                    Name = "Obciążenie Eurokod"
-                },
-                new Template()
-                {
-                    Id = 18,
-                    Name = "Wycena tryskaczy"
-                },
-                new Template()
-                {
-                    Id = 19,
-                    Name = "Tryskacze NFPA 13"
-                },
-            };
+            var templates = LoadTemplates();
             return Ok(templates);
         }
 
+        [HttpPost("api/[controller]/save")]
+        [EnableCors("AllowAll")]
+        [AllowAnonymous]
         public async Task<OkObjectResult> SaveCustomTemplate([FromBody] CustomTamplate template)
         {
             var tmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == 1).UsersTmpLeft;
@@ -514,6 +420,34 @@ namespace FirePlatform.WebApi.Controllers
 
             }
             return file_contents;
+        }
+
+        private IList<TemplateModel> LoadTemplates()
+        {
+            var result = new List<TemplateModel>();
+            string data = string.Empty;
+            using (var wc = new System.Net.WebClient())
+            {
+                data = wc.DownloadString("https://docs.google.com/spreadsheets/d/1hh0mYlkmSvRQwgiIhAnnEOmHKCpg293empAKl1Kj2mc/export?format=csv&id=1hh0mYlkmSvRQwgiIhAnnEOmHKCpg293empAKl1Kj2mc&gid=0");
+            }
+            var items = data?.Split("\r\n").ToArray();
+            if (items != null)
+                for (int i = 1; i < items.Length; i++)
+                {
+                    var item = items[i];
+                    var parts = item.Split(',');
+                    result.Add(new TemplateModel()
+                    {
+                        Lng = parts[0],
+                        ShortName = parts[1],
+                        LongName = parts[2],
+                        Stage = parts[3],
+                        Type = parts[4],
+                        Topic = parts[5],
+                        Link = parts[6]
+                    });
+                }
+            return result;
         }
     }
 }
