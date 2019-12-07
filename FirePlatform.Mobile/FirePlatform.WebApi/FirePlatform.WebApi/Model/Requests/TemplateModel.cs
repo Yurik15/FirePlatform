@@ -9,7 +9,6 @@ namespace FirePlatform.WebApi.Model.Requests
     public class TemplateModel
     {
         public string Lng { get; set; }
-        [JsonProperty("Name")]
         public string ShortName { get; set; }
         public string LongName { get; set; }
         public string Stage { get; set; }
@@ -19,5 +18,13 @@ namespace FirePlatform.WebApi.Model.Requests
         public string Link { get; set; }
         public int UserId { get; set; }
         public bool IsRightTemplate { get; set; }
+        public bool IsCustom { get; set; }
+        public string SavedName { get; set; }
+        public List<TemplateModel> SavedTemplates{ get; set; }
+
+        public TemplateModel()
+        {
+            SavedTemplates = new List<TemplateModel>();
+        }
     }
 }

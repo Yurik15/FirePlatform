@@ -366,19 +366,32 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-        public OkObjectResult LoadTemplatesTest(int userid = 1)
+        public OkObjectResult LoadTemplates(string language, int userid = 0)
         {
             var templates = LoadTemplates();
-            var user = new Models.Models.User()
+
+            var customTemplates = Service
+                                    .GetUserTemplatesService()
+                                    .GetNameTemplates(userid);
+
+            foreach (var customTemplate in customTemplates)
             {
-                Id = userid
-            };
-            var templatesCustom = Service.GetUserTemplatesService().GetNameTemplates(user);
-            foreach(var item in templatesCustom)
-            {
-                templates.Add(new TemplateModel() { ShortName = item.name });
+                foreach (var template in templates)
+                {
+                    if (template.ShortName == customTemplate.mainName)
+                    {
+                        template.SavedTemplates.Add(new TemplateModel()
+                        {
+                            ShortName = customTemplate.mainName,
+                            IsCustom = true,
+                            SavedName = customTemplate.name
+                        });
+                    }
+                }
             }
-            return Ok(templates);
+            var res = templates.Where(x => x.Lng == language);
+
+            return Ok(res);
         }
 
 
@@ -387,12 +400,11 @@ namespace FirePlatform.WebApi.Controllers
         [AllowAnonymous]
         public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
-            //var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();
-            //var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
-            //var bytes = modified.Serialize();
-            var bytes = new List<ItemGroup>().Serialize();
+            var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();
+            var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
+            var bytes = modified.Serialize();
             var service = Service.GetUserTemplatesService();
-            var result = service.Save(new Models.Models.User() { Id = template.UserId }, template.MainName, template.Name, bytes);
+            var result = service.Save(new Models.Models.Users() { Id = template.UserId }, template.MainName, template.Name, bytes);
             return Ok(result.success);
         }
 

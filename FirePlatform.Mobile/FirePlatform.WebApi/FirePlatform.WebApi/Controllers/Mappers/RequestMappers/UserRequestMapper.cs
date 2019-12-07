@@ -8,7 +8,7 @@ namespace FirePlatform.WebApi.Controllers.Mappers
     {
         public UserRequestMapper()
         {
-            CreateMap<UserRequest, User>();
+            CreateMap<UserRequest, Users>();
         }
     }
 }

@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace FirePlatform.Services.Services
 {
-    public class UserService : BaseService<UserService, UserRepository, User>
+    public class UserService : BaseService<UserService, UserRepository, Users>
     {
         public UserService
             (
-                BaseRepository<User, UserRepository> baseRepository,
+                BaseRepository<Users, UserRepository> baseRepository,
                 Repository repository
             ) : base(baseRepository, repository)
         {
@@ -33,9 +33,9 @@ namespace FirePlatform.Services.Services
                 return false;
         }
 
-        public async Task<ServiceContainer<User>> Register(User user)
+        public async Task<ServiceContainer<Users>> Register(Users user)
         {
-            var container = new ServiceContainer<User>();
+            var container = new ServiceContainer<Users>();
 
             var userFromDb = Repository.GetUserRepository().GetIQueryable(x => x.Login == user.Login);
             if (!userFromDb.Any())

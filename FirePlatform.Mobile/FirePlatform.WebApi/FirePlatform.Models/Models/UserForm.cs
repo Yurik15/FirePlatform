@@ -7,7 +7,7 @@ namespace FirePlatform.Models.Models
     {
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public Users User { get; set; }
         public int FormId { get; set; }
         [ForeignKey("FormId")]
         public TemplateModel Form { get; set; }

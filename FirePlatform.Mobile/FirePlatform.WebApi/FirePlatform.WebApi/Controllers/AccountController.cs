@@ -86,7 +86,7 @@ namespace FirePlatform.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = Mapper.Map<UserRequest, User>(request);
+            var user = Mapper.Map<UserRequest, Users>(request);
             var userFromDbContainer = await Service.GetUserService().Register(user);
 
             if (userFromDbContainer.Message == null)
@@ -225,7 +225,7 @@ namespace FirePlatform.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = Mapper.Map<UserRequest, User>(request);
+            var user = Mapper.Map<UserRequest, Users>(request);
             var result = await Service.GetUserService().Create(user);
             var response = Mapper.Map<UserResponse>(result);
             var container = new ApiContainer<UserResponse>
@@ -243,7 +243,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(200, Type = typeof(UserResponse))]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<User>> Get(int id)
+        public async Task<ActionResult<Users>> Get(int id)
         {
             var result = await Service.GetUserService().GetById(id);
             var response = Mapper.Map<UserResponse>(result);
@@ -263,7 +263,7 @@ namespace FirePlatform.WebApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = Mapper.Map<UserRequest, User>(request);
+            var user = Mapper.Map<UserRequest, Users>(request);
             var result = await Service.GetUserService().Update(user);
             var response = Mapper.Map<UserResponse>(result);
             var container = new ApiContainer<UserResponse>
@@ -290,7 +290,7 @@ namespace FirePlatform.WebApi.Controllers
             if (result == null)
                 return NotFound();
 
-            var response = Mapper.Map<IEnumerable<User>, IEnumerable<UserResponse>>(result);
+            var response = Mapper.Map<IEnumerable<Users>, IEnumerable<UserResponse>>(result);
             var container = new ApiContainer<UserResponse>
             {
                 DataCollection = response

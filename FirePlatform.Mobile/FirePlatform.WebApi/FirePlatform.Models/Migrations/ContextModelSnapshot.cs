@@ -15,7 +15,7 @@ namespace FirePlatform.Models.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.3-rtm-32065")
+                .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -32,7 +32,26 @@ namespace FirePlatform.Models.Migrations
                     b.ToTable("Forms");
                 });
 
-            modelBuilder.Entity("FirePlatform.Models.Models.User", b =>
+            modelBuilder.Entity("FirePlatform.Models.Models.UserForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FormId");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserForm");
+                });
+
+            modelBuilder.Entity("FirePlatform.Models.Models.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,38 +66,23 @@ namespace FirePlatform.Models.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("FirePlatform.Models.Models.UserForm", b =>
-                {
-                    b.Property<int>("UserId");
-
-                    b.Property<int>("FormId");
-
-                    b.Property<int>("Id");
-
-                    b.HasKey("UserId", "FormId");
-
-                    b.HasAlternateKey("Id");
-
-                    b.HasIndex("FormId");
-
-                    b.ToTable("UserForm");
-                });
-
             modelBuilder.Entity("FirePlatform.Models.Models.UserTemplates", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<byte[]>("Data");
-
-                    b.Property<int>("Id");
 
                     b.Property<string>("MainName");
 
                     b.Property<string>("Name");
 
-                    b.HasKey("UserId");
+                    b.Property<int>("UserId");
 
-                    b.HasAlternateKey("Id");
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserTemplates");
                 });
@@ -90,15 +94,15 @@ namespace FirePlatform.Models.Migrations
                         .HasForeignKey("FormId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("FirePlatform.Models.Models.User", "User")
-                        .WithMany("UserForms")
+                    b.HasOne("FirePlatform.Models.Models.Users", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("FirePlatform.Models.Models.UserTemplates", b =>
                 {
-                    b.HasOne("FirePlatform.Models.Models.User", "User")
+                    b.HasOne("FirePlatform.Models.Models.Users", "User")
                         .WithMany("UserTemplates")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

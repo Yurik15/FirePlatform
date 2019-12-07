@@ -18,18 +18,17 @@ namespace FirePlatform.Services.Services
             ) : base(baseRepository, repository)
         {
         }
-        public (bool success, string error) Save(User user, string mainTmp, string nameTmp, byte[] data)
+        public (bool success, string error) Save(Users user, string mainTmp, string nameTmp, byte[] data)
         {
             try
             {
                 if (user == null) return (false, "User is null");
                 var context = Repository.GetUserTemplatesRepository();
+              
                 var newTemplate = new UserTemplates()
                 {
-                    Id = 5,
                     Name = nameTmp,
                     MainName = mainTmp,
-                    User = user,
                     UserId = user.Id,
                     Data = data
                 };
@@ -41,14 +40,15 @@ namespace FirePlatform.Services.Services
                 return (false, ex.Message);
             }
         }
-        public IList<(int id, string name)> GetNameTemplates(User user)
+        public IList<(int id, string name, string mainName)> GetNameTemplates(int userId)
         {
             try
             {
-                if (user == null) return null;
+                if (userId == 0) return null;
+
                 var context = Repository.GetUserTemplatesRepository();
-                var templates = context.Get(x => x.UserId == user.Id);
-                var result = templates.Select(x => (x.Id, x.Name)).ToList();
+                var templates = context.Get(x => x.UserId == userId);
+                var result = templates.Select(x => (x.Id, x.Name, x.MainName)).ToList();
                 return result;
             }
             catch(Exception ex)
@@ -57,7 +57,7 @@ namespace FirePlatform.Services.Services
             }
         }
 
-        public (bool success, string error) Delete(User user, int templateId)
+        public (bool success, string error) Delete(Users user, int templateId)
         {
             try
             {

@@ -6,7 +6,7 @@ namespace FirePlatform.Models
     public class Context : DbContext
     {
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Users> Users { get; set; }
         public DbSet<TemplateModel> Forms { get; set; }
         public DbSet<UserForm> UserForms { get; set; }
         public DbSet<UserTemplates> UserTemplates { get; set; }
@@ -19,8 +19,8 @@ namespace FirePlatform.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
 #if DEBUG
-                //optionsBuilder.UseSqlServer(@"Server=DESKTOP-5V6A2V8;Database=FirePlatformDB;Trusted_Connection=True;MultipleActiveResultSets=true;");
-                optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\GitHub\FirePlatform\FirePlatform.Mobile\FirePlatform.WebApi\FirePlatform.Models\FireplatformDB.mdf;Integrated Security=True");
+                optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = AFeeWQ12@!#;");
+                //optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\GitHub\FirePlatform\FirePlatform.Mobile\FirePlatform.WebApi\FirePlatform.Models\FireplatformDB.mdf;Integrated Security=True");
 #else
                 optionsBuilder.UseSqlServer(@"Server=sql6001.site4now.net;Database=DB_A43487_FirePlatformDB;MultipleActiveResultSets=true;User Id=DB_A43487_FirePlatformDB_admin;Password=V@sya123!;");
 #endif
@@ -30,35 +30,20 @@ namespace FirePlatform.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<Users>()
                 .HasKey(u => u.Id);
 
             modelBuilder.Entity<TemplateModel>()
                 .HasKey(u => u.Id);
 
-            modelBuilder.Entity<UserForm>()
-                .HasKey(u => u.Id);
-
-            modelBuilder.Entity<UserForm>()
-                .HasKey(us => new { us.UserId, us.FormId });
-
-            modelBuilder.Entity<UserForm>()
-                .HasOne(us => us.User)
-                .WithMany(u => u.UserForms)
-                .HasForeignKey(us => us.UserId);
-
-            modelBuilder.Entity<UserForm>()
-                .HasOne(us => us.Form)
-                .WithMany(f => f.UserForms)
-                .HasForeignKey(us => us.FormId);
-
-            modelBuilder.Entity<UserTemplates>()
-               .HasKey(u => u.Id);
-            modelBuilder.Entity<UserTemplates>()
-              .HasKey(u => new { u.UserId });
             modelBuilder.Entity<UserTemplates>()
               .HasOne(us => us.User)
                .WithMany(f => f.UserTemplates)
+               .HasForeignKey(us => us.UserId);
+
+            modelBuilder.Entity<Users>()
+              .HasMany(t => t.UserTemplates)
+               .WithOne(u => u.User)
                .HasForeignKey(us => us.UserId);
         }
     }

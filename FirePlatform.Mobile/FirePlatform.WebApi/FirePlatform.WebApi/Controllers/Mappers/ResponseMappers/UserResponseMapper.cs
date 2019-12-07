@@ -8,7 +8,7 @@ namespace FirePlatform.WebApi.Controllers.Mappers.ResponseMappers
     {
         public UserResponseMapper()
         {
-            CreateMap<User, UserResponse>();
+            CreateMap<Users, UserResponse>();
         }
     }
 }
