@@ -61,12 +61,21 @@ namespace FirePlatform.WebApi.Controllers
         [HttpPost("api/[controller]/LoadTmp")]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
-        public OkObjectResult Load([FromBody] TemplateModel request)
+        public async Task<OkObjectResult> Load([FromBody] TemplateModel request)
         {
             List<ItemGroup> res;
             var content = Download(request);
 
-            res = Parser.PrepareControls(content);
+            List<Item> savedItems = null;
+            var service = Service.GetUserTemplatesService();
+            var result = await service.Get(x => x.Name == "1111" && x.UserId == request.UserId && x.MainName == request.ShortName);
+            if (result != null)
+            {
+                var tmp = result.FirstOrDefault();
+                var tmpData = tmp?.Data?.DeSerialize();
+                savedItems = tmpData as List<Item>;
+            }
+            res = Parser.PrepareControls(content, savedItems);
 
             var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == request.UserId);
             if (isExistsUser)
@@ -401,8 +410,18 @@ namespace FirePlatform.WebApi.Controllers
         public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
             var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();
-            var modified = tmp.Where(x => x.Items.Any(y => y.InitialValue != y.Value)).ToArray();
-            var bytes = modified.Serialize();
+            List<Item> items = new List<Item>();
+            foreach (var group in tmp)
+            {
+                foreach (var item in group.Items)
+                {
+                    if (item.Value != item.InitialValue && item.IsVisible)
+                    {
+                        items.Add(item);
+                    }
+                }
+            }
+            var bytes = items.Serialize();
             var service = Service.GetUserTemplatesService();
             var result = service.Save(new Models.Models.Users() { Id = template.UserId }, template.MainName, template.Name, bytes);
             return Ok(result.success);

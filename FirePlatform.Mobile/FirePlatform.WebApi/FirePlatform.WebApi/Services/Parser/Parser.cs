@@ -10,13 +10,18 @@ namespace FirePlatform.WebApi.Services.Parser
 {
     public static class Parser
     {
-        public static List<ItemGroup> PrepareControls(string fileContent)
+        public static List<ItemGroup> PrepareControls(string fileContent, List<Item> savedItems = null)
         {
             var startDate = DateTime.Now;
             var controls = ParseDoc(fileContent);
             var endDate = DateTime.Now;
             var result = endDate - startDate;
             Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+
+            if(savedItems != null)
+            {
+                PopulateSavedValues(controls, savedItems);
+            }
 
             startDate = DateTime.Now;
             var varibles = PrepareFieldNameDependToItemDic(controls);//PrepareFieldNameDependToItem(controls);
@@ -31,6 +36,23 @@ namespace FirePlatform.WebApi.Services.Parser
             Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
 
             return controls;
+        }
+
+        private static void PopulateSavedValues(List<ItemGroup> itemGroups, List<Item> items)
+        {
+            foreach(var item in items)
+            {
+                var foundGroup = itemGroups.FirstOrDefault(x => x.IndexGroup == item.GroupID);
+                if(foundGroup != null)
+                {
+                    var foundItem = foundGroup.Items.FirstOrDefault(x => x.NumID == item.NumID);
+                    if(foundItem != null)
+                    {
+                        foundItem.Value = item.Value;
+                        foundItem.NameVarible = item.NameVarible;
+                    }
+                }
+            }
         }
 
         #region parser
