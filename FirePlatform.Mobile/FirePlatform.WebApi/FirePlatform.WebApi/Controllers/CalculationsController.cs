@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
 using System.Threading.Tasks;
 using AutoMapper;
 using FirePlatform.Services;
-using FirePlatform.Utils.AlgorithmHelpers;
 using FirePlatform.WebApi.Model;
 using FirePlatform.WebApi.Model.Requests;
 using FirePlatform.WebApi.Model.Responses;
@@ -14,13 +11,10 @@ using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services;
 using FirePlatform.WebApi.Services.Parser;
 using FirePlatform.WebApi.Services.Tools;
-using LZString;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NCalc;
-using Newtonsoft.Json;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace FirePlatform.WebApi.Controllers
 {
@@ -144,17 +138,25 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(res);
         }
 
-        [HttpGet("api/[controller]/ClearTemplates")]
+        [HttpPost("api/[controller]/ClearTemplates")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        [Authorize]
-        public ActionResult ClearTemplateDataPerUser(int userId)
+        //[Authorize]
+        public ActionResult ClearTemplateDataPerUser([FromBody] TemplateModel request)
         {
-            //var existingDataperUser = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId);
-            //if (existingDataperUser != null)
-            //    existingDataperUser.UsersTmp = new List<ItemGroup>();
+            var existingDataperUser = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId);
+            if (existingDataperUser != null)
+            {
+                List<ItemGroup> res;
+                var content = Download(request);
+                res = Parser.PrepareControls(content);
+
+                if (request.IsRightTemplate)
+                    existingDataperUser.UsersTmpRight = res;
+                existingDataperUser.UsersTmpLeft = res;
+            }
 
             return Ok();
         }
@@ -273,8 +275,8 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(res);
         }
         [HttpGet("api/[controller]/Set")]
-        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
