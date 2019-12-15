@@ -62,7 +62,7 @@ namespace FirePlatform.WebApi.Controllers
 
             List<Item> savedItems = null;
             var service = Service.GetUserTemplatesService();
-            var result = await service.Get(x => x.Name == "1111" && x.UserId == request.UserId && x.MainName == request.ShortName);
+            var result = await service.Get(x => x.Name == request.SavedName && x.UserId == request.UserId && x.MainName == request.ShortName);
             if (result != null)
             {
                 var tmp = result.FirstOrDefault();
@@ -238,7 +238,7 @@ namespace FirePlatform.WebApi.Controllers
                         {
                             if (string.IsNullOrWhiteSpace(item.Value as string))
                             {
-                                item.Value = item.ComboItems?.FirstOrDefault().GroupKey;
+                                item.NameVarible = item.ComboItems?.FirstOrDefault().GroupKey;
                             }
                         }
                         else
