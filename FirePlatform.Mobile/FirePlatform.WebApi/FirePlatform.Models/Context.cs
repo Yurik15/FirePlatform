@@ -22,7 +22,7 @@ namespace FirePlatform.Models
                 optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = AFeeWQ12@!#;");
                 //optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\GitHub\FirePlatform\FirePlatform.Mobile\FirePlatform.WebApi\FirePlatform.Models\FireplatformDB.mdf;Integrated Security=True");
 #else
-                optionsBuilder.UseSqlServer(@"Server=sql6001.site4now.net;Database=DB_A43487_FirePlatformDB;MultipleActiveResultSets=true;User Id=DB_A43487_FirePlatformDB_admin;Password=V@sya123!;");
+                optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = AFeeWQ12@!#;");
 #endif
 
             }

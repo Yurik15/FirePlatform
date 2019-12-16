@@ -54,6 +54,7 @@ namespace FirePlatform.WebApi.Controllers
 
         [HttpPost("api/[controller]/LoadTmp")]
         [EnableCors("AllowAll")]
+        //[Authorize]
         [AllowAnonymous]
         public async Task<OkObjectResult> Load([FromBody] TemplateModel request)
         {
@@ -62,8 +63,8 @@ namespace FirePlatform.WebApi.Controllers
 
             List<Item> savedItems = null;
             var service = Service.GetUserTemplatesService();
-            var result = await service.Get(x => x.Name == "1111" && x.UserId == request.UserId && x.MainName == request.ShortName);
-            if (result != null)
+            var result = await service.Get(x => x.Name == request.SavedName && x.UserId == request.UserId && x.MainName == request.ShortName);
+            if (result != null && result.Count() > 0)
             {
                 var tmp = result.FirstOrDefault();
                 var tmpData = tmp?.Data?.DeSerialize();
@@ -143,6 +144,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
+        [AllowAnonymous]
         //[Authorize]
         public ActionResult ClearTemplateDataPerUser([FromBody] TemplateModel request)
         {
@@ -167,6 +169,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
+        //[AllowAnonymous]
         public ActionResult FetchPictureForItem(int numberId, int groupId)
         {
             var response = Pictures.FirstOrDefault(x => x.NumID == numberId && x.GroupID == groupId);
@@ -179,6 +182,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
+       // [AllowAnonymous]
         public OkObjectResult TestCalc()
         {
             var parameters = new Dictionary<string, object>()
@@ -221,6 +225,7 @@ namespace FirePlatform.WebApi.Controllers
 
         [HttpPost("api/[controller]/Preselection")]
         [EnableCors("AllowAll")]
+        //[Authorize]
         [AllowAnonymous]
         public OkObjectResult Preselection([FromBody] PreselectionRequest request)
         {
@@ -280,6 +285,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
+        //[AllowAnonymous]
         public async Task<OkObjectResult> Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, bool isRightTemplate = false)
         {
             var res = Tuple.Create<List<ItemGroup>, List<Item>>(null, null);
@@ -377,6 +383,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
+       // [AllowAnonymous]
         public OkObjectResult LoadTemplates(string language, int userid = 0)
         {
             var templates = LoadTemplates();
@@ -408,7 +415,8 @@ namespace FirePlatform.WebApi.Controllers
 
         [HttpPost("api/[controller]/SaveTemplate")]
         [EnableCors("AllowAll")]
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [Authorize]
         public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
             var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();
