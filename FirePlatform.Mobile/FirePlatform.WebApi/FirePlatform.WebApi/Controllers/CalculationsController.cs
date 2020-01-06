@@ -182,7 +182,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-       // [AllowAnonymous]
+        // [AllowAnonymous]
         public OkObjectResult TestCalc()
         {
             var parameters = new Dictionary<string, object>()
@@ -383,7 +383,7 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [Authorize]
-       // [AllowAnonymous]
+        // [AllowAnonymous]
         public OkObjectResult LoadTemplates(string language, int userid = 0)
         {
             var templates = LoadTemplates();
@@ -464,7 +464,7 @@ namespace FirePlatform.WebApi.Controllers
                 for (int i = 1; i < items.Length; i++)
                 {
                     var item = items[i];
-                    var parts = item.Split(',');
+                    var parts = ParseExcelLine(item);//item.Split(',');
                     result.Add(new TemplateModel()
                     {
                         Lng = parts[0],
@@ -477,6 +477,33 @@ namespace FirePlatform.WebApi.Controllers
                     });
                 }
             return result;
+        }
+
+        private string[] ParseExcelLine(string line)
+        {
+            if (string.IsNullOrWhiteSpace(line)) return null;
+            List<string> result = new List<string>();
+
+            string buffor = "";
+            bool isString = false;
+            foreach(var chr in line)
+            {
+                if(chr == '"')
+                {
+                    isString = !isString;
+                    continue;
+                }
+
+                if(!isString && chr == ',')
+                {
+                    result.Add(buffor);
+                    buffor = "";
+                    continue;
+                }
+                buffor += chr;
+            }
+            result.Add(buffor);
+            return result?.ToArray();
         }
     }
 }
