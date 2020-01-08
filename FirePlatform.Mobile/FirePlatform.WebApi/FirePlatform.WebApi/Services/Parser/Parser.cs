@@ -18,7 +18,7 @@ namespace FirePlatform.WebApi.Services.Parser
             var result = endDate - startDate;
             Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
 
-            if(savedItems != null)
+            if (savedItems != null)
             {
                 PopulateSavedValues(controls, savedItems);
             }
@@ -40,13 +40,13 @@ namespace FirePlatform.WebApi.Services.Parser
 
         private static void PopulateSavedValues(List<ItemGroup> itemGroups, List<Item> items)
         {
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 var foundGroup = itemGroups.FirstOrDefault(x => x.IndexGroup == item.GroupID);
-                if(foundGroup != null)
+                if (foundGroup != null)
                 {
                     var foundItem = foundGroup.Items.FirstOrDefault(x => x.NumID == item.NumID);
-                    if(foundItem != null)
+                    if (foundItem != null)
                     {
                         foundItem.Value = item.Value;
                         foundItem.NameVarible = item.NameVarible;
@@ -141,7 +141,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             };
                             tempDB.Add(comboItem);
                         }
-                        if(dbTitle.Trim().ToLower() == "sources")
+                        if (dbTitle.Trim().ToLower() == "sources")
                         {
 
                         }
@@ -226,6 +226,17 @@ namespace FirePlatform.WebApi.Services.Parser
                         var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes, Memoses, Pictures);
                         item.ParentGroup = groupItems;
                         //if (!string.IsNullOrEmpty(item.Type))
+                        if (item.Type == ItemType.HTML.ToString())
+                        {
+                            var prevItem = items.LastOrDefault();
+                            if (prevItem != null)
+                            {
+                                if(item.HtmlLevel > prevItem.HtmlLevel)
+                                {
+                                    item.ParentHtmlItem = prevItem;
+                                }
+                            }
+                        }
                         items.Add(item);
                     }
 

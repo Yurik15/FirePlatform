@@ -82,7 +82,15 @@ namespace FirePlatform.WebApi.Model
 
         public bool IsVisible
         {
-            get => _isVisible;
+            get
+            {
+                if(Type == ItemType.HTML.ToString())
+                {
+                    var parentVis = ParentHtmlItem == null ? true : ParentHtmlItem.IsVisible;
+                    return parentVis && _isVisible;
+                }
+               return _isVisible;
+            }
             set
             {
                 IsVisiblePrev = _isVisible;
@@ -179,8 +187,16 @@ namespace FirePlatform.WebApi.Model
 
         [JsonIgnore]
         public string NameVaribleMatrix { get => _nameVaribleMatrix; set => _nameVaribleMatrix = value; } //TODO NEED TO BE REFACTOR
+
+        #region HTML - PRZEPISY
+        [JsonIgnore]
+        public Item ParentHtmlItem { get; set; }
+        [JsonIgnore]
+        public int HtmlLevel { get; set; } = -1;
+        #endregion HTML - PRZEPISY
+
         #endregion ignore fields
     }
-    public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture };
+    public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture, HTML };
     public enum ModifiedFlag { Unchanged, Modified }
 }

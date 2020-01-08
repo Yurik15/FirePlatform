@@ -38,7 +38,7 @@ namespace FirePlatform.WebApi.Services.Tools
                 var visCondition = item.VisCondition;
                 if (!string.IsNullOrEmpty(visCondition))
                 {
-                    if (item.Title.Trim().ToLower() == "dilution:")
+                    if (item.Title?.Trim().ToLower() == "dilution:")
                     {
 
                     }

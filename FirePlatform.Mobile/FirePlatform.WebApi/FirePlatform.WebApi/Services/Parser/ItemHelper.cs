@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FirePlatform.WebApi.Model;
 using FirePlatform.WebApi.Model.Template;
-using FirePlatform.WebApi.Services.Tools;
-using NCalc;
 
 namespace FirePlatform.WebApi.Services.Parser
 {
@@ -214,6 +211,31 @@ namespace FirePlatform.WebApi.Services.Parser
                     throw ex;
                 }
 
+            }
+            else
+            {
+                item.Type = ItemType.HTML.ToString();
+
+                var parts = Text_line.Split("\t");
+                var visibility = parts[0];
+                if (!"-".Equals(visibility))
+                {
+                    item.VisCondition = visibility;
+                }
+                string text = string.Empty;
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(parts[i]))
+                    {
+                        if (item.HtmlLevel == -1)
+                        {
+                            item.HtmlLevel = i;
+                        }
+                        text += parts[i];
+                    }
+                }
+
+                item.Value = text ?? string.Empty;
             }
             return item;
         }
