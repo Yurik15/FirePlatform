@@ -36,6 +36,27 @@ namespace FirePlatform.WebApi.Services.Tools
                 //item.IsVisiblePrev = item.IsVisible;
                 var formula = item.Formula;
                 var visCondition = item.VisCondition;
+
+                if (item.ComboContainsVisCondition)
+                {
+                    foreach (var comboItem in item.ComboItems)
+                    {
+                        var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
+                        var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
+                        comboItem.IsVisible = res.HasValue ? res.Value : false;
+                    }
+
+                    var selectedItem = item.ComboItems.FirstOrDefault(x => x.GroupKey == item.NameVarible);
+                    if(selectedItem != null)
+                    {
+                        if (!selectedItem.IsVisible)
+                        {
+                            item.NameVarible = "";
+                            item.Value = null;
+                        }
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(visCondition))
                 {
                     if (item.Title?.Trim().ToLower() == "dilution:")

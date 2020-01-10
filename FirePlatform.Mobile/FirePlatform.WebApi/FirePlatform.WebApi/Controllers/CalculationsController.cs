@@ -243,7 +243,7 @@ namespace FirePlatform.WebApi.Controllers
                         {
                             if (string.IsNullOrWhiteSpace(item.Value as string))
                             {
-                                item.NameVarible = item.ComboItems?.FirstOrDefault().GroupKey;
+                                item.NameVarible = item.ComboItems?.FirstOrDefault(x=>x.IsVisible)?.GroupKey;
                             }
                         }
                         else

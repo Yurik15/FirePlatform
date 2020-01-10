@@ -48,6 +48,8 @@ namespace FirePlatform.WebApi.Model
         private List<string> _formulaNameVaribles;
         [NonSerialized]
         private List<string> _visConditionNameVaribles;
+        [NonSerialized]
+        private bool _comboContainsVisCondition;
 
         #endregion fields
 
@@ -84,12 +86,12 @@ namespace FirePlatform.WebApi.Model
         {
             get
             {
-                if(Type == ItemType.HTML.ToString())
+                if (Type == ItemType.HTML.ToString())
                 {
                     var parentVis = ParentHtmlItem == null ? true : ParentHtmlItem.IsVisible;
                     return parentVis && _isVisible;
                 }
-               return _isVisible;
+                return _isVisible;
             }
             set
             {
@@ -194,6 +196,22 @@ namespace FirePlatform.WebApi.Model
         [JsonIgnore]
         public int HtmlLevel { get; set; } = -1;
         #endregion HTML - PRZEPISY
+
+        #region combo visibility
+        [JsonIgnore]
+        public bool ComboContainsVisCondition
+        {
+            get
+            {
+                var items = ComboItems;
+                if (ItemType.Combo.ToString() == Type && items != null && items.Any())
+                {
+                    return items.Any(x => !string.IsNullOrWhiteSpace(x.VisCondition));
+                }
+                return false;
+            }
+        }
+        #endregion combo visibility
 
         #endregion ignore fields
     }

@@ -119,13 +119,28 @@ namespace FirePlatform.WebApi.Services.Parser
 
                         foreach (var itemText in itemsFromGroup)
                         {
-                            var line = itemText.Trim().TrimStart(T);
+                            string text = itemText;
+                            string visCondition = string.Empty;
+                            var bracket = text.IndexOf("[", StringComparison.Ordinal);
+
+                            if (bracket > -1)
+                            {
+                                var nodetag = text.Substring(bracket);
+                                var nodetags = Parser.GetTags(nodetag).ToArray();
+                                visCondition = nodetags[0].Substring(2).Trim().ToLowerInvariant();
+                            }
+
+                            var line = text.Trim().TrimStart(T);
                             string separator = "\t";
                             if (line.Contains(", \t")) line = line.Replace(", \t", separator);
                             else if (line.Contains(",\t")) line = line.Replace(",\t", separator);
                             else if (line.Contains("\t,")) line = line.Replace("\t,", separator);
 
                             var dbItems = StringSplit(line, separator); //COMMA_SEPARATOR);
+                            if (!string.IsNullOrWhiteSpace(visCondition))
+                            {
+                                dbItems = dbItems.Take(dbItems.Length - 1).ToArray();
+                            }
 
                             var displayName = dbItems[0];
                             var groupKey = String.Join(",", dbItems.Skip(1)).Trim(',');
@@ -137,7 +152,8 @@ namespace FirePlatform.WebApi.Services.Parser
                             var comboItem = new ComboItem()
                             {
                                 DisplayName = displayName,
-                                GroupKey = groupKey
+                                GroupKey = groupKey,
+                                VisCondition = visCondition
                             };
                             tempDB.Add(comboItem);
                         }
@@ -231,7 +247,7 @@ namespace FirePlatform.WebApi.Services.Parser
                             var prevItem = items.LastOrDefault();
                             if (prevItem != null)
                             {
-                                if(item.HtmlLevel > prevItem.HtmlLevel)
+                                if (item.HtmlLevel > prevItem.HtmlLevel)
                                 {
                                     item.ParentHtmlItem = prevItem;
                                 }
@@ -293,6 +309,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         var formula = item.Formula;
                         condition += " " + formula;
                     }
+
                     if (!string.IsNullOrEmpty(condition))
                     {
                         var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
@@ -399,6 +416,41 @@ namespace FirePlatform.WebApi.Services.Parser
                             var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
                             var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
                             item.IsVisible = res.HasValue ? res.Value : false;
+                        }
+                    }
+                    else
+                    {
+                        item.IsVisible = true;
+                    }
+                    if (item.ComboContainsVisCondition)
+                    {
+                        var comboItems = item.ComboItems?.Where(x => !string.IsNullOrWhiteSpace(x.VisCondition)).ToList();
+                        foreach (var comboItem in comboItems)
+                        {
+                            var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
+                            foreach (var varibleName in comboItem.VisConditionNameVaribles)
+                            {
+                                foreach (var dependElement in data)
+                                {
+                                    var needToAdd = false;
+                                    var nameDependElement = dependElement.Key;
+                                    if (nameDependElement.Contains(","))
+                                    {
+                                        var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
+                                        needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                    }
+                                    else
+                                    {
+                                        needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                    }
+                                    if (needToAdd)
+                                        relatedItems.Add(dependElement);
+                                }
+                                comboItem.DependToItems = relatedItems;
+                            }
+                            var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
+                            var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
+                            comboItem.IsVisible = res.HasValue ? res.Value : false;
                         }
                     }
                 }
