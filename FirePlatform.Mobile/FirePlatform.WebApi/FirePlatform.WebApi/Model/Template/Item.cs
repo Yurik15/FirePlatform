@@ -50,6 +50,8 @@ namespace FirePlatform.WebApi.Model
         private List<string> _visConditionNameVaribles;
         [NonSerialized]
         private bool _comboContainsVisCondition;
+        [NonSerialized]
+        private Picture _picture;
 
         #endregion fields
 
@@ -102,7 +104,14 @@ namespace FirePlatform.WebApi.Model
         public bool IsGroupVisible { get; set; } = true;
 
         public List<ComboItem> ComboItems { get => _comboItems; set => _comboItems = value; }
-        public Picture Picture { get; set; }
+        public Picture Picture
+        {
+            get => _picture;
+            set
+            {
+                _picture = value;
+            }
+        }
         #endregion properties
 
         #region ignore fields
