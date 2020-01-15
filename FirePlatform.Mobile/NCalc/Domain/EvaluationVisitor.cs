@@ -243,7 +243,7 @@ namespace NCalc.Domain
             switch (expression.Type)
             {
                 case UnaryExpressionType.Not:
-                    if (Result == null) { Result = false; } else { Result = !Convert.ToBoolean(Result); }
+                    if (Result == null) { Result = true; } else { Result = !Convert.ToBoolean(Result); }
                     break;
 
                 case UnaryExpressionType.Negate:

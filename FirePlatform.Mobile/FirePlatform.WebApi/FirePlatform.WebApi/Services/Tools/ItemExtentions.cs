@@ -326,7 +326,7 @@ namespace FirePlatform.WebApi.Services.Tools
             }
             if (relatedItem.ReferencedItem.GhostFormulas.Any())
             {
-                var paramsDicFromGhostFormulas = GetParamsFromGhostFormulas(relatedItem.ReferencedItem.GhostFormulas, relatedItem.ReferencedItem.IsVisible && relatedItem.ReferencedItem.IsGroupVisible);
+                var paramsDicFromGhostFormulas = GetParamsFromGhostFormulas(relatedItem.ReferencedItem.GhostFormulas, relatedItem.ReferencedItem.IsVisible && relatedItem.ReferencedItem.IsVisible);
                 foreach (var element in paramsDicFromGhostFormulas)
                 {
                     if (paramsDic.ContainsKey(element.Key.Trim()))

@@ -243,7 +243,7 @@ namespace FirePlatform.WebApi.Controllers
                         {
                             if (string.IsNullOrWhiteSpace(item.Value as string))
                             {
-                                item.NameVarible = item.ComboItems?.FirstOrDefault(x=>x.IsVisible)?.GroupKey;
+                                item.NameVarible = item.ComboItems?.FirstOrDefault(x => x.IsVisible)?.GroupKey;
                             }
                         }
                         else
@@ -392,21 +392,22 @@ namespace FirePlatform.WebApi.Controllers
                                     .GetUserTemplatesService()
                                     .GetNameTemplates(userid);
 
-            foreach (var customTemplate in customTemplates)
-            {
-                foreach (var template in templates)
+            if (customTemplates != null)
+                foreach (var customTemplate in customTemplates)
                 {
-                    if (template.ShortName == customTemplate.mainName)
+                    foreach (var template in templates)
                     {
-                        template.SavedTemplates.Add(new TemplateModel()
+                        if (template.ShortName == customTemplate.mainName)
                         {
-                            ShortName = customTemplate.mainName,
-                            IsCustom = true,
-                            SavedName = customTemplate.name
-                        });
+                            template.SavedTemplates.Add(new TemplateModel()
+                            {
+                                ShortName = customTemplate.mainName,
+                                IsCustom = true,
+                                SavedName = customTemplate.name
+                            });
+                        }
                     }
                 }
-            }
             var res = templates.Where(x => x.Lng == language);
 
             return Ok(res);
@@ -486,15 +487,15 @@ namespace FirePlatform.WebApi.Controllers
 
             string buffor = "";
             bool isString = false;
-            foreach(var chr in line)
+            foreach (var chr in line)
             {
-                if(chr == '"')
+                if (chr == '"')
                 {
                     isString = !isString;
                     continue;
                 }
 
-                if(!isString && chr == ',')
+                if (!isString && chr == ',')
                 {
                     result.Add(buffor);
                     buffor = "";
