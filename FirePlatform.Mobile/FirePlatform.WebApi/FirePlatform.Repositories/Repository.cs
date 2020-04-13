@@ -21,5 +21,9 @@ namespace FirePlatform.Repositories
         {
             return UserTemplatesRepository.Instance;
         }
+        public static MainTemplatesRepository GetMainTemplatesRepository()
+        {
+            return MainTemplatesRepository.Instance;
+        }
     }
 }

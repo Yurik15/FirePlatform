@@ -11,17 +11,20 @@ namespace FirePlatform.Services
         private readonly UserService _userService;
         private readonly FormService _formService;
         private readonly UserTemplatesService _userTemplatesService;
+        private readonly MainTemplatesService _mainTemplatesService;
 
         public Service
             (
                 UserService userService,
                 FormService formService,
-                UserTemplatesService userTemplatesService
+                UserTemplatesService userTemplatesService,
+                MainTemplatesService mainTemplatesService
             )
         {
             _userService = userService;
             _formService = formService;
             _userTemplatesService = userTemplatesService;
+            _mainTemplatesService = mainTemplatesService;
         }
 
         #region Methods
@@ -39,6 +42,11 @@ namespace FirePlatform.Services
         public UserTemplatesService GetUserTemplatesService()
         {
             return _userTemplatesService;
+        }
+
+        public MainTemplatesService GetMainTemplatesService()
+        {
+            return _mainTemplatesService;
         }
         #endregion
     }
