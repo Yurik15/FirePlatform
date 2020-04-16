@@ -29,7 +29,7 @@ namespace FirePlatform.WebApi.Model
         public bool IsRightTemplate { get; set; }
         public bool Expanded { get; set; }
         public int IndexGroup { get; set; }
-        public string Title { get => _title; set => _title = value?.Trim().ToLower() ?? string.Empty; }
+        public string Title { get => _title; set => _title = value?.Trim() ?? string.Empty; }
         [JsonIgnore]
         public string Tag { get => _tag; set => _tag = value?.Trim().ToLower() ?? string.Empty; }
 

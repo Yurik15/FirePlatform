@@ -64,7 +64,7 @@ namespace FirePlatform.WebApi.Model
 
         public object Value { get; set; }
 
-        public string Title { get => _title; set => _title = value?.Trim().ToLower() ?? string.Empty; }
+        public string Title { get => _title; set => _title = value ?? string.Empty; }
         public string Type { get; set; }
         public string GroupTitle { get => _groupTitle; set => _groupTitle = value?.Trim().ToLower() ?? string.Empty; }
         public string NameVarible { get => _nameVarible; set => _nameVarible = value?.Trim().ToLower() ?? string.Empty; }
