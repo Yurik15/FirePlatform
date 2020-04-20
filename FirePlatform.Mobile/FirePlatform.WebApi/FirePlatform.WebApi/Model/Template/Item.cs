@@ -66,8 +66,8 @@ namespace FirePlatform.WebApi.Model
 
         public string Title { get => _title; set => _title = value ?? string.Empty; }
         public string Type { get; set; }
-        public string GroupTitle { get => _groupTitle; set => _groupTitle = value?.Trim().ToLower() ?? string.Empty; }
-        public string NameVarible { get => _nameVarible; set => _nameVarible = value?.Trim().ToLower() ?? string.Empty; }
+        public string GroupTitle { get => _groupTitle; set => _groupTitle = value?.Trim() ?? string.Empty; }
+        public string NameVarible { get => _nameVarible; set => _nameVarible = value?.Trim() ?? string.Empty; }
         public string Dec { get; set; }
 
         public double Min { get; set; }
@@ -184,8 +184,17 @@ namespace FirePlatform.WebApi.Model
         #region HTML - PRZEPISY
         [JsonIgnore]
         public Item ParentHtmlItem { get; set; }
+        public int? ParentHtmlItemId { get => ParentHtmlItem?.NumID; }
         [JsonIgnore]
+        public List<Item> ChildItems { get; set; }
+        public List<int> ChildItemsIds { get; set; }
         public int HtmlLevel { get; set; } = -1;
+        //uses for collapsing elements on the GUI part
+        public bool IsHidden
+        {
+            get; set;
+        } = false;
+
         #endregion HTML - PRZEPISY
 
         #region combo visibility

@@ -22,10 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Services\Calculation\" />
     <Folder Include="Services\Parser\" />
-    <Folder Include="Services\Tools\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Model\Template\ScriptIgnoreAttribute.cs" />
