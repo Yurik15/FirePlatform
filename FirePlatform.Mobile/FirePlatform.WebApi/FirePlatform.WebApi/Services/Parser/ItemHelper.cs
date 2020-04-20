@@ -212,10 +212,13 @@ namespace FirePlatform.WebApi.Services.Parser
                 }
 
             }
-            else
+            if (string.IsNullOrWhiteSpace(item.Type))
             {
                 item.Type = ItemType.HTML.ToString();
+                if (item.NumID == 54)
+                {
 
+                }
                 var parts = Text_line.Split("\t");
                 var visibility = parts[0];
                 if (!"-".Equals(visibility))

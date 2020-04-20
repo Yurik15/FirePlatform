@@ -284,7 +284,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                 }
                                 else
                                 {
-                                    item.ParentHtmlItem = items.LastOrDefault(x => x.HtmlLevel == item.HtmlLevel);
+                                    item.ParentHtmlItem = items.LastOrDefault(x => x.HtmlLevel == item.HtmlLevel)?.ParentHtmlItem;
                                 }
                             }
                         }
