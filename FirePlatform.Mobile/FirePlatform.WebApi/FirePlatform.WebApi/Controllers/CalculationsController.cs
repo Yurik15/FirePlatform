@@ -52,6 +52,52 @@ namespace FirePlatform.WebApi.Controllers
             return Ok("It works");
         }
 
+        private (bool fromDB, List<ItemGroup> items) LoadIfExistsInDB(TemplateModel request)
+        {
+            bool fromDb = false;
+            List<ItemGroup> res = null;
+            var service = Service.GetMainTemplatesService();
+            if (service != null)
+            {
+
+                var requestData = new Models.Models.MainTemplates()
+                {
+                    Lng = request.Lng,
+                    LongName = request.LongName,
+                    ShortName = request.ShortName
+                };
+
+                var foundTmp = service.TryGetTemplateOrDefault(requestData);
+
+                if (foundTmp == null)
+                {
+                    var downalodedTmp = Download(request);
+                    res = Parser.PrepareControls(downalodedTmp);
+
+                    try
+                    {
+                        var bytes = res.Serialize();
+                        if (bytes != null)
+                        {
+                            requestData.Data = bytes;
+                            service.Save(requestData);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                }
+                else
+                {
+                    res = foundTmp.Data?.DeSerialize() as List<ItemGroup>;
+                    fromDb = true;
+                }
+            }
+            return (fromDb, res);
+        }
+
         [HttpPost("api/[controller]/LoadTmp")]
         [EnableCors("AllowAll")]
         //[Authorize]
@@ -61,6 +107,7 @@ namespace FirePlatform.WebApi.Controllers
             List<ItemGroup> res;
             var content = Download(request);
 
+            
             List<Item> savedItems = null;
             var service = Service.GetUserTemplatesService();
             var result = await service.Get(x => x.Name == request.SavedName && x.UserId == request.UserId && x.MainName == request.ShortName);
@@ -70,7 +117,13 @@ namespace FirePlatform.WebApi.Controllers
                 var tmpData = tmp?.Data?.DeSerialize();
                 savedItems = tmpData as List<Item>;
             }
-            res = Parser.PrepareControls(content, savedItems);
+
+            var items = LoadIfExistsInDB(request);
+
+            if (items.fromDB)
+                res = Parser.PrepareControlsLoadedFromDB(items.items, savedItems);
+            else
+                res = items.items;
 
             var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == request.UserId);
             if (isExistsUser)

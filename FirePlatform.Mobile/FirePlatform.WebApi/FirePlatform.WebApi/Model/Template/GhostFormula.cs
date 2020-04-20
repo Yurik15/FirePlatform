@@ -6,10 +6,13 @@ using FirePlatform.WebApi.Services.Tools;
 
 namespace FirePlatform.WebApi.Model.Template
 {
+    [Serializable]
     public class GhostFormula
     {
         private string _conditions = String.Empty;
         private string _name = String.Empty;
+        [NonSerialized]
+        private List<DataDependItem> dependToItems;
 
         public GhostFormula()
         {
@@ -31,7 +34,7 @@ namespace FirePlatform.WebApi.Model.Template
                 }
             }
         }
-        public List<DataDependItem> DependToItems { get; set; }
+        public List<DataDependItem> DependToItems { get => dependToItems; set => dependToItems = value; }
         public List<string> ConditionsNameVaribles { get; set; }
 
         public string Tag { get; set; }

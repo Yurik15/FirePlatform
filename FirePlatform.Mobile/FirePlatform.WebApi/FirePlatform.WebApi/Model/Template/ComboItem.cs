@@ -7,18 +7,14 @@ using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Model.Template
 {
+    [Serializable]
     public class ComboItem
     {
         private string _displayName = String.Empty;
         private string _groupKey = String.Empty;
 
-        public string DisplayName { get => _displayName; set => _displayName = value?.Trim().ToLower() ?? string.Empty; }
+        public string DisplayName { get => _displayName; set => _displayName = value?.Trim() ?? string.Empty; }
         public string GroupKey { get => _groupKey; set => _groupKey = value?.Trim().ToLower() ?? string.Empty; }
-
-        public string[] Keys
-        {
-            get => GroupKey?.Split(',');
-        }
         public bool IsVisible { get; set; }
 
         public ComboItem()
@@ -26,8 +22,6 @@ namespace FirePlatform.WebApi.Model.Template
             _visConditionNameVaribles = new List<string>();
             IsVisible = true;
         }
-
-        [NonSerialized]
         private List<string> _visConditionNameVaribles;
         [JsonIgnore]
         public List<string> VisConditionNameVaribles
@@ -35,7 +29,6 @@ namespace FirePlatform.WebApi.Model.Template
             get => _visConditionNameVaribles;
             set => _visConditionNameVaribles = value;
         }
-        [NonSerialized]
         private string _visCondition = String.Empty;
         [JsonIgnore]
         public string VisCondition

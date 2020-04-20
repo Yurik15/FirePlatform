@@ -89,6 +89,9 @@ namespace FirePlatform.WebApi
             services.AddScoped<UserTemplatesRepository, UserTemplatesRepository>();
             services.AddScoped<BaseRepository<UserTemplates, UserTemplatesRepository>, BaseRepository<UserTemplates, UserTemplatesRepository>>();
 
+            services.AddScoped<MainTemplatesRepository, MainTemplatesRepository>();
+            services.AddScoped<BaseRepository<MainTemplates, MainTemplatesRepository>, BaseRepository<MainTemplates, MainTemplatesRepository>>();
+
             //services
             services.AddScoped<Service, Service>();
 
@@ -100,6 +103,9 @@ namespace FirePlatform.WebApi
 
             services.AddScoped<UserTemplatesService, UserTemplatesService>();
             services.AddScoped<BaseService<UserTemplatesService, UserTemplatesRepository, UserTemplates>, BaseService<UserTemplatesService, UserTemplatesRepository, UserTemplates>>();
+
+            services.AddScoped<MainTemplatesService, MainTemplatesService>();
+            services.AddScoped<BaseService<MainTemplatesService, MainTemplatesRepository, MainTemplates>, BaseService<MainTemplatesService, MainTemplatesRepository, MainTemplates>>();
             #endregion
         }
 

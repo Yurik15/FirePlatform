@@ -38,6 +38,29 @@ namespace FirePlatform.WebApi.Services.Parser
             return controls;
         }
 
+        public static List<ItemGroup> PrepareControlsLoadedFromDB(List<ItemGroup> controls, List<Item> savedItems = null)
+        {
+            var startDate = DateTime.Now;
+
+            if (savedItems != null)
+            {
+                PopulateSavedValues(controls, savedItems);
+            }
+
+            var varibles = PrepareFieldNameDependToItemDic(controls, true);
+            var endDate = DateTime.Now;
+            var result = endDate - startDate;
+            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+
+            startDate = DateTime.Now;
+            PrepareGroupDependToItems(controls, varibles);
+            endDate = DateTime.Now;
+            result = endDate - startDate;
+            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+
+            return controls;
+        }
+
         private static void PopulateSavedValues(List<ItemGroup> itemGroups, List<Item> items)
         {
             foreach (var item in items)
@@ -249,7 +272,19 @@ namespace FirePlatform.WebApi.Services.Parser
                             {
                                 if (item.HtmlLevel > prevItem.HtmlLevel)
                                 {
+                                    if (prevItem.HtmlLevel + 1 != item.HtmlLevel)
+                                    {
+                                        item.HtmlLevel = prevItem.HtmlLevel + 1;
+                                    }
                                     item.ParentHtmlItem = prevItem;
+                                }
+                                else if (item.HtmlLevel == prevItem.HtmlLevel)
+                                {
+                                    item.ParentHtmlItem = prevItem.ParentHtmlItem;
+                                }
+                                else
+                                {
+                                    item.ParentHtmlItem = items.LastOrDefault(x => x.HtmlLevel == item.HtmlLevel);
                                 }
                             }
                         }
@@ -300,141 +335,197 @@ namespace FirePlatform.WebApi.Services.Parser
                 }
             }*/
 
-            //Calculate items
-            foreach (var group in _ItemGroups)
+            try
             {
-                foreach (var item in group.Items)
+                //Calculate items
+                foreach (var group in _ItemGroups)
                 {
-                    string condition = item.VisCondition ?? string.Empty;
-                    if (item.Type == ItemType.Formula.ToString())
+
+
+
+                    foreach (var item in group.Items)
                     {
-                        if (string.IsNullOrWhiteSpace(item.Formula))
+                        try
                         {
-                            throw new Exception("the item with 'FORMULA' type can't be null or empty!");
-                        }
-                        var formula = item.Formula;
-                        condition += " " + formula;
-                    }
-
-                    if (!string.IsNullOrEmpty(condition))
-                    {
-                        var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
-                        foreach (var varibleName in item.VisConditionNameVaribles)
-                        {
-                            var elmentesBeforCurrentElement = data;
-                            /*var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
-                            if (item.GroupID > 0)
+                            if (item.ParentGroup == null)
                             {
-                                elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
+                                item.ParentGroup = group;
                             }
-                            if (elmentesBeforCurrentElement.Count == 0)
+                            string condition = item.VisCondition ?? string.Empty;
+                            if (item.Type == ItemType.Formula.ToString())
                             {
-                                elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
-                            }
-                            if (elmentesBeforCurrentElement.Count == 0)
-                            {
-                                throw new Exception("The element doesn't exists before!!!");
-                            }*/
-
-                            foreach (var dependElement in elmentesBeforCurrentElement)
-                            {
-                                var needToAdd = false;
-                                var nameDependElement = dependElement.Key;
-                                if (nameDependElement.Contains(","))
+                                if (string.IsNullOrWhiteSpace(item.Formula))
                                 {
-                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
-                                    needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                    throw new Exception("the item with 'FORMULA' type can't be null or empty!");
                                 }
-                                else
+                                var formula = item.Formula;
+                                condition += " " + formula;
+                            }
+
+                            if (!string.IsNullOrEmpty(condition))
+                            {
+                                var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
+                                foreach (var varibleName in item.VisConditionNameVaribles)
                                 {
-                                    needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                    var elmentesBeforCurrentElement = data;
+                                    /*var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
+                                    if (item.GroupID > 0)
+                                    {
+                                        elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
+                                    }
+                                    if (elmentesBeforCurrentElement.Count == 0)
+                                    {
+                                        elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
+                                    }
+                                    if (elmentesBeforCurrentElement.Count == 0)
+                                    {
+                                        throw new Exception("The element doesn't exists before!!!");
+                                    }*/
+
+                                    foreach (var dependElement in elmentesBeforCurrentElement)
+                                    {
+                                        var needToAdd = false;
+                                        var nameDependElement = dependElement.Key;
+                                        if (nameDependElement.Contains(","))
+                                        {
+                                            var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
+                                            needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                        }
+                                        else
+                                        {
+                                            needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                        }
+                                        if (needToAdd)
+                                            relatedItems.Add(dependElement);
+                                    }
+
                                 }
-                                if (needToAdd)
-                                    relatedItems.Add(dependElement);
+                                item.DependToItems = relatedItems;
+                                relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
+
+                                Debug.WriteLine("------------------");
+                                Debug.WriteLine($"                  {group.IndexGroup}:{item.NumID}");
+                                Debug.WriteLine("------------------");
+
                             }
 
-                        }
-                        item.DependToItems = relatedItems;
-                        relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
-
-                    }
-
-                    if (!string.IsNullOrEmpty(item.Formula))
-                    {
-                        var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
-                        foreach (var varibleName in item.FormulaNameVaribles)
-                        {
-                            var elmentesBeforCurrentElement = data;
-                            /*var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
-                            if (item.GroupID > 0)
+                            if (!string.IsNullOrEmpty(item.Formula))
                             {
-                                elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
-                            }
-                            if (elmentesBeforCurrentElement.Count == 0)
-                            {
-                                elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
-                            }
-                            if (elmentesBeforCurrentElement.Count == 0)
-                            {
-                                throw new Exception("The element doesn't exists before!!!");
-                            }*/
-
-                            foreach (var dependElement in elmentesBeforCurrentElement)
-                            {
-                                var needToAdd = false;
-                                var nameDependElement = dependElement.Key;
-                                if (nameDependElement.Contains(","))
+                                var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
+                                foreach (var varibleName in item.FormulaNameVaribles)
                                 {
-                                    var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
-                                    needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                    var elmentesBeforCurrentElement = data;
+                                    /*var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
+                                    if (item.GroupID > 0)
+                                    {
+                                        elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
+                                    }
+                                    if (elmentesBeforCurrentElement.Count == 0)
+                                    {
+                                        elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
+                                    }
+                                    if (elmentesBeforCurrentElement.Count == 0)
+                                    {
+                                        throw new Exception("The element doesn't exists before!!!");
+                                    }*/
+
+                                    foreach (var dependElement in elmentesBeforCurrentElement)
+                                    {
+                                        var needToAdd = false;
+                                        var nameDependElement = dependElement.Key;
+                                        if (nameDependElement.Contains(","))
+                                        {
+                                            var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
+                                            needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                        }
+                                        else
+                                        {
+                                            needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                        }
+                                        if (needToAdd)
+                                            relatedItems.Add(dependElement);
+                                    }
+
                                 }
-                                else
+                                item.DependToItemsForFormulas = relatedItems;
+                                relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
+
+                                if (item.ParentGroup.IsVisible) // PERFORMANCE
                                 {
-                                    needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                    var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);
+                                    object result = null;
+                                    if (item.Matrix != null)
+                                    {
+                                        result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
+                                    }
+                                    else
+                                    {
+                                        result = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                                    }
+                                    item.Value = result;
                                 }
-                                if (needToAdd)
-                                    relatedItems.Add(dependElement);
                             }
-
-                        }
-                        item.DependToItemsForFormulas = relatedItems;
-                        relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
-
-                        if (item.ParentGroup.IsVisible) // PERFORMANCE
-                        {
-                            var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);
-                            object result = null;
-                            if (item.Matrix != null)
+                            if (!string.IsNullOrEmpty(item.VisCondition))
                             {
-                                result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
+                                if (item.ParentGroup.IsVisible) // PERFORMANCE
+                                {
+                                    var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
+                                    var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
+                                    item.IsVisible = res.HasValue ? res.Value : false;
+                                }
                             }
                             else
                             {
-                                result = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                                item.IsVisible = true;
                             }
-                            item.Value = result;
+                            if (item.ComboContainsVisCondition)
+                            {
+                                var comboItems = item.ComboItems?.Where(x => !string.IsNullOrWhiteSpace(x.VisCondition)).ToList();
+                                foreach (var comboItem in comboItems)
+                                {
+                                    var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
+                                    foreach (var varibleName in comboItem.VisConditionNameVaribles)
+                                    {
+                                        foreach (var dependElement in data)
+                                        {
+                                            var needToAdd = false;
+                                            var nameDependElement = dependElement.Key;
+                                            if (nameDependElement.Contains(","))
+                                            {
+                                                var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
+                                                needToAdd = parts.Contains(varibleName.Trim().ToLower());
+                                            }
+                                            else
+                                            {
+                                                needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
+                                            }
+                                            if (needToAdd)
+                                                relatedItems.Add(dependElement);
+                                        }
+                                        comboItem.DependToItems = relatedItems;
+                                    }
+                                    var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
+                                    var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
+                                    comboItem.IsVisible = res.HasValue ? res.Value : false;
+                                }
+                            }
                         }
-                    }
-                    if (!string.IsNullOrEmpty(item.VisCondition))
-                    {
-                        if (item.ParentGroup.IsVisible) // PERFORMANCE
+                        catch (Exception ex)
                         {
-                            var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
-                            var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
-                            item.IsVisible = res.HasValue ? res.Value : false;
-                        }
+                            Debug.WriteLine(ex.Message);
+                        } 
                     }
-                    else
+
+                }
+                //Calculate groups
+                foreach (var group in _ItemGroups)
+                {
+                    try
                     {
-                        item.IsVisible = true;
-                    }
-                    if (item.ComboContainsVisCondition)
-                    {
-                        var comboItems = item.ComboItems?.Where(x => !string.IsNullOrWhiteSpace(x.VisCondition)).ToList();
-                        foreach (var comboItem in comboItems)
+                        if (!string.IsNullOrEmpty(group.VisCondition))
                         {
                             var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
-                            foreach (var varibleName in comboItem.VisConditionNameVaribles)
+                            foreach (var varibleName in group.VisConditionNameVaribles)
                             {
                                 foreach (var dependElement in data)
                                 {
@@ -442,7 +533,7 @@ namespace FirePlatform.WebApi.Services.Parser
                                     var nameDependElement = dependElement.Key;
                                     if (nameDependElement.Contains(","))
                                     {
-                                        var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower()).ToArray();
+                                        var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
                                         needToAdd = parts.Contains(varibleName.Trim().ToLower());
                                     }
                                     else
@@ -452,57 +543,38 @@ namespace FirePlatform.WebApi.Services.Parser
                                     if (needToAdd)
                                         relatedItems.Add(dependElement);
                                 }
-                                comboItem.DependToItems = relatedItems;
                             }
-                            var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
-                            var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
-                            comboItem.IsVisible = res.HasValue ? res.Value : false;
+                            group.DependToItems = relatedItems;
+                            relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyGroups.Add(group)));
+
+                            var paramsDic = ItemExtentions.GetParams(group.DependToItems);
+                            var res = CalculationTools.CalculateVis(group.VisCondition, paramsDic);
+                            group.IsVisible = res.HasValue ? res.Value : false;
                         }
+                    }
+                    catch(Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
                     }
                 }
             }
-            //Calculate groups
-            foreach (var group in _ItemGroups)
+            catch (Exception ex)
             {
-                if (!string.IsNullOrEmpty(group.VisCondition))
-                {
-                    var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
-                    foreach (var varibleName in group.VisConditionNameVaribles)
-                    {
-                        foreach (var dependElement in data)
-                        {
-                            var needToAdd = false;
-                            var nameDependElement = dependElement.Key;
-                            if (nameDependElement.Contains(","))
-                            {
-                                var parts = nameDependElement.Split(",").Select(y => y.Trim().ToLower());
-                                needToAdd = parts.Contains(varibleName.Trim().ToLower());
-                            }
-                            else
-                            {
-                                needToAdd = nameDependElement.Trim().ToLower() == varibleName.Trim().ToLower();
-                            }
-                            if (needToAdd)
-                                relatedItems.Add(dependElement);
-                        }
-                    }
-                    group.DependToItems = relatedItems;
-                    relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyGroups.Add(group)));
-
-                    var paramsDic = ItemExtentions.GetParams(group.DependToItems);
-                    var res = CalculationTools.CalculateVis(group.VisCondition, paramsDic);
-                    group.IsVisible = res.HasValue ? res.Value : false;
-                }
+                Debug.WriteLine(ex.Message);
             }
         }
 
-        private static List<DataDependItem> PrepareFieldNameDependToItem(List<ItemGroup> _ItemGroups)
+        private static List<DataDependItem> PrepareFieldNameDependToItem(List<ItemGroup> _ItemGroups, bool fromDb = false)
         {
             List<DataDependItem> dataDependItem = new List<DataDependItem>();
             foreach (var group in _ItemGroups)
             {
+                if (fromDb)
+                    group.Recalculate();
                 foreach (var item in group.Items)
                 {
+                    if (fromDb)
+                        item.Recalculate();
                     var name = item.NameVarible;
 
                     if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(item.Varibles))
@@ -518,7 +590,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         };
                         dataDependItem.Add(dependItem);
                     }
-                    if (item.GhostFormulas.Any())
+                    if (item.GhostFormulas != null && item.GhostFormulas.Any())
                     {
                         foreach (var ghostFormula in item.GhostFormulas)
                         {
@@ -602,12 +674,20 @@ namespace FirePlatform.WebApi.Services.Parser
             return dataDependItem;
         }
 
-        private static Dictionary<string, List<DataDependItem>> PrepareFieldNameDependToItemDic(List<ItemGroup> _ItemGroups)
+        private static Dictionary<string, List<DataDependItem>> PrepareFieldNameDependToItemDic(List<ItemGroup> _ItemGroups, bool fromDb = false)
         {
-            var dependItems = PrepareFieldNameDependToItem(_ItemGroups);
-            var groupedItemsByName = dependItems.GroupBy(x => x.Name).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
-            //var a = groupedItemsByName.Where(x => x.Value.Count > 1).OrderBy(x => x.Value.Count).ToDictionary(gdc => gdc.Key, gdc => gdc.Value);
-            return groupedItemsByName;
+            try
+            {
+                var dependItems = PrepareFieldNameDependToItem(_ItemGroups, fromDb);
+                var groupedItemsByName = dependItems.GroupBy(x => x.Name).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
+                //var a = groupedItemsByName.Where(x => x.Value.Count > 1).OrderBy(x => x.Value.Count).ToDictionary(gdc => gdc.Key, gdc => gdc.Value);
+                return groupedItemsByName;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
         }
 
         #endregion prepare depend controls

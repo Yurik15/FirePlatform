@@ -12,27 +12,22 @@ namespace FirePlatform.WebApi.Model
     public class Item
     {
         #region fields
-        [NonSerialized]
         private string _visCondition = String.Empty;
-        [NonSerialized]
         private string _formula = String.Empty;
-        [NonSerialized]
         private string _varibles = String.Empty;
         private string _nameVarible = String.Empty;
         private string _groupTitle;
         private string _title;
-        [NonSerialized]
         private string _tooltipText;
         [NonSerialized]
         private bool _isVisiblePrev;
         private bool _isVisible = true;
-        [NonSerialized]
+        private List<string> _formulaNameVaribles;
+        private List<string> _visConditionNameVaribles;
+        private bool _comboContainsVisCondition;
         private List<ComboItem> _comboItems;
-        [NonSerialized]
         private List<GhostFormula> _ghostFormulas;
-        [NonSerialized]
         private string _nameVaribleMatrix;
-        [NonSerialized]
         private string[,] _matrix;
         [NonSerialized]
         private List<ItemGroup> _needNotifyGroups;
@@ -44,12 +39,7 @@ namespace FirePlatform.WebApi.Model
         private List<KeyValuePair<string, List<DataDependItem>>> _dependToItems;
         [NonSerialized]
         private ItemGroup _parentGroup;
-        [NonSerialized]
-        private List<string> _formulaNameVaribles;
-        [NonSerialized]
-        private List<string> _visConditionNameVaribles;
-        [NonSerialized]
-        private bool _comboContainsVisCondition;
+        
         [NonSerialized]
         private Picture _picture;
 
@@ -74,7 +64,7 @@ namespace FirePlatform.WebApi.Model
 
         public object Value { get; set; }
 
-        public string Title { get => _title; set => _title = value?.Trim() ?? string.Empty; }
+        public string Title { get => _title; set => _title = value ?? string.Empty; }
         public string Type { get; set; }
         public string GroupTitle { get => _groupTitle; set => _groupTitle = value?.Trim() ?? string.Empty; }
         public string NameVarible { get => _nameVarible; set => _nameVarible = value?.Trim() ?? string.Empty; }
@@ -135,11 +125,7 @@ namespace FirePlatform.WebApi.Model
             set
             {
                 _visCondition = value?.Trim().ToLower() ?? string.Empty;
-                if (!string.IsNullOrEmpty(_visCondition))
-                {
-                    VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(_visCondition));
-                    VisConditionNameVaribles = VisConditionNameVaribles.Distinct().ToList();
-                }
+                RecalculateVisConditionNameVaribles();
             }
         }
         [JsonIgnore]
@@ -151,11 +137,7 @@ namespace FirePlatform.WebApi.Model
             set
             {
                 _formula = value?.Trim().ToLower() ?? string.Empty;
-                if (!string.IsNullOrEmpty(_formula))
-                {
-                    FormulaNameVaribles.AddRange(CalculationTools.GetVaribliNames(_formula));
-                    FormulaNameVaribles = FormulaNameVaribles.Distinct().ToList();
-                }
+                RecalculateFormulaNameVaribles();
             }
         }
         [JsonIgnore]
@@ -168,7 +150,7 @@ namespace FirePlatform.WebApi.Model
                 if (string.IsNullOrEmpty(_varibles))
                 {
                     var items = ComboItems;
-                    if (items.Any())
+                    if (items != null && items.Any())
                     {
                         var separate = "|";
                         var keys = items.Select(x => string.Join(separate, x.GroupKey));
@@ -189,9 +171,9 @@ namespace FirePlatform.WebApi.Model
         [JsonIgnore]
         public List<KeyValuePair<string, List<DataDependItem>>> DependToItemsForFormulas { get => _dependToItemsForFormulas; set => _dependToItemsForFormulas = value; }
         [JsonIgnore]
-        public List<Item> NeedNotifyItems { get => _needNotifyItems; set => _needNotifyItems = value; }
+        public List<Item> NeedNotifyItems { get => _needNotifyItems ?? new List<Item>(); set => _needNotifyItems = value; }
         [JsonIgnore]
-        public List<ItemGroup> NeedNotifyGroups { get => _needNotifyGroups; set => _needNotifyGroups = value; }
+        public List<ItemGroup> NeedNotifyGroups { get => _needNotifyGroups ?? new List<ItemGroup>(); set => _needNotifyGroups = value; }
 
         [JsonIgnore]
         public string[,] Matrix { get => _matrix; set => _matrix = value; }
@@ -232,6 +214,36 @@ namespace FirePlatform.WebApi.Model
         #endregion combo visibility
 
         #endregion ignore fields
+
+        public void Recalculate()
+        {
+            RecalculateFormulaNameVaribles();
+            RecalculateVisConditionNameVaribles();
+        }
+        private void RecalculateFormulaNameVaribles()
+        {
+            if (!string.IsNullOrEmpty(_formula))
+            {
+                FormulaNameVaribles.AddRange(CalculationTools.GetVaribliNames(_formula));
+                FormulaNameVaribles = FormulaNameVaribles.Distinct().ToList();
+            }
+            else
+            {
+                FormulaNameVaribles = null;
+            }
+        }
+        private void RecalculateVisConditionNameVaribles()
+        {
+            if (!string.IsNullOrEmpty(_visCondition))
+            {
+                VisConditionNameVaribles.AddRange(CalculationTools.GetVaribliNames(_visCondition));
+                VisConditionNameVaribles = VisConditionNameVaribles.Distinct().ToList();
+            }
+            else
+            {
+                VisConditionNameVaribles = null;
+            }
+        }
     }
     public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture, HTML };
     public enum ModifiedFlag { Unchanged, Modified }
