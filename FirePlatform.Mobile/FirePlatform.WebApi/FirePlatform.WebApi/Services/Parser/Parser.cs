@@ -292,7 +292,7 @@ namespace FirePlatform.WebApi.Services.Parser
                         var itemsWithTreeView = ItemTreeViewExtension.BuildTreeForHtmlItems(items);
                         foreach (var it in items)
                         {
-                            it.ChildItemsIds = ItemTreeViewExtension.GetChildItemsIds(it).Select(x => x.NumID).ToList();
+                            it.ChildItemsIds = ItemTreeViewExtension.ReadChildNodes(it).Select(x => x.NumID).ToList();
                             it.ChildItems = null;
                         }
                     }
