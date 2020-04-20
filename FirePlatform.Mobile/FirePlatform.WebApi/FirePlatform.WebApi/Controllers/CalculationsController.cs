@@ -416,8 +416,8 @@ namespace FirePlatform.WebApi.Controllers
 
         [HttpPost("api/[controller]/SaveTemplate")]
         [EnableCors("AllowAll")]
-        //[AllowAnonymous]
-        [Authorize]
+        [AllowAnonymous]
+        //[Authorize]
         public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
             var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();

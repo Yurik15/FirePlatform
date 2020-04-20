@@ -239,6 +239,16 @@ namespace FirePlatform.WebApi.Services.Parser
             }
             return item;
         }
+
+        public static string RemoveHeaderFromHtmlElements(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            var splittedText = text.Split("\t");
+
+            return splittedText[splittedText.Length - 1];
+        }
     }
 }
 
