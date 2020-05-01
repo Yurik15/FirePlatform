@@ -15,7 +15,7 @@ namespace FirePlatform.WebApi.Services.Tools
         {
             try
             {
-                Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase)
+                Expression expression = new Expression(formula?.ToLower(), EvaluateOptions.IgnoreCase)
                 {
                     Parameters = parameters
                 };
@@ -248,7 +248,7 @@ namespace FirePlatform.WebApi.Services.Tools
                 {
                     formula = "ns*k*(pow (p,0.5))";
                 }
-                Expression expression = new Expression(formula, EvaluateOptions.IgnoreCase)
+                Expression expression = new Expression(formula?.ToLower(), EvaluateOptions.IgnoreCase)
                 {
                     Parameters = parameters
                 };

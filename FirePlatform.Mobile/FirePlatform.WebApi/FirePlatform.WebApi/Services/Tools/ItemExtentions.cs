@@ -136,7 +136,7 @@ namespace FirePlatform.WebApi.Services.Tools
                             {
                                 if (!paramsDic.ContainsKey(part))
                                 {
-                                    paramsDic.Add(part, null);
+                                    paramsDic.Add(part?.ToLower(), null);
                                 }
                             }
                         }
@@ -144,7 +144,7 @@ namespace FirePlatform.WebApi.Services.Tools
                         {
                             if (!paramsDic.ContainsKey(item.Key))
                             {
-                                paramsDic.Add(item.Key, null);
+                                paramsDic.Add(item.Key?.ToLower(), null);
                             }
 
                         }
@@ -160,7 +160,7 @@ namespace FirePlatform.WebApi.Services.Tools
             {
                 if (!paramsDic.ContainsKey(pr.Key))
                 {
-                    paramsDic.Add(pr.Key, pr.Value);
+                    paramsDic.Add(pr.Key?.ToLower(), pr.Value);
                 }
                 else
                 {

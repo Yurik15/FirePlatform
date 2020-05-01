@@ -104,6 +104,7 @@ namespace FirePlatform.WebApi.Controllers
         [AllowAnonymous]
         public async Task<OkObjectResult> Load([FromBody] TemplateModel request)
         {
+            CalculationTools.NotFoundName_Visibility = new Dictionary<string, int>();
             List<ItemGroup> res;
             var content = Download(request);
 
