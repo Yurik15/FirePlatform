@@ -93,7 +93,7 @@ namespace FirePlatform.WebApi.Model
         }
         public bool IsGroupVisible { get; set; } = true;
 
-        public List<ComboItem> ComboItems { get => _comboItems; set => _comboItems = value; }
+        public List<ComboItem> ComboItems { get => _comboItems ?? (_comboItems = new List<ComboItem>()); set => _comboItems = value; }
         public Picture Picture
         {
             get => _picture;
@@ -117,7 +117,7 @@ namespace FirePlatform.WebApi.Model
         [JsonIgnore]
         public string TooltipText { get => _tooltipText; set => _tooltipText = value?.Trim().ToLower() ?? string.Empty; }
         [JsonIgnore]
-        public List<GhostFormula> GhostFormulas { get => _ghostFormulas; set => _ghostFormulas = value; }
+        public List<GhostFormula> GhostFormulas { get => _ghostFormulas ?? (_ghostFormulas = new List<GhostFormula>()); set => _ghostFormulas = value; }
         [JsonIgnore]
         public string VisCondition
         {
@@ -129,7 +129,7 @@ namespace FirePlatform.WebApi.Model
             }
         }
         [JsonIgnore]
-        public List<string> VisConditionNameVaribles { get => _visConditionNameVaribles; set => _visConditionNameVaribles = value; }
+        public List<string> VisConditionNameVaribles { get => _visConditionNameVaribles ?? (_visConditionNameVaribles = new List<string>()); set => _visConditionNameVaribles = value; }
         [JsonIgnore]
         public string Formula
         {
@@ -141,7 +141,7 @@ namespace FirePlatform.WebApi.Model
             }
         }
         [JsonIgnore]
-        public List<string> FormulaNameVaribles { get => _formulaNameVaribles; set => _formulaNameVaribles = value; }
+        public List<string> FormulaNameVaribles { get => _formulaNameVaribles ?? (_formulaNameVaribles = new List<string>()); set => _formulaNameVaribles = value; }
         [JsonIgnore]
         public string Varibles
         {
@@ -167,13 +167,13 @@ namespace FirePlatform.WebApi.Model
         [JsonIgnore]
         public object InitialValue { get; set; }
         [JsonIgnore]
-        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems; set => _dependToItems = value; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems ?? (_dependToItems = new List<KeyValuePair<string, List<DataDependItem>>>()); set => _dependToItems = value; }
         [JsonIgnore]
-        public List<KeyValuePair<string, List<DataDependItem>>> DependToItemsForFormulas { get => _dependToItemsForFormulas; set => _dependToItemsForFormulas = value; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItemsForFormulas { get => _dependToItemsForFormulas ?? (_dependToItemsForFormulas = new List<KeyValuePair<string, List<DataDependItem>>>()); set => _dependToItemsForFormulas = value; }
         [JsonIgnore]
-        public List<Item> NeedNotifyItems { get => _needNotifyItems ?? new List<Item>(); set => _needNotifyItems = value; }
+        public List<Item> NeedNotifyItems { get => _needNotifyItems ?? (_needNotifyItems = new List<Item>()); set => _needNotifyItems = value; }
         [JsonIgnore]
-        public List<ItemGroup> NeedNotifyGroups { get => _needNotifyGroups ?? new List<ItemGroup>(); set => _needNotifyGroups = value; }
+        public List<ItemGroup> NeedNotifyGroups { get => _needNotifyGroups ?? (_needNotifyGroups = new List<ItemGroup>()); set => _needNotifyGroups = value; }
 
         [JsonIgnore]
         public string[,] Matrix { get => _matrix; set => _matrix = value; }

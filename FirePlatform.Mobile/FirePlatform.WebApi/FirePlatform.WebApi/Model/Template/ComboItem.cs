@@ -26,7 +26,7 @@ namespace FirePlatform.WebApi.Model.Template
         [JsonIgnore]
         public List<string> VisConditionNameVaribles
         {
-            get => _visConditionNameVaribles;
+            get => _visConditionNameVaribles ?? (_visConditionNameVaribles = new List<string>());
             set => _visConditionNameVaribles = value;
         }
         private string _visCondition = String.Empty;
@@ -48,6 +48,6 @@ namespace FirePlatform.WebApi.Model.Template
         [NonSerialized]
         private List<KeyValuePair<string, List<DataDependItem>>> _dependToItems;
         [JsonIgnore]
-        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems; set => _dependToItems = value; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems ?? (_dependToItems = new List<KeyValuePair<string, List<DataDependItem>>>()); set => _dependToItems = value; }
     }
 }
