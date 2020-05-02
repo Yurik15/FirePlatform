@@ -20,10 +20,10 @@ namespace FirePlatform.Models
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
 #if DEBUG
-                optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = AFeeWQ12@!#;");
+                optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = yB2Fh8SE6kF9NT5v;");
                 //optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\GitHub\FirePlatform\FirePlatform.Mobile\FirePlatform.WebApi\FirePlatform.Models\FireplatformDB.mdf;Integrated Security=True");
 #else
-                optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = AFeeWQ12@!#;");
+                optionsBuilder.UseSqlServer(@"Server=SQL6007.site4now.net;Database=DB_A4DBB1_shine15;User Id = DB_A4DBB1_shine15_admin; Password = yB2Fh8SE6kF9NT5v;");
 #endif
 
             }
