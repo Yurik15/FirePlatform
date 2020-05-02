@@ -43,12 +43,12 @@ namespace FirePlatform.WebApi.Model
                 Recalculate();
             }
         }
-        public List<string> VisConditionNameVaribles { get => _visConditionNameVaribles; set => _visConditionNameVaribles = value; }
+        public List<string> VisConditionNameVaribles { get => _visConditionNameVaribles ?? (_visConditionNameVaribles = new List<string>()); set => _visConditionNameVaribles = value; }
 
         public bool IsVisible { get; set; }
-        public List<Item> Items { get => _items; set => _items = value; }
+        public List<Item> Items { get => _items ?? (_items = new List<Item>()); set => _items = value; }
         [JsonIgnore]
-        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems; set => _dependToItems = value; }
+        public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems ?? (_dependToItems = new List<KeyValuePair<string, List<DataDependItem>>>()); set => _dependToItems = value; }
 
         [JsonIgnore]
         public bool InitialVisibility { get; set; }

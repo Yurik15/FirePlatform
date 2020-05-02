@@ -13,6 +13,7 @@ namespace FirePlatform.WebApi.Model.Template
         private string _name = String.Empty;
         [NonSerialized]
         private List<DataDependItem> dependToItems;
+        private List<string> conditionsNameVaribles;
 
         public GhostFormula()
         {
@@ -34,8 +35,8 @@ namespace FirePlatform.WebApi.Model.Template
                 }
             }
         }
-        public List<DataDependItem> DependToItems { get => dependToItems; set => dependToItems = value; }
-        public List<string> ConditionsNameVaribles { get; set; }
+        public List<DataDependItem> DependToItems { get => dependToItems ?? (dependToItems = new List<DataDependItem>()); set => dependToItems = value; }
+        public List<string> ConditionsNameVaribles { get => conditionsNameVaribles ?? (conditionsNameVaribles = new List<string>()); set => conditionsNameVaribles = value; }
 
         public string Tag { get; set; }
     }
