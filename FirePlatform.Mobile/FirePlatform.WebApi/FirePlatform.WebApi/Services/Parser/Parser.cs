@@ -402,11 +402,6 @@ namespace FirePlatform.WebApi.Services.Parser
                                 }
                                 item.DependToItems = relatedItems;
                                 relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
-
-                                Debug.WriteLine("------------------");
-                                Debug.WriteLine($"                  {group.IndexGroup}:{item.NumID}");
-                                Debug.WriteLine("------------------");
-
                             }
 
                             if (!string.IsNullOrEmpty(item.Formula))
@@ -550,6 +545,10 @@ namespace FirePlatform.WebApi.Services.Parser
                             var paramsDic = ItemExtentions.GetParams(group.DependToItems);
                             var res = CalculationTools.CalculateVis(group.VisCondition, paramsDic);
                             group.IsVisible = res.HasValue ? res.Value : false;
+                        }
+                        else
+                        {
+                            group.IsVisible = true;
                         }
                     }
                     catch(Exception ex)

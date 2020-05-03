@@ -235,19 +235,10 @@ namespace FirePlatform.WebApi.Services.Tools
             return result;
         }
 
-
-
-
-
-
         public static object CalculateFormulas(string formula, Dictionary<string, object> parameters)
         {
             try
             {
-                if ("ns*k*(pow (p,0.5)) #2 dm³/min".Equals(formula))
-                {
-                    formula = "ns*k*(pow (p,0.5))";
-                }
                 Expression expression = new Expression(formula?.ToLower(), EvaluateOptions.IgnoreCase)
                 {
                     Parameters = parameters

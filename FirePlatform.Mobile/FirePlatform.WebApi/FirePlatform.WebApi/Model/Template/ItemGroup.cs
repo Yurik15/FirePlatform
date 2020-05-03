@@ -19,6 +19,7 @@ namespace FirePlatform.WebApi.Model
         [NonSerialized]
         private List<KeyValuePair<string, List<DataDependItem>>> _dependToItems;
         private List<string> _visConditionNameVaribles;
+        private bool isVisible;
 
         public ItemGroup()
         {
@@ -45,7 +46,16 @@ namespace FirePlatform.WebApi.Model
         }
         public List<string> VisConditionNameVaribles { get => _visConditionNameVaribles ?? (_visConditionNameVaribles = new List<string>()); set => _visConditionNameVaribles = value; }
 
-        public bool IsVisible { get; set; }
+        public bool IsVisible
+        {
+            get => isVisible; set
+            {
+                IsVisiblePrev = isVisible;
+                isVisible = value;
+            }
+        }
+        [JsonIgnore]
+        public bool IsVisiblePrev { get; set; }
         public List<Item> Items { get => _items ?? (_items = new List<Item>()); set => _items = value; }
         [JsonIgnore]
         public List<KeyValuePair<string, List<DataDependItem>>> DependToItems { get => _dependToItems ?? (_dependToItems = new List<KeyValuePair<string, List<DataDependItem>>>()); set => _dependToItems = value; }

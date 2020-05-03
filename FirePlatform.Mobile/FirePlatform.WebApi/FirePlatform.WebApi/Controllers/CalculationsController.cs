@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NCalc;
+using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Controllers
 {
@@ -108,7 +109,7 @@ namespace FirePlatform.WebApi.Controllers
             List<ItemGroup> res;
             var content = Download(request);
 
-            
+
             List<Item> savedItems = null;
             var service = Service.GetUserTemplatesService();
             var result = await service.Get(x => x.Name == request.SavedName && x.UserId == request.UserId && x.MainName == request.ShortName);
@@ -310,9 +311,11 @@ namespace FirePlatform.WebApi.Controllers
 
             foreach (var group in UsersTmp)
             {
+                group.IsVisiblePrev = group.IsVisible;
                 group.UpdateGroup();
                 foreach (var item in group.Items)
                 {
+                    item.IsVisiblePrev = item.IsVisible;
                     if (group.IsVisible)
                         item.UpdateItem();
                     else
@@ -327,9 +330,13 @@ namespace FirePlatform.WebApi.Controllers
             }));
 
             var changedItems = new List<Item>();
-            UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
+            UsersTmp.ForEach(x => x.Items?.ForEach(y =>
+            {
+                if (x.IsVisible)
+                    changedItems.Add(y);
+            }));
 
-            changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev || !string.IsNullOrWhiteSpace(x.Formula)).ToList();
+            changedItems = changedItems.Where(x => x.IsVisible != x.IsVisiblePrev || (x.IsVisible && !string.IsNullOrWhiteSpace(x.Formula))).ToList();
             (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
             return Ok(res);
         }
@@ -368,27 +375,37 @@ namespace FirePlatform.WebApi.Controllers
 
                 foreach (var group in UsersTmp)
                 {
+                    group.IsVisiblePrev = group.IsVisible;
                     group.UpdateGroup();
                     foreach (var item in group.Items)
                     {
+                        item.IsVisiblePrev = item.IsVisible;
                         if (group.IsVisible)
                             item.UpdateItem();
-                        else
+                        else if (item.IsVisible)
                             item.IsVisible = false;
                     }
                 }
 
                 var resultGroups = new List<ItemGroup>();
-                UsersTmp.ForEach(x => resultGroups.Add(new ItemGroup()
+                UsersTmp.ForEach(x =>
                 {
-                    IndexGroup = x.IndexGroup,
-                    IsVisible = x.IsVisible
-                }));
+                    if (x.IsVisible != x.IsVisiblePrev)
+                        resultGroups.Add(new ItemGroup()
+                        {
+                            IndexGroup = x.IndexGroup,
+                            IsVisible = x.IsVisible
+                        });
+                });
 
                 var changedItems = new List<Item>();
-                UsersTmp.ForEach(x => x.Items?.ForEach(y => changedItems.Add(y)));
+                UsersTmp.ForEach(x =>
+                {
+                    if (x.IsVisible)
+                        x.Items?.ForEach(y => changedItems.Add(y));
+                });
 
-                changedItems = changedItems.Where(x => x.IsVisible || x.IsVisible != x.IsVisiblePrev || !string.IsNullOrWhiteSpace(x.Formula)).ToList();
+                changedItems = changedItems.Where(x => x.IsVisible != x.IsVisiblePrev || (x.IsVisible && !string.IsNullOrWhiteSpace(x.Formula))).ToList();
                 res = Tuple.Create<List<ItemGroup>, List<Item>>(resultGroups, changedItems); ;
 
 
