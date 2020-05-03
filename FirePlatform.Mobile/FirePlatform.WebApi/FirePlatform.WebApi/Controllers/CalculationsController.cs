@@ -107,9 +107,6 @@ namespace FirePlatform.WebApi.Controllers
         {
             CalculationTools.NotFoundName_Visibility = new Dictionary<string, int>();
             List<ItemGroup> res;
-            var content = Download(request);
-
-
             List<Item> savedItems = null;
             var service = Service.GetUserTemplatesService();
             var result = await service.Get(x => x.Name == request.SavedName && x.UserId == request.UserId && x.MainName == request.ShortName);
