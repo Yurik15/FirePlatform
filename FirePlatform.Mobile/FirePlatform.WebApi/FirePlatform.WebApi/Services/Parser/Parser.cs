@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using FirePlatform.WebApi.Model;
 using FirePlatform.WebApi.Model.Template;
 using FirePlatform.WebApi.Services.Tools;
@@ -40,24 +41,26 @@ namespace FirePlatform.WebApi.Services.Parser
 
         public static List<ItemGroup> PrepareControlsLoadedFromDB(List<ItemGroup> controls, List<Item> savedItems = null)
         {
-            var startDate = DateTime.Now;
-
-            if (savedItems != null)
+            Task.Run(() =>
             {
-                PopulateSavedValues(controls, savedItems);
-            }
+                var startDate = DateTime.Now;
 
-            var varibles = PrepareFieldNameDependToItemDic(controls, true);
-            var endDate = DateTime.Now;
-            var result = endDate - startDate;
-            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+                if (savedItems != null)
+                {
+                    PopulateSavedValues(controls, savedItems);
+                }
 
-            startDate = DateTime.Now;
-            PrepareGroupDependToItems(controls, varibles);
-            endDate = DateTime.Now;
-            result = endDate - startDate;
-            Debug.WriteLine($"[ParseDoc] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+                var varibles = PrepareFieldNameDependToItemDic(controls, true);
+                var endDate = DateTime.Now;
+                var result = endDate - startDate;
+                Debug.WriteLine($"[PrepareFieldNameDependToItemDic] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
 
+                startDate = DateTime.Now;
+                PrepareGroupDependToItems(controls, varibles, true);
+                endDate = DateTime.Now;
+                result = endDate - startDate;
+                Debug.WriteLine($"[PrepareGroupDependToItems] - Time - minutes : {result.Minutes} or seconds : {result.Seconds}");
+            });
             return controls;
         }
 
@@ -323,26 +326,13 @@ namespace FirePlatform.WebApi.Services.Parser
         #endregion parser
 
         #region prepare depend controls
-        private static void PrepareGroupDependToItems(List<ItemGroup> _ItemGroups, Dictionary<string, List<DataDependItem>> data)
+        private static void PrepareGroupDependToItems(List<ItemGroup> _ItemGroups, Dictionary<string, List<DataDependItem>> data, bool fromDb = false)
         {
-
-            //-------DON'T REMOVE
-            /*foreach (var a in data)
-            {
-                if (a.Name.Contains("|") || a.Name.Contains(",") || a.Name.Contains("."))
-                {
-                    Debug.WriteLine($"TYPE : {a.ReferencedItem.Type}, GROUP_ID : {a.ReferencedItem.GroupID}, NUM_ID : {a.ReferencedItem.NumID}, VALUE : {a.Name}");
-                }
-            }*/
-
             try
             {
                 //Calculate items
                 foreach (var group in _ItemGroups)
                 {
-
-
-
                     foreach (var item in group.Items)
                     {
                         try
@@ -368,20 +358,6 @@ namespace FirePlatform.WebApi.Services.Parser
                                 foreach (var varibleName in item.VisConditionNameVaribles)
                                 {
                                     var elmentesBeforCurrentElement = data;
-                                    /*var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
-                                    if (item.GroupID > 0)
-                                    {
-                                        elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
-                                    }
-                                    if (elmentesBeforCurrentElement.Count == 0)
-                                    {
-                                        elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
-                                    }
-                                    if (elmentesBeforCurrentElement.Count == 0)
-                                    {
-                                        throw new Exception("The element doesn't exists before!!!");
-                                    }*/
-
                                     foreach (var dependElement in elmentesBeforCurrentElement)
                                     {
                                         var needToAdd = false;
@@ -403,27 +379,28 @@ namespace FirePlatform.WebApi.Services.Parser
                                 item.DependToItems = relatedItems;
                                 relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
                             }
-
+                            if (!fromDb)
+                            {
+                                if (!string.IsNullOrEmpty(item.VisCondition))
+                                {
+                                    if (item.ParentGroup.IsVisible) // PERFORMANCE
+                                    {
+                                        var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
+                                        var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
+                                        item.IsVisible = res.HasValue ? res.Value : false;
+                                    }
+                                }
+                                else
+                                {
+                                    item.IsVisible = true;
+                                }
+                            }
                             if (!string.IsNullOrEmpty(item.Formula))
                             {
                                 var relatedItems = new List<KeyValuePair<string, List<DataDependItem>>>();
                                 foreach (var varibleName in item.FormulaNameVaribles)
                                 {
                                     var elmentesBeforCurrentElement = data;
-                                    /*var elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID && x.ReferencedItem.GroupID == item.GroupID).ToList();
-                                    if (item.GroupID > 0)
-                                    {
-                                        elmentesBeforCurrentElement.AddRange(data.Where(x => x.ReferencedItem.GroupID < item.GroupID).ToList());
-                                    }
-                                    if (elmentesBeforCurrentElement.Count == 0)
-                                    {
-                                        elmentesBeforCurrentElement = data.Where(x => x.ReferencedItem.NumID < item.NumID || x.ReferencedItem.GroupID < item.GroupID).ToList();
-                                    }
-                                    if (elmentesBeforCurrentElement.Count == 0)
-                                    {
-                                        throw new Exception("The element doesn't exists before!!!");
-                                    }*/
-
                                     foreach (var dependElement in elmentesBeforCurrentElement)
                                     {
                                         var needToAdd = false;
@@ -445,34 +422,25 @@ namespace FirePlatform.WebApi.Services.Parser
                                 item.DependToItemsForFormulas = relatedItems;
                                 relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyItems.Add(item)));
 
-                                if (item.ParentGroup.IsVisible) // PERFORMANCE
+                                if (!fromDb)
                                 {
-                                    var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);
-                                    object result = null;
-                                    if (item.Matrix != null)
+                                    if (item.ParentGroup.IsVisible && item.IsVisible) // PERFORMANCE
                                     {
-                                        result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
+                                        var paramsDic = ItemExtentions.GetParams(item.DependToItemsForFormulas, item.NumID, item.GroupID);
+                                        object result = null;
+                                        if (item.Matrix != null)
+                                        {
+                                            result = CalculationTools.CalculateFormulasMatrix(item.Formula, item.Matrix, paramsDic);
+                                        }
+                                        else
+                                        {
+                                            result = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
+                                        }
+                                        item.Value = result;
                                     }
-                                    else
-                                    {
-                                        result = CalculationTools.CalculateFormulas(item.Formula, paramsDic);
-                                    }
-                                    item.Value = result;
                                 }
                             }
-                            if (!string.IsNullOrEmpty(item.VisCondition))
-                            {
-                                if (item.ParentGroup.IsVisible) // PERFORMANCE
-                                {
-                                    var paramsDic = ItemExtentions.GetParams(item.DependToItems, item.NumID, item.GroupID);
-                                    var res = CalculationTools.CalculateVis(item.VisCondition, paramsDic);
-                                    item.IsVisible = res.HasValue ? res.Value : false;
-                                }
-                            }
-                            else
-                            {
-                                item.IsVisible = true;
-                            }
+
                             if (item.ComboContainsVisCondition)
                             {
                                 var comboItems = item.ComboItems?.Where(x => !string.IsNullOrWhiteSpace(x.VisCondition)).ToList();
@@ -499,16 +467,20 @@ namespace FirePlatform.WebApi.Services.Parser
                                         }
                                         comboItem.DependToItems = relatedItems;
                                     }
-                                    var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
-                                    var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
-                                    comboItem.IsVisible = res.HasValue ? res.Value : false;
+
+                                    if (!fromDb)
+                                    {
+                                        var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
+                                        var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
+                                        comboItem.IsVisible = res.HasValue ? res.Value : false;
+                                    }
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
                             Debug.WriteLine(ex.Message);
-                        } 
+                        }
                     }
 
                 }
@@ -542,16 +514,19 @@ namespace FirePlatform.WebApi.Services.Parser
                             group.DependToItems = relatedItems;
                             relatedItems.ForEach(x => x.Value.ForEach(y => y.ReferencedItem.NeedNotifyGroups.Add(group)));
 
-                            var paramsDic = ItemExtentions.GetParams(group.DependToItems);
-                            var res = CalculationTools.CalculateVis(group.VisCondition, paramsDic);
-                            group.IsVisible = res.HasValue ? res.Value : false;
+                            if (!fromDb)
+                            {
+                                var paramsDic = ItemExtentions.GetParams(group.DependToItems);
+                                var res = CalculationTools.CalculateVis(group.VisCondition, paramsDic);
+                                group.IsVisible = res.HasValue ? res.Value : false;
+                            }
                         }
                         else
                         {
                             group.IsVisible = true;
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Debug.WriteLine(ex.Message);
                     }
@@ -568,12 +543,12 @@ namespace FirePlatform.WebApi.Services.Parser
             List<DataDependItem> dataDependItem = new List<DataDependItem>();
             foreach (var group in _ItemGroups)
             {
-                if (fromDb)
-                    group.Recalculate();
+                //if (fromDb)
+                //   group.Recalculate();
                 foreach (var item in group.Items)
                 {
-                    if (fromDb)
-                        item.Recalculate();
+                    //   if (fromDb)
+                    //       item.Recalculate();
                     var name = item.NameVarible;
 
                     if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(item.Varibles))
