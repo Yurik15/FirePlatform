@@ -11,8 +11,7 @@ namespace FirePlatform.Models
         public DbSet<UserForm> UserForms { get; set; }
         public DbSet<UserTemplates> UserTemplates { get; set; }
         public DbSet<MainTemplates> MainTemplates { get; set; }
-        //public DbSet<UserRole> UserRoles { get; set; }
-        //public DbSet<Role> Roles { get; set; }
+        public DbSet<ScriptDefinition> ScriptDefinitions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -49,6 +48,9 @@ namespace FirePlatform.Models
               .HasMany(t => t.UserTemplates)
                .WithOne(u => u.User)
                .HasForeignKey(us => us.UserId);
+
+            modelBuilder.Entity<ScriptDefinition>()
+               .HasKey(u => u.Id);
         }
     }
 }

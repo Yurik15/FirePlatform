@@ -25,5 +25,9 @@ namespace FirePlatform.Repositories
         {
             return MainTemplatesRepository.Instance;
         }
+        public static ScriptDefinitionRepository GetScriptDefinitionRepository()
+        {
+            return ScriptDefinitionRepository.Instance;
+        }
     }
 }

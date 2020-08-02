@@ -92,6 +92,9 @@ namespace FirePlatform.WebApi
             services.AddScoped<MainTemplatesRepository, MainTemplatesRepository>();
             services.AddScoped<BaseRepository<MainTemplates, MainTemplatesRepository>, BaseRepository<MainTemplates, MainTemplatesRepository>>();
 
+            services.AddScoped<ScriptDefinitionRepository, ScriptDefinitionRepository>();
+            services.AddScoped<BaseRepository<ScriptDefinition, ScriptDefinitionRepository>, BaseRepository<ScriptDefinition, ScriptDefinitionRepository>>();
+
             //services
             services.AddScoped<Service, Service>();
 
@@ -106,6 +109,9 @@ namespace FirePlatform.WebApi
 
             services.AddScoped<MainTemplatesService, MainTemplatesService>();
             services.AddScoped<BaseService<MainTemplatesService, MainTemplatesRepository, MainTemplates>, BaseService<MainTemplatesService, MainTemplatesRepository, MainTemplates>>();
+
+            services.AddScoped<ScriptDefinitionService, ScriptDefinitionService>();
+            services.AddScoped<BaseService<ScriptDefinitionService, ScriptDefinitionRepository, ScriptDefinition>, BaseService<ScriptDefinitionService, ScriptDefinitionRepository, ScriptDefinition>>();
             #endregion
         }
 
