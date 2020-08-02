@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NCalc;
-using Newtonsoft.Json;
 
 namespace FirePlatform.WebApi.Controllers
 {
@@ -131,30 +130,26 @@ namespace FirePlatform.WebApi.Controllers
                 {
                     if (data.UserId == request.UserId)
                     {
-                        if (request.IsRightTemplate)
+                        data.UserTemplates.ForEach((x) =>
                         {
-                            data.UsersTmpRight = res;
-                        }
-                        else
-                        {
-                            data.UsersTmpLeft = res;
-                        }
-                        break;
+                            if (x.TemplateGuiID == request.TemplateGuiID)
+                                x.UsersTmp = res;
+                        });
                     }
+                    break;
                 }
             }
             else
             {
-                var itemDataPerUser = request.IsRightTemplate ? new ItemDataPerUser
+                var itemDataPerUser = new ItemDataPerUser
                 {
                     UserId = request.UserId,
-                    UsersTmpRight = res
-                } :
-                new ItemDataPerUser
-                {
-                    UserId = request.UserId,
-                    UsersTmpLeft = res
                 };
+                itemDataPerUser.UserTemplates.ForEach((x) =>
+                {
+                    if (x.TemplateGuiID == request.TemplateGuiID)
+                        x.UsersTmp = res;
+                });
 
                 ItemDataPerUsers.Add(itemDataPerUser);
             }
@@ -185,7 +180,7 @@ namespace FirePlatform.WebApi.Controllers
                     }
             }
             res.ForEach(x =>
-                x.IsRightTemplate = request.IsRightTemplate
+                x.TemplateGuiID = request.TemplateGuiID
             );
 
             return Ok(res);
@@ -207,9 +202,11 @@ namespace FirePlatform.WebApi.Controllers
                 var content = Download(request);
                 res = Parser.PrepareControls(content);
 
-                if (request.IsRightTemplate)
-                    existingDataperUser.UsersTmpRight = res;
-                existingDataperUser.UsersTmpLeft = res;
+                existingDataperUser.UserTemplates.ForEach((x) =>
+                {
+                    if (x.TemplateGuiID == request.TemplateGuiID)
+                        x.UsersTmp = res;
+                });
             }
 
             return Ok();
@@ -281,9 +278,8 @@ namespace FirePlatform.WebApi.Controllers
         [AllowAnonymous]
         public OkObjectResult Preselection([FromBody] PreselectionRequest request)
         {
-            var UsersTmp = request.IsRightTemplate ?
-                                   ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmpRight :
-                                   ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId).UsersTmpLeft;
+            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId)
+                           .UserTemplates.FirstOrDefault(x => x.TemplateGuiID == request.TemplateGuiID).UsersTmp;
 
             foreach (var group in UsersTmp)
             {
@@ -344,14 +340,15 @@ namespace FirePlatform.WebApi.Controllers
         [EnableCors("AllowAll")]
         [Authorize]
         //[AllowAnonymous]
-        public async Task<OkObjectResult> Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, bool isRightTemplate = false)
+        public async Task<OkObjectResult> Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, int templateGuiID = 0)
         {
             var res = Tuple.Create<List<ItemGroup>, List<Item>>(null, null);
             try
             {
                 var startDate = DateTime.Now;
-                var UsersTmp = isRightTemplate ? ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId).UsersTmpRight :
-                                                 ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId).UsersTmpLeft;
+                var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId)
+                                .UserTemplates.FirstOrDefault(x => x.TemplateGuiID == templateGuiID).UsersTmp;
+
                 var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
                 var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == itemId);
                 object newValue = null;
@@ -450,8 +447,8 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        [Authorize]
-        // [AllowAnonymous]
+        //[Authorize]
+         [AllowAnonymous]
         public OkObjectResult LoadTemplates(string language, int userid = 0)
         {
             var templates = LoadTemplates();
@@ -488,7 +485,8 @@ namespace FirePlatform.WebApi.Controllers
         //[Authorize]
         public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
-            var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId).UsersTmpLeft ?? new List<ItemGroup>();
+            var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId)
+                      .UserTemplates.FirstOrDefault(x => x.TemplateGuiID == template.TemplateGuiID).UsersTmp ?? new List<ItemGroup>();
             List<Item> items = new List<Item>();
             foreach (var group in tmp)
             {

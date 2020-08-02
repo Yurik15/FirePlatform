@@ -27,7 +27,7 @@ namespace FirePlatform.WebApi.Model
             Expanded = true;
         }
 
-        public bool IsRightTemplate { get; set; }
+        public int TemplateGuiID { get; set; }
         public bool Expanded { get; set; }
         public int IndexGroup { get; set; }
         public string Title { get => _title; set => _title = value?.Trim() ?? string.Empty; }

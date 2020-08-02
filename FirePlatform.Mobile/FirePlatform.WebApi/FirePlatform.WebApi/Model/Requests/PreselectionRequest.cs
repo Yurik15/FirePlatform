@@ -4,6 +4,6 @@
     {
         public int UserId { get; set; }
         public bool PreselectionEnabled { get; set; }
-        public bool IsRightTemplate { get; set; }
+        public int TemplateGuiID { get; set; }
     }
 }

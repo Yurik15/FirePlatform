@@ -63,7 +63,21 @@ namespace FirePlatform.WebApi.Model
         public int NumID { get; set; }
 
         public object Value { get; set; }
-
+        public string BackCalcsValue
+        {
+            get
+            {
+                if (Type == ItemType.BackCalc.ToString())
+                {
+                    return Value?.ToString();
+                }
+                return null;
+            }
+            set
+            {
+                BackCalcsValue = value;
+            }
+        }
         public string Title { get => _title; set => _title = value ?? string.Empty; }
         public string Type { get; set; }
         public string GroupTitle { get => _groupTitle; set => _groupTitle = value?.Trim() ?? string.Empty; }
@@ -193,7 +207,7 @@ namespace FirePlatform.WebApi.Model
         public bool IsHidden
         {
             get; set;
-        } = false;
+        } = true;
 
         #endregion HTML - PRZEPISY
 

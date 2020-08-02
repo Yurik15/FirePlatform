@@ -10,5 +10,6 @@ namespace FirePlatform.WebApi.Model.Requests
         public int UserId { get; set; }
         public string MainName { get; set; }
         public string Name { get; set; }
+        public int TemplateGuiID { get; set; }
     }
 }
