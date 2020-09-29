@@ -92,6 +92,7 @@ namespace FirePlatform.Repositories.Repositories
 
             await _context.Set<TEntity>()
                         .AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
 
             return entities;
         }
@@ -130,6 +131,12 @@ namespace FirePlatform.Repositories.Repositories
             var entity = GetById(id);
             _context.Set<TEntity>().Remove(entity);
             _context.SaveChanges();
+        }
+        public async Task DeleteAllAsync()
+        {
+            var items = await GetAsync();
+            _context.Set<TEntity>().RemoveRange(items);
+            await _context.SaveChangesAsync();
         }
         #endregion
     }

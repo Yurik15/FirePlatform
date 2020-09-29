@@ -52,7 +52,7 @@ namespace FirePlatform.WebApi.Controllers
             return Ok("It works");
         }
 
-        private (bool fromDB, List<ItemGroup> items) LoadIfExistsInDB(TemplateModel request)
+        private (bool fromDB, List<ItemGroup> items) LoadIfExistsInDB(FirePlatform.Models.Models.ScriptDefinition request)
         {
             bool fromDb = false;
             List<ItemGroup> res = null;
@@ -186,14 +186,14 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(res);
         }
 
-        [HttpPost("api/[controller]/ClearTemplates")]
+        /*[HttpPost("api/[controller]/ClearTemplates")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
         //[Authorize]
-        public ActionResult ClearTemplateDataPerUser([FromBody] TemplateModel request)
+        public ActionResult ClearTemplateDataPerUser([FromBody] FirePlatform.Models.Models.ScriptDefinition request)
         {
             var existingDataperUser = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId);
             if (existingDataperUser != null)
@@ -210,7 +210,7 @@ namespace FirePlatform.WebApi.Controllers
             }
 
             return Ok();
-        }
+        }*/
 
         [HttpGet("api/[controller]/FetchPicture")]
         [ProducesResponseType(200)]
@@ -453,32 +453,6 @@ namespace FirePlatform.WebApi.Controllers
         {
             var templates = LoadTemplates();
 
-            var customTemplates = Service
-                                    .GetUserTemplatesService()
-                                    .GetNameTemplates(userid);
-
-            if (customTemplates != null)
-                foreach (var customTemplate in customTemplates)
-                {
-                    foreach (var template in templates)
-                    {
-                        if (template.ShortName == customTemplate.mainName)
-                        {
-                            template.SavedTemplates.Add(new TemplateModel()
-                            {
-                                ShortName = customTemplate.mainName,
-                                IsCustom = true,
-                                SavedName = customTemplate.name
-                            });
-                        }
-                    }
-                }
-            var res = templates.Where(x => x.Lng == language);
-
-            return Ok(res);
-        }
-
-
         [HttpPost("api/[controller]/SaveTemplate")]
         [EnableCors("AllowAll")]
         [AllowAnonymous]
@@ -504,73 +478,15 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(result.success);
         }
 
-        private string Download(TemplateModel templateModel)
+        private string Download(FirePlatform.Models.Models.ScriptDefinition scriptDefinition)
         {
-            var templates = LoadTemplates();
-
-            var selectedTmp = templates?.FirstOrDefault(x => x.Lng == templateModel.Lng && x.ShortName == templateModel.ShortName && x.Stage == templateModel.Stage);
             string file_contents = string.Empty;
             using (var wc = new System.Net.WebClient())
             {
                 wc.Encoding = System.Text.Encoding.UTF8;// GetEncoding("Windows-1250"); 
-                file_contents = wc.DownloadString(selectedTmp.Link);
+                file_contents = wc.DownloadString(scriptDefinition.Link);
             }
             return file_contents;
-        }
-
-        private IList<TemplateModel> LoadTemplates()
-        {
-            var result = new List<TemplateModel>();
-            string data = string.Empty;
-            using (var wc = new System.Net.WebClient())
-            {
-                data = wc.DownloadString("https://docs.google.com/spreadsheets/d/1hh0mYlkmSvRQwgiIhAnnEOmHKCpg293empAKl1Kj2mc/export?format=csv&id=1hh0mYlkmSvRQwgiIhAnnEOmHKCpg293empAKl1Kj2mc&gid=0");
-            }
-            var items = data?.Split("\r\n").ToArray();
-            if (items != null)
-                for (int i = 1; i < items.Length; i++)
-                {
-                    var item = items[i];
-                    var parts = ParseExcelLine(item);//item.Split(',');
-                    result.Add(new TemplateModel()
-                    {
-                        Lng = parts[0],
-                        ShortName = parts[1],
-                        LongName = parts[2],
-                        Stage = parts[3],
-                        Type = parts[4],
-                        Topic = parts[5],
-                        Link = parts[6]
-                    });
-                }
-            return result;
-        }
-
-        private string[] ParseExcelLine(string line)
-        {
-            if (string.IsNullOrWhiteSpace(line)) return null;
-            List<string> result = new List<string>();
-
-            string buffor = "";
-            bool isString = false;
-            foreach (var chr in line)
-            {
-                if (chr == '"')
-                {
-                    isString = !isString;
-                    continue;
-                }
-
-                if (!isString && chr == ',')
-                {
-                    result.Add(buffor);
-                    buffor = "";
-                    continue;
-                }
-                buffor += chr;
-            }
-            result.Add(buffor);
-            return result?.ToArray();
         }
     }
 }

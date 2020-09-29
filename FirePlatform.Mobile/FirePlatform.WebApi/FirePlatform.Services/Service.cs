@@ -12,19 +12,22 @@ namespace FirePlatform.Services
         private readonly FormService _formService;
         private readonly UserTemplatesService _userTemplatesService;
         private readonly MainTemplatesService _mainTemplatesService;
+        private readonly ScriptDefinitionService _scriptDefinitionService;
 
         public Service
             (
                 UserService userService,
                 FormService formService,
                 UserTemplatesService userTemplatesService,
-                MainTemplatesService mainTemplatesService
+                MainTemplatesService mainTemplatesService,
+                ScriptDefinitionService scriptDefinitionService
             )
         {
             _userService = userService;
             _formService = formService;
             _userTemplatesService = userTemplatesService;
             _mainTemplatesService = mainTemplatesService;
+            _scriptDefinitionService = scriptDefinitionService;
         }
 
         #region Methods
@@ -47,6 +50,10 @@ namespace FirePlatform.Services
         public MainTemplatesService GetMainTemplatesService()
         {
             return _mainTemplatesService;
+        }
+        public ScriptDefinitionService GetScriptDefinitionService()
+        {
+            return _scriptDefinitionService;
         }
         #endregion
     }
