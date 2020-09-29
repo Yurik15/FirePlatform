@@ -39,8 +39,9 @@ namespace FirePlatform.WebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
+        [AllowAnonymous]
         [EnableCors("AllowAll")]
-        [Authorize]
+        //[Authorize]
         public async Task<OkObjectResult> LoadTemplates()
         {
             var scriptDefinitionService = Service.GetScriptDefinitionService();

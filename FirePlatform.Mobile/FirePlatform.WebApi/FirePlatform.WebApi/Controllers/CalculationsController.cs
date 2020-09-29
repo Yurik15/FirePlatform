@@ -116,7 +116,9 @@ namespace FirePlatform.WebApi.Controllers
                 savedItems = tmpData as List<Item>;
             }
 
-            var items = LoadIfExistsInDB(request);
+            //TODO change fakerequest to request when GUI will finished
+            var fakeRequest = new Models.Models.ScriptDefinition() { };
+            var items = LoadIfExistsInDB(fakeRequest);
 
             if (items.fromDB)
                 res = Parser.PrepareControlsLoadedFromDB(items.items, savedItems);
@@ -441,17 +443,6 @@ namespace FirePlatform.WebApi.Controllers
             //await SaveCustomTemplate(new CustomTamplate() { MainName = "A", Name = "B" });
             return Ok(res);
         }
-
-        [HttpGet("api/[controller]/LoadTemplates")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        [EnableCors("AllowAll")]
-        //[Authorize]
-         [AllowAnonymous]
-        public OkObjectResult LoadTemplates(string language, int userid = 0)
-        {
-            var templates = LoadTemplates();
 
         [HttpPost("api/[controller]/SaveTemplate")]
         [EnableCors("AllowAll")]
