@@ -116,45 +116,19 @@ namespace FirePlatform.WebApi.Controllers
                 savedItems = tmpData as List<Item>;
             }
 
-            //TODO change fakerequest to request when GUI will finished
-            var fakeRequest = new Models.Models.ScriptDefinition() { };
-            var items = LoadIfExistsInDB(fakeRequest);
+            var scriptDefinitionService = Service.GetScriptDefinitionService();
+            var scripts = await scriptDefinitionService.GetAsync();
+            var scriptDetails = scripts.FirstOrDefault(x => x.ShortName == request.ShortName);
+            var items = LoadIfExistsInDB(scriptDetails);
 
             if (items.fromDB)
                 res = Parser.PrepareControlsLoadedFromDB(items.items, savedItems);
             else
                 res = items.items;
 
-            var isExistsUser = ItemDataPerUsers.Any(x => x.UserId == request.UserId);
-            if (isExistsUser)
-            {
-                foreach (var data in ItemDataPerUsers)
-                {
-                    if (data.UserId == request.UserId)
-                    {
-                        data.UserTemplates.ForEach((x) =>
-                        {
-                            if (x.TemplateGuiID == request.TemplateGuiID)
-                                x.UsersTmp = res;
-                        });
-                    }
-                    break;
-                }
-            }
-            else
-            {
-                var itemDataPerUser = new ItemDataPerUser
-                {
-                    UserId = request.UserId,
-                };
-                itemDataPerUser.UserTemplates.ForEach((x) =>
-                {
-                    if (x.TemplateGuiID == request.TemplateGuiID)
-                        x.UsersTmp = res;
-                });
+            var token = ((Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestHeaders)HttpContext.Request.Headers).HeaderAuthorization;
+            SetSessionScript(request.UserId, token.ToString(), request.TemplateGuiID, res);
 
-                ItemDataPerUsers.Add(itemDataPerUser);
-            }
             List<Item> ite = new List<Item>();
             foreach (var i in res)
             {
@@ -201,83 +175,21 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(response);
         }
 
-       
-        [HttpPost("api/[controller]/Preselection")]
-        [EnableCors("AllowAll")]
-        //[Authorize]
-        [AllowAnonymous]
-        public OkObjectResult Preselection([FromBody] PreselectionRequest request)
-        {
-            var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId)
-                           .UserTemplates.FirstOrDefault(x => x.TemplateGuiID == request.TemplateGuiID).UsersTmp;
-
-            foreach (var group in UsersTmp)
-            {
-                foreach (var item in group.Items)
-                {
-                    if (item.Type == ItemType.Combo.ToString())
-                    {
-                        if (request.PreselectionEnabled)
-                        {
-                            if (string.IsNullOrWhiteSpace(item.Value as string))
-                            {
-                                item.NameVarible = item.ComboItems?.FirstOrDefault(x => x.IsVisible)?.GroupKey;
-                            }
-                        }
-                        else
-                        {
-                            item.Value = null;
-                        }
-                    }
-                }
-            }
-
-            foreach (var group in UsersTmp)
-            {
-                group.IsVisiblePrev = group.IsVisible;
-                group.UpdateGroup();
-                foreach (var item in group.Items)
-                {
-                    item.IsVisiblePrev = item.IsVisible;
-                    if (group.IsVisible)
-                        item.UpdateItem();
-                    else
-                        item.IsVisible = false;
-                }
-            }
-            var resultGroups = new List<ItemGroup>();
-            UsersTmp.ForEach(x => resultGroups.Add(new ItemGroup()
-            {
-                IndexGroup = x.IndexGroup,
-                IsVisible = x.IsVisible
-            }));
-
-            var changedItems = new List<Item>();
-            UsersTmp.ForEach(x => x.Items?.ForEach(y =>
-            {
-                if (x.IsVisible)
-                    changedItems.Add(y);
-            }));
-
-            changedItems = changedItems.Where(x => x.IsVisible != x.IsVisiblePrev || (x.IsVisible && !string.IsNullOrWhiteSpace(x.Formula))).ToList();
-            (List<ItemGroup>, List<Item>) res = (groups: resultGroups, items: changedItems);
-            return Ok(res);
-        }
         [HttpGet("api/[controller]/Set")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [EnableCors("AllowAll")]
-        [Authorize]
-        //[AllowAnonymous]
+        //[Authorize]
+        [AllowAnonymous]
         public async Task<OkObjectResult> Set(int groupId = 0, int itemId = 0, string value = "", int userId = 0, int templateGuiID = 0)
         {
             var res = Tuple.Create<List<ItemGroup>, List<Item>>(null, null);
             try
             {
                 var startDate = DateTime.Now;
-                var UsersTmp = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId)
-                                .UserTemplates.FirstOrDefault(x => x.TemplateGuiID == templateGuiID).UsersTmp;
+                var token = ((Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpRequestHeaders)HttpContext.Request.Headers).HeaderAuthorization;
+                var UsersTmp = GetSessionScript(userId, token.ToString(), templateGuiID);
 
                 var selectedGroup = UsersTmp.FirstOrDefault(x => x.IndexGroup == groupId);
                 var selectedItem = selectedGroup.Items.FirstOrDefault(x => x.NumID == itemId);
@@ -352,16 +264,6 @@ namespace FirePlatform.WebApi.Controllers
                         });
                     }
                 }
-
-                //foreach (var item in res.Item2)
-                //{
-                //    if (item.Picture != null && item.Picture.Data != null)
-                //    {
-                //        item.Picture.Data = null;
-                //        item.Picture.ToFetch = true;
-                //    }
-                //}
-                //var itemss = res.Item2.Where(x => x.Picture != null && x.Picture.Data != null);
             }
             catch (Exception ex)
             {
@@ -378,8 +280,7 @@ namespace FirePlatform.WebApi.Controllers
         //[Authorize]
         public OkObjectResult SaveCustomTemplate([FromBody] CustomTamplate template)
         {
-            var tmp = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == template.UserId)
-                      .UserTemplates.FirstOrDefault(x => x.TemplateGuiID == template.TemplateGuiID).UsersTmp ?? new List<ItemGroup>();
+            var tmp = GetSessionScript(template.UserId, "TEST", template.TemplateGuiID);
             List<Item> items = new List<Item>();
             foreach (var group in tmp)
             {
@@ -406,6 +307,83 @@ namespace FirePlatform.WebApi.Controllers
                 file_contents = wc.DownloadString(scriptDefinition.Link);
             }
             return file_contents;
+        }
+
+        private void SetSessionScript(int userId, string token, int templateGuiID, List<ItemGroup> data)
+        {
+            if (ItemDataPerUsers == null)
+            {
+                ItemDataPerUsers = new List<ItemDataPerUser>();
+            }
+
+            var userTemplates = ItemDataPerUsers.FirstOrDefault(x => x.UserId == userId);
+            if (userTemplates == null)
+            {
+                userTemplates = new ItemDataPerUser(userId)
+                {
+                    SessionUserTemplates = new Dictionary<string, List<UserTemplates>>()
+                     {
+                         { token, new List<UserTemplates>(){ new UserTemplates(templateGuiID) { UsersTmp = data } } }
+                     }
+                };
+                ItemDataPerUsers.Add(userTemplates);
+            }
+            else
+            {
+                var sessionTemplates = userTemplates.SessionUserTemplates;
+                List<UserTemplates> templates = null;
+                if (sessionTemplates.ContainsKey(token))
+                {
+                    templates = sessionTemplates[token];
+                }
+                else
+                {
+                    sessionTemplates.Clear();
+                    templates = new List<UserTemplates>();
+                    sessionTemplates.Add(token, templates);
+                }
+
+                var selectedTemplate = templates.FirstOrDefault(x => x.TemplateGuiID == templateGuiID);
+                if (selectedTemplate == null)
+                {
+                    selectedTemplate = new UserTemplates(templateGuiID) { UsersTmp = data };
+                    templates.Add(selectedTemplate);
+                }
+                else
+                {
+                    selectedTemplate.UsersTmp = data;
+                }
+            }
+        }
+        private List<ItemGroup> GetSessionScript(int userId, string token, int templateGuiID)
+        {
+            var userTemplates = ItemDataPerUsers?.FirstOrDefault(x => x.UserId == userId);
+            if (userTemplates == null)
+            {
+                return null;
+            }
+
+            var sessionTemplates = userTemplates.SessionUserTemplates;
+            if (sessionTemplates.Count > 1)
+            {
+                var needToRemoveOldSession = sessionTemplates.Where(x => x.Key != token);
+                foreach (var item in needToRemoveOldSession)
+                {
+                    sessionTemplates[item.Key].Clear();
+                    sessionTemplates.Remove(item.Key);
+                }
+            }
+            List<UserTemplates> templates = null;
+            if (sessionTemplates.ContainsKey(token))
+            {
+                templates = sessionTemplates[token];
+            }
+            else
+            {
+                sessionTemplates.Clear();
+                return null;
+            }
+            return templates.FirstOrDefault(x => x.TemplateGuiID == templateGuiID)?.UsersTmp;
         }
     }
 }

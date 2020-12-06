@@ -4,7 +4,11 @@ namespace FirePlatform.WebApi.Model.Template
 {
     public class UserTemplates
     {
-        public int TemplateGuiID { get; set; }
+        public UserTemplates(int templateGuiID)
+        {
+            TemplateGuiID = templateGuiID;
+        }
+        public int TemplateGuiID { get; }
         public List<ItemGroup> UsersTmp { get; set; }
     }
 }

@@ -4,26 +4,13 @@ namespace FirePlatform.WebApi.Model.Template
 {
     public class ItemDataPerUser
     {
-        public ItemDataPerUser()
+        public ItemDataPerUser(int userId)
         {
-            //inits three user templates by default
-            UserTemplates = new List<UserTemplates>()
-            {
-                new UserTemplates()
-                {
-                    TemplateGuiID = 0
-                },
-                new UserTemplates()
-                {
-                    TemplateGuiID = 1
-                },
-                 new UserTemplates()
-                {
-                    TemplateGuiID = 2
-                }
-            };
+            UserId = userId;
+            SessionUserTemplates = new Dictionary<string, List<UserTemplates>>();
         }
-        public int UserId { get; set; }
-        public List<UserTemplates> UserTemplates { get; set; }
+        public int UserId { get; }
+
+        public Dictionary<string, List<UserTemplates>> SessionUserTemplates { get; set; }
     }
 }
