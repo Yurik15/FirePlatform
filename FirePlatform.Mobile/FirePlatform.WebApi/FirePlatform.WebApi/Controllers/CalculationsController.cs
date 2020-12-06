@@ -188,32 +188,6 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(res);
         }
 
-        /*[HttpPost("api/[controller]/ClearTemplates")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        [EnableCors("AllowAll")]
-        [AllowAnonymous]
-        //[Authorize]
-        public ActionResult ClearTemplateDataPerUser([FromBody] FirePlatform.Models.Models.ScriptDefinition request)
-        {
-            var existingDataperUser = ItemDataPerUsers.FirstOrDefault(x => x.UserId == request.UserId);
-            if (existingDataperUser != null)
-            {
-                List<ItemGroup> res;
-                var content = Download(request);
-                res = Parser.PrepareControls(content);
-
-                existingDataperUser.UserTemplates.ForEach((x) =>
-                {
-                    if (x.TemplateGuiID == request.TemplateGuiID)
-                        x.UsersTmp = res;
-                });
-            }
-
-            return Ok();
-        }*/
-
         [HttpGet("api/[controller]/FetchPicture")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -227,53 +201,7 @@ namespace FirePlatform.WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet("api/[controller]/test-calc")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        [EnableCors("AllowAll")]
-        [Authorize]
-        // [AllowAnonymous]
-        public OkObjectResult TestCalc()
-        {
-            var parameters = new Dictionary<string, object>()
-            {
-                { "a", null },
-                { "b", null },
-                { "c", true },
-                { "d", false },
-                { "e", 1 },
-                {"f", "sdasdasd" }
-            };
-            a("c || d", parameters);
-            a("a && b", parameters);
-            a("a || b", parameters);
-            a("a && c", parameters);
-            a("a || c", parameters);
-            a("a && e<=1", parameters);
-            a("a>=1 && e<=1", parameters);
-            a("a >= 0", parameters);
-            a("f == a", parameters);
-            a("'a' == a", parameters);
-            a("'a' == f", parameters);
-            void a(string formula, Dictionary<string, object> param)
-            {
-                try
-                {
-                    var expression = new Expression(formula, EvaluateOptions.IgnoreCase)
-                    {
-                        Parameters = parameters
-                    };
-                    expression.Evaluate();
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"{formula} - {ex.Message} \n");
-                }
-            }
-            return Ok(true);
-        }
-
+       
         [HttpPost("api/[controller]/Preselection")]
         [EnableCors("AllowAll")]
         //[Authorize]

@@ -24,17 +24,6 @@ namespace FirePlatform.WebApi.Controllers
         }
 
 
-        [HttpGet("api/[controller]/test")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        [EnableCors("AllowAll")]
-        [AllowAnonymous]
-        public OkObjectResult Init()
-        {
-            return Ok("It works");
-        }
-
         [HttpGet("api/[controller]/LoadTemplates")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
