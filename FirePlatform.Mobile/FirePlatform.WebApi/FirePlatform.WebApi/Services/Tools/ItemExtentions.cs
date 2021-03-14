@@ -87,6 +87,18 @@ namespace FirePlatform.WebApi.Services.Tools
                     item.Value = result;
                     //item?.NotifyAboutChange();
                 }
+
+                if (item.Type == ItemType.Combo.ToString())
+                {
+                    if (item.ComboItems != null && item.ComboItems.Any())
+                    {
+                        if (item.Value == null)
+                        {
+                            item.Value = true;
+                            item.NameVarible = item.ComboItems.FirstOrDefault(x => x.IsVisible).GroupKey;
+                        }
+                    }
+                }
             }
         }
         public static void UpdateGroup(this ItemGroup itemGroup)

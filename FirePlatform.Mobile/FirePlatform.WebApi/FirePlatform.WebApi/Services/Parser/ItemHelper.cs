@@ -10,7 +10,15 @@ namespace FirePlatform.WebApi.Services.Parser
 
     public static class ItemHelper
     {
-        public static Item Prepare(string Text_line, int numID, int groupNum, string groupTitle, string groupTag, Dictionary<string, List<ComboItem>> Databases, Dictionary<string, string[,]> Matrixes, Dictionary<string, string> Memoses, Dictionary<string, string> Pictures)
+        public static Item Prepare(string Text_line, 
+                                   int numID, 
+                                   int groupNum, 
+                                   string groupTitle, 
+                                   string groupTag, 
+                                   Dictionary<string, List<ComboItem>> Databases, 
+                                   Dictionary<string, string[,]> Matrixes, 
+                                   Dictionary<string, string> Memoses, 
+                                   Dictionary<string, string> Pictures)
         {
             Item item = new Item();
 
@@ -201,6 +209,11 @@ namespace FirePlatform.WebApi.Services.Parser
                                 };
                             }
                         }
+                        else if (((nt.Length > 2) && (nt.Substring(0, 2) == "W:")))
+                        {
+                            item.Type = ItemType.Fulltext.ToString();
+                            item.NameVarible = nt.Substring(2).Trim().ToLowerInvariant();
+                        }
                         item.InitialValue = item.Value;
                         item.NameVarible = item.NameVarible.Trim();
                         item.IsVisible = string.IsNullOrEmpty(item.VisCondition);
@@ -215,10 +228,6 @@ namespace FirePlatform.WebApi.Services.Parser
             if (string.IsNullOrWhiteSpace(item.Type))
             {
                 item.Type = ItemType.HTML.ToString();
-                if (item.NumID == 54)
-                {
-
-                }
                 var parts = Text_line.Split("\t");
                 var visibility = parts[0];
                 if (!"-".Equals(visibility))

@@ -259,6 +259,6 @@ namespace FirePlatform.WebApi.Model
             }
         }
     }
-    public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture, HTML };
+    public enum ItemType { Text, Formula, BackCalc, Combo, Num, Check, Hidden, Message, Picture, HTML, Fulltext };
     public enum ModifiedFlag { Unchanged, Modified }
 }

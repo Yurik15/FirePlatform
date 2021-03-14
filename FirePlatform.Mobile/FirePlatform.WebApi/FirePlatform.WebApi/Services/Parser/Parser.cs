@@ -89,6 +89,7 @@ namespace FirePlatform.WebApi.Services.Parser
                 string DATABASE = "Database";
                 string MATRIX = "Matrix";
                 string MEMOS = "Memos";
+                string FULLTEXT = "Fulltext";
                 string PICTURE = "Picture";
                 string SPACE = " ";
                 string COMMENT_LINE = "---";
@@ -99,6 +100,7 @@ namespace FirePlatform.WebApi.Services.Parser
 
                 var result = new List<ItemGroup>();
                 Dictionary<string, List<ComboItem>> Databases = new Dictionary<string, List<ComboItem>>();
+                Dictionary<string, List<Item>> FullTexts = new Dictionary<string, List<Item>>();
                 Dictionary<string, string[,]> Matrixes = new Dictionary<string, string[,]>();
                 Dictionary<string, string> Memoses = new Dictionary<string, string>();
                 Dictionary<String, string> Pictures = new Dictionary<string, string>();
@@ -137,6 +139,54 @@ namespace FirePlatform.WebApi.Services.Parser
                     var tag = group.Key.Item2;
                     var itemsFromGroup = group.Value;
 
+                    if (title.StartsWith(FULLTEXT, StringComparison.Ordinal))
+                    {
+                        var tempDB = new List<string>();
+                        var dbTitle = title.Substring(FULLTEXT.Length).Trim().TrimStart(T).ToLowerInvariant();
+                        dbTitle = dbTitle.Split(" ")[0];
+
+                        var fulltextItems = new List<Item>();
+                        for (int indexItems = 0; indexItems < itemsFromGroup.Count; indexItems++)
+                        {
+                            var itemText = itemsFromGroup[indexItems];
+                            if (itemText.StartsWith(END, StringComparison.Ordinal)) break;
+                            else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
+
+                            var item = ItemHelper.Prepare(itemText, indexItems, -1, title, tag, Databases, Matrixes, Memoses, Pictures);
+
+                            if (item.Type == ItemType.HTML.ToString())
+                            {
+                                var prevItem = fulltextItems.LastOrDefault();
+                                if (prevItem != null)
+                                {
+                                    if (item.HtmlLevel > prevItem.HtmlLevel)
+                                    {
+                                        if (prevItem.HtmlLevel + 1 != item.HtmlLevel)
+                                        {
+                                            item.HtmlLevel = prevItem.HtmlLevel + 1;
+                                        }
+                                        item.ParentHtmlItem = prevItem;
+                                    }
+                                    else if (item.HtmlLevel == prevItem.HtmlLevel)
+                                    {
+                                        item.ParentHtmlItem = prevItem.ParentHtmlItem;
+                                    }
+                                    else
+                                    {
+                                        item.ParentHtmlItem = fulltextItems.LastOrDefault(x => x.HtmlLevel == item.HtmlLevel)?.ParentHtmlItem;
+                                    }
+                                }
+                            }
+                            fulltextItems.Add(item);
+                            var itemsWithTreeView = ItemTreeViewExtension.BuildTreeForHtmlItems(fulltextItems);
+                            foreach (var it in fulltextItems)
+                            {
+                                it.ChildItemsIds = ItemTreeViewExtension.ReadChildNodes(it).Select(x => x.NumID).ToList();
+                                it.ChildItems = null;
+                            }
+                        }
+                        FullTexts.Add(dbTitle, fulltextItems);
+                    }
                     if (title.StartsWith(DATABASE, StringComparison.Ordinal))
                     {
                         var tempDB = new List<ComboItem>();
@@ -247,7 +297,12 @@ namespace FirePlatform.WebApi.Services.Parser
                     var tag = group.Key.Item2;
                     var itemsFromGroup = group.Value;
 
-                    if (title.StartsWith(DATABASE, StringComparison.Ordinal) || title.StartsWith(MATRIX, StringComparison.Ordinal) || title.StartsWith(MEMOS, StringComparison.Ordinal) || title.StartsWith(PICTURE, StringComparison.Ordinal)) continue;
+                    if (title.StartsWith(DATABASE, StringComparison.Ordinal)
+                        || title.StartsWith(MATRIX, StringComparison.Ordinal)
+                        || title.StartsWith(MEMOS, StringComparison.Ordinal)
+                        || title.StartsWith(PICTURE, StringComparison.Ordinal)
+                        || title.StartsWith(FULLTEXT, StringComparison.Ordinal))
+                        continue;
 
                     var items = new List<Item>();
                     var groupItems = new ItemGroup
@@ -266,38 +321,19 @@ namespace FirePlatform.WebApi.Services.Parser
                         else if (string.IsNullOrWhiteSpace(itemText) || itemText.StartsWith(COMMENT_LINE, StringComparison.Ordinal)) continue;
 
                         var item = ItemHelper.Prepare(itemText, indexItems, indexGroup, title, tag, Databases, Matrixes, Memoses, Pictures);
-                        item.ParentGroup = groupItems;
-                        //if (!string.IsNullOrEmpty(item.Type))
-                        if (item.Type == ItemType.HTML.ToString())
+                        if (item.Type == ItemType.Fulltext.ToString())
                         {
-                            var prevItem = items.LastOrDefault();
-                            if (prevItem != null)
+                            var fulltext = FullTexts[item.NameVarible];
+                            fulltext.ForEach(x =>
                             {
-                                if (item.HtmlLevel > prevItem.HtmlLevel)
-                                {
-                                    if (prevItem.HtmlLevel + 1 != item.HtmlLevel)
-                                    {
-                                        item.HtmlLevel = prevItem.HtmlLevel + 1;
-                                    }
-                                    item.ParentHtmlItem = prevItem;
-                                }
-                                else if (item.HtmlLevel == prevItem.HtmlLevel)
-                                {
-                                    item.ParentHtmlItem = prevItem.ParentHtmlItem;
-                                }
-                                else
-                                {
-                                    item.ParentHtmlItem = items.LastOrDefault(x => x.HtmlLevel == item.HtmlLevel)?.ParentHtmlItem;
-                                }
-                            }
+                                x.ParentGroup = groupItems;
+                                x.GroupID = indexGroup;
+                            });
+                            items.AddRange(fulltext);
+                            break;
                         }
+                        item.ParentGroup = groupItems;
                         items.Add(item);
-                        var itemsWithTreeView = ItemTreeViewExtension.BuildTreeForHtmlItems(items);
-                        foreach (var it in items)
-                        {
-                            it.ChildItemsIds = ItemTreeViewExtension.ReadChildNodes(it).Select(x => x.NumID).ToList();
-                            it.ChildItems = null;
-                        }
                     }
 
                     groupItems.Items = items;
@@ -473,6 +509,17 @@ namespace FirePlatform.WebApi.Services.Parser
                                         var paramsDic = ItemExtentions.GetParams(comboItem.DependToItems, item.NumID, item.GroupID);
                                         var res = CalculationTools.CalculateVis(comboItem.VisCondition, paramsDic);
                                         comboItem.IsVisible = res.HasValue ? res.Value : false;
+                                    }
+                                }
+                            }
+                            if (item.Type == ItemType.Combo.ToString())
+                            {
+                                if (item.ComboItems != null && item.ComboItems.Any())
+                                {
+                                    if (item.Value == null)
+                                    {
+                                        item.Value = true;
+                                        item.NameVarible = item.ComboItems.FirstOrDefault(x => x.IsVisible).GroupKey;
                                     }
                                 }
                             }
